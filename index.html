@@ -1,0 +1,3402 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="刘敏 — C端产品经理 · AI Product Builder" />
+  <title>刘敏 · Portfolio</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600;9..40,700&family=Noto+Serif+SC:wght@500;600&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --bg: #0a0a0b;
+      --bg-elevated: #121214;
+      --card: #161618;
+      --card-border: rgba(255, 255, 255, 0.08);
+      --lime: #ccff00;
+      --lime-dim: rgba(204, 255, 0, 0.15);
+      --text: #f5f5f7;
+      --muted: #9ca3af;
+      --font-ui: "DM Sans", "PingFang SC", "Microsoft YaHei", sans-serif;
+      --font-serif: "Noto Serif SC", "Songti SC", serif;
+      --space: clamp(16px, 3vw, 40px);
+      --page-gutter: clamp(20px, 10vw, 160px);
+      --page-max: 1060px;
+      --header-h: 64px;
+      --ease: cubic-bezier(0.22, 1, 0.36, 1);
+    }
+    @media (max-width: 760px) {
+      :root { --page-gutter: max(16px, 5vw); }
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html, body {
+      height: 100%;
+      overflow: hidden;
+    }
+
+    body {
+      font-family: var(--font-ui);
+      font-size: 15px;
+      line-height: 1.6;
+      color: var(--text);
+      background: var(--bg);
+      -webkit-font-smoothing: antialiased;
+    }
+
+    :focus-visible {
+      outline: 2px solid var(--lime);
+      outline-offset: 3px;
+    }
+
+    /* —— Header —— */
+    .site-header {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 200;
+      height: var(--header-h);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 var(--space);
+      pointer-events: none;
+    }
+    .site-header > * { pointer-events: auto; }
+
+    .site-brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--text);
+    }
+    .site-brand-sep { color: rgba(255, 255, 255, 0.25); font-weight: 400; }
+    .site-brand-meta {
+      text-transform: none;
+      letter-spacing: 0.06em;
+      font-weight: 500;
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    .site-nav {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+      gap: 4px;
+      max-width: min(620px, 58vw);
+    }
+    .site-nav a {
+      font-size: 10px;
+      font-weight: 600;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      text-decoration: none;
+      color: var(--muted);
+      padding: 8px 12px;
+      border-radius: 999px;
+      transition: color 0.25s var(--ease), background 0.25s var(--ease);
+    }
+    .site-nav a:hover { color: var(--text); }
+    .site-nav a.is-active {
+      background: var(--lime);
+      color: #0a0a0b;
+    }
+
+    .progress-line {
+      position: fixed;
+      top: 0;
+      left: 0;
+      height: 2px;
+      width: 0;
+      background: var(--lime);
+      z-index: 201;
+      transition: width 0.4s var(--ease);
+    }
+
+    .page-indicator {
+      position: fixed;
+      right: var(--space);
+      bottom: 16px;
+      z-index: 200;
+      font-size: 10px;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+
+    .scroll-hint {
+      position: fixed;
+      left: var(--space);
+      bottom: 16px;
+      z-index: 200;
+      font-size: 10px;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: rgba(255, 255, 255, 0.35);
+    }
+
+    /* —— Horizontal track —— */
+    .track {
+      display: flex;
+      width: 100%;
+      height: 100dvh;
+      overflow-x: auto;
+      overflow-y: hidden;
+      overscroll-behavior-x: contain;
+      scroll-snap-type: x mandatory;
+      scroll-behavior: smooth;
+      -webkit-overflow-scrolling: touch;
+    }
+    .track::-webkit-scrollbar { height: 0; }
+    .slide::-webkit-scrollbar { width: 0; height: 0; display: none; }
+
+    .slide {
+      flex: 0 0 100%;
+      width: 100%;
+      height: 100dvh;
+      scroll-snap-align: start;
+      scroll-snap-stop: always;
+      overflow-y: auto;
+      overflow-x: hidden;
+      overscroll-behavior-y: contain;
+      -webkit-overflow-scrolling: touch;
+      scrollbar-width: none;
+      -ms-overflow-style: none;
+      padding: calc(var(--header-h) + 12px) var(--page-gutter) var(--space);
+      background: var(--bg);
+      position: relative;
+    }
+    .slide::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background:
+        radial-gradient(ellipse 80% 50% at 70% 20%, rgba(204, 255, 0, 0.06) 0%, transparent 55%),
+        radial-gradient(ellipse 40% 30% at 20% 80%, rgba(255, 255, 255, 0.03) 0%, transparent 50%);
+      pointer-events: none;
+    }
+    .slide-inner {
+      position: relative;
+      z-index: 1;
+      max-width: 1200px;
+      margin: 0 auto;
+      height: 100%;
+    }
+
+    /* —— HOME：内容不足一屏时居中，超出则在本屏内纵向滚动 —— */
+    .slide--home {
+      padding-top: calc(var(--header-h) + 8px);
+      padding-bottom: 20px;
+    }
+    .slide--home .slide-inner {
+      width: 100%;
+      height: auto;
+      max-width: none;
+      min-height: calc(100dvh - var(--header-h) - 28px);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+    .home-center {
+      width: min(var(--page-max), 100%);
+      margin: 0 auto;
+    }
+    .home-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 28px;
+      justify-content: center;
+      align-items: center;
+    }
+    @media (min-width: 860px) {
+      .home-grid {
+        grid-template-columns: minmax(0, 420px) minmax(260px, 320px);
+        gap: clamp(28px, 4vw, 44px);
+        justify-content: center;
+      }
+    }
+    .home-copy {
+      width: 100%;
+      justify-self: center;
+    }
+
+    .home-hello {
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--lime);
+      margin-bottom: 12px;
+    }
+    .home-title {
+      font-family: var(--font-serif);
+      font-size: clamp(36px, 5vw, 56px);
+      font-weight: 600;
+      line-height: 1.15;
+      margin-bottom: 16px;
+    }
+    .home-sub {
+      font-size: clamp(15px, 2vw, 18px);
+      color: rgba(255, 255, 255, 0.85);
+      margin-bottom: 20px;
+    }
+    .home-tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 12px;
+      color: var(--muted);
+      padding: 8px 14px;
+      border-radius: 999px;
+      border: 1px solid var(--card-border);
+      background: var(--card);
+      margin-bottom: 28px;
+    }
+    .home-stats {
+      list-style: none;
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 0;
+      margin-bottom: 28px;
+      max-width: 420px;
+    }
+    .home-stats li {
+      text-align: center;
+      padding: 0 12px;
+      border-left: 1px solid var(--card-border);
+    }
+    .home-stats li:first-child { border-left: none; padding-left: 0; }
+    .home-stats strong {
+      display: block;
+      font-size: clamp(28px, 4vw, 36px);
+      font-weight: 700;
+      color: var(--lime);
+      line-height: 1.1;
+    }
+    .home-stats span {
+      font-size: 11px;
+      color: var(--muted);
+    }
+    .home-cta {
+      appearance: none;
+      font-family: var(--font-ui);
+      font-size: 14px;
+      font-weight: 700;
+      padding: 16px 28px;
+      width: 100%;
+      border: none;
+      border-radius: 999px;
+      background: var(--lime);
+      color: #0a0a0b;
+      cursor: pointer;
+      transition: transform 0.3s var(--ease), box-shadow 0.3s var(--ease);
+    }
+    .home-cta:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 12px 40px rgba(204, 255, 0, 0.25);
+    }
+
+    .home-visual {
+      display: flex;
+      justify-content: center;
+      width: 100%;
+    }
+    .avatar-wrap {
+      position: relative;
+      width: min(300px, 78vw);
+      margin: 0 auto;
+    }
+    .avatar-ring {
+      position: relative;
+      width: 100%;
+      aspect-ratio: 1;
+      border-radius: 50%;
+      background: var(--lime);
+      display: flex;
+      align-items: flex-end;
+      justify-content: center;
+      overflow: hidden;
+      box-shadow: 0 0 0 1px rgba(204, 255, 0, 0.3), 0 24px 80px rgba(0, 0, 0, 0.5);
+    }
+    .avatar-stack {
+      --ip-rx: 0deg;
+      --ip-ry: 0deg;
+      --ip-tx: 0px;
+      --ip-ty: 0px;
+      position: relative;
+      width: 88%;
+      height: 95%;
+      transform: perspective(900px) rotateY(var(--ip-rx)) rotateX(var(--ip-ry))
+        translate3d(var(--ip-tx), var(--ip-ty), 0);
+      transform-origin: 50% 92%;
+    }
+    .avatar-stack img {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      object-position: bottom center;
+      opacity: 0;
+      pointer-events: none;
+    }
+    .avatar-stack img.is-show { opacity: 1; }
+    .avatar-caption {
+      margin-top: clamp(12px, 2vh, 18px);
+      padding: 10px 14px;
+      font-size: 11px;
+      line-height: 1.55;
+      color: var(--muted);
+      text-align: center;
+      border-radius: 14px;
+      background: var(--card);
+      border: 1px solid var(--card-border);
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.35);
+    }
+
+    .home-features {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 10px;
+      margin-top: clamp(20px, 3vh, 32px);
+      width: 100%;
+    }
+    @media (min-width: 768px) {
+      .home-features { grid-template-columns: repeat(5, 1fr); }
+    }
+    .skill-card {
+      position: relative;
+      min-height: 150px;
+      border-radius: 22px;
+      padding: 16px 14px 44px;
+      overflow: hidden;
+      text-align: left;
+      transition: transform 0.35s var(--ease), box-shadow 0.35s var(--ease);
+    }
+    .skill-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 16px 40px rgba(0, 0, 0, 0.35);
+    }
+    .skill-card--product { background: #f6f5f0; }
+    .skill-card--data { background: #eef7ea; }
+    .skill-card--design { background: #f3f0fa; }
+    .skill-card--ai { background: #eef8f4; }
+    .skill-card--flow { background: #f5f8ee; }
+    .skill-card h3 {
+      font-size: 14px;
+      font-weight: 700;
+      color: #141414;
+      line-height: 1.3;
+    }
+    .skill-card-en {
+      margin-top: 4px;
+      font-size: 9px;
+      font-weight: 600;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: #9ca3af;
+    }
+    .skill-card-go {
+      position: absolute;
+      left: 14px;
+      bottom: 12px;
+      width: 30px;
+      height: 30px;
+      border-radius: 50%;
+      background: #fff;
+      color: #222;
+      font-size: 14px;
+      line-height: 1;
+      display: grid;
+      place-items: center;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    }
+    .skill-card-deco {
+      position: absolute;
+      right: 2px;
+      bottom: -6px;
+      width: 76px;
+      height: 76px;
+      pointer-events: none;
+    }
+
+    /* —— 内页居中（与 HOME 同宽），可纵向滚动 —— */
+    .slide--page {
+      padding-top: calc(var(--header-h) + 8px);
+      padding-bottom: 20px;
+    }
+    .slide--page .slide-inner {
+      width: 100%;
+      max-width: none;
+      height: auto;
+      min-height: calc(100dvh - var(--header-h) - 28px);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+    .page-center {
+      width: min(var(--page-max), 100%);
+      margin: 0 auto;
+    }
+
+    /* —— Inner pages —— */
+    .slide-tag {
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--lime);
+      margin-bottom: 12px;
+    }
+    .slide-title {
+      font-family: var(--font-serif);
+      font-size: clamp(28px, 4vw, 40px);
+      font-weight: 600;
+      margin-bottom: 12px;
+    }
+    .slide-lead {
+      color: var(--muted);
+      max-width: 52ch;
+      margin-bottom: 32px;
+    }
+
+    .block {
+      border-top: 1px solid var(--card-border);
+      padding: 24px 0;
+    }
+    .block:first-of-type { border-top: none; padding-top: 0; }
+    .block h3 {
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      margin-bottom: 8px;
+    }
+    .block p { color: var(--muted); max-width: 60ch; }
+
+    /* —— Experience（左 IP + 右经历，整屏横滑切换） —— */
+    .slide--experience {
+      overflow-y: hidden;
+    }
+    .slide--experience .slide-inner {
+      align-items: center;
+      justify-content: center;
+      min-height: calc(100dvh - var(--header-h) - 28px);
+      width: 100%;
+    }
+    .exp-page {
+      width: min(var(--page-max), 100%);
+      height: calc(100dvh - var(--header-h) - 36px);
+      max-height: 780px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: minmax(180px, 30%) auto minmax(0, 1fr);
+      align-items: stretch;
+      gap: clamp(16px, 2.6vw, 36px);
+      cursor: grab;
+    }
+    .exp-page.is-dragging {
+      cursor: grabbing;
+      user-select: none;
+    }
+    .exp-ip-slider,
+    .exp-slider {
+      position: relative;
+      min-width: 0;
+      min-height: 0;
+      overflow: hidden;
+      touch-action: pan-x;
+    }
+    .exp-slides {
+      display: flex;
+      flex-direction: column;
+      height: 100%;
+      transform: translate3d(0, calc(var(--exp-i, 0) * -100% + var(--exp-drag, 0px)), 0);
+      transition: transform 0.8s var(--ease);
+      will-change: transform;
+    }
+    .exp-page.is-dragging .exp-slides { transition: none; }
+    .exp-station,
+    .exp-ip {
+      flex: 0 0 100%;
+      min-width: 0;
+      min-height: 0;
+      height: 100%;
+      box-sizing: border-box;
+      padding: 6px 0;
+      display: flex;
+      flex-direction: column;
+      opacity: 0.3;
+      transition: opacity 0.6s var(--ease);
+    }
+    .exp-station.is-center,
+    .exp-ip.is-center { opacity: 1; }
+
+    .exp-ip {
+      position: relative;
+      justify-content: flex-end;
+    }
+    .exp-station-card { flex: 1 1 auto; }
+    .exp-ip-index {
+      position: absolute;
+      top: 2%;
+      left: 4%;
+      font-family: var(--font-serif);
+      font-size: clamp(64px, 9vw, 120px);
+      font-weight: 600;
+      line-height: 1;
+      color: rgba(255, 255, 255, 0.05);
+      pointer-events: none;
+    }
+    .exp-ip-glow {
+      position: absolute;
+      left: 50%;
+      bottom: 2%;
+      width: 80%;
+      height: 16%;
+      transform: translateX(-50%);
+      border-radius: 50%;
+      background: radial-gradient(ellipse at center, rgba(204, 255, 0, 0.2) 0%, transparent 70%);
+      filter: blur(10px);
+      pointer-events: none;
+    }
+    .exp-ip-figure {
+      position: relative;
+      z-index: 1;
+      flex: 1 1 auto;
+      min-height: 0;
+      margin: 0;
+      transform: translateY(16px) scale(0.96);
+      transition: transform 0.8s var(--ease);
+    }
+    .exp-ip.is-center .exp-ip-figure { transform: none; }
+    .exp-ip-figure img {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      object-position: bottom center;
+      filter: drop-shadow(0 18px 32px rgba(0, 0, 0, 0.55));
+      pointer-events: none;
+      -webkit-user-drag: none;
+    }
+
+    .exp-station-card {
+      min-width: 0;
+      min-height: 0;
+      display: flex;
+      flex-direction: column;
+      padding: clamp(16px, 2.2vw, 26px);
+      border-radius: 18px;
+      background: linear-gradient(145deg, rgba(204, 255, 0, 0.06) 0%, rgba(22, 22, 24, 0.86) 46%);
+      border: none;
+      backdrop-filter: blur(8px);
+    }
+    .exp-station-head {
+      flex: 0 0 auto;
+      margin-bottom: 12px;
+    }
+    .exp-station-top {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px 12px;
+      margin-bottom: 6px;
+    }
+    .exp-station-when {
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--lime);
+    }
+    .exp-station:not(.is-center) .exp-station-when { color: var(--muted); }
+    .exp-station-tag {
+      font-size: 9px;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      padding: 4px 10px;
+      border-radius: 999px;
+      border: 1px solid var(--card-border);
+      color: var(--muted);
+    }
+    .exp-station[data-type="edu"] .exp-station-tag { border-color: rgba(196, 161, 255, 0.35); color: #c4a1ff; }
+    .exp-station[data-type="intern"] .exp-station-tag { border-color: rgba(80, 200, 220, 0.35); color: #50c8dc; }
+    .exp-station[data-type="full"] .exp-station-tag { border-color: rgba(255, 180, 80, 0.35); color: #ffb450; }
+    .exp-station-titleline {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: baseline;
+      gap: 4px 8px;
+      margin: 0;
+      line-height: 1.35;
+    }
+    .exp-station-company {
+      font-size: clamp(15px, 1.5vw, 17px);
+      font-weight: 700;
+      margin: 0;
+      line-height: 1.35;
+      color: var(--text);
+    }
+    .exp-station-role {
+      font-size: 12px;
+      font-weight: 500;
+      margin: 0;
+      color: rgba(204, 255, 0, 0.82);
+    }
+    .exp-station-role::before {
+      content: "·";
+      margin-right: 6px;
+      color: rgba(255, 255, 255, 0.28);
+      font-weight: 400;
+    }
+    .exp-station-kpis {
+      flex: 0 0 auto;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin: 0 0 12px;
+      padding: 0;
+      list-style: none;
+    }
+    .exp-station-kpis li {
+      flex: 1 1 calc(33.333% - 10px);
+      min-width: 92px;
+      padding: 10px 12px;
+      border-radius: 12px;
+      background: rgba(255, 255, 255, 0.04);
+      font-size: 11px;
+      line-height: 1.4;
+      color: var(--muted);
+    }
+    .exp-station-kpis em {
+      display: block;
+      font-size: clamp(16px, 1.9vw, 20px);
+      font-weight: 700;
+      font-style: normal;
+      color: var(--lime);
+      margin-bottom: 2px;
+    }
+    .exp-station:not(.is-center) .exp-station-kpis em { color: rgba(204, 255, 0, 0.55); }
+    .exp-station-body {
+      flex: 1 1 auto;
+      min-height: 0;
+      display: flex;
+      flex-direction: column;
+    }
+    .exp-body-viewport {
+      position: relative;
+      flex: 1 1 auto;
+      min-height: 0;
+      overflow: hidden;
+      border-radius: 12px;
+      background: rgba(0, 0, 0, 0.18);
+      touch-action: pan-x;
+    }
+    .exp-body-viewport::before,
+    .exp-body-viewport::after {
+      content: "";
+      position: absolute;
+      left: 0;
+      right: 0;
+      height: 20%;
+      z-index: 2;
+      pointer-events: none;
+    }
+    .exp-body-viewport::before {
+      top: 0;
+      background: linear-gradient(180deg, rgba(22, 22, 24, 0.88) 0%, transparent);
+    }
+    .exp-body-viewport::after {
+      bottom: 0;
+      background: linear-gradient(0deg, rgba(22, 22, 24, 0.9) 0%, transparent);
+    }
+    .exp-body-progress {
+      position: absolute;
+      left: 10px;
+      right: 10px;
+      top: 8px;
+      height: 2px;
+      z-index: 3;
+      border-radius: 2px;
+      background: rgba(255, 255, 255, 0.08);
+      pointer-events: none;
+      opacity: 0;
+      transition: opacity 0.35s var(--ease);
+    }
+    .exp-station.is-center .exp-body-progress { opacity: 1; }
+    .exp-body-progress > span {
+      display: block;
+      height: 100%;
+      width: 100%;
+      border-radius: inherit;
+      background: linear-gradient(90deg, rgba(204, 255, 0, 0.35), var(--lime));
+      transform-origin: left center;
+      transform: scaleX(0);
+    }
+    .exp-body-inner {
+      padding: 18px 18px 28px;
+      will-change: transform;
+    }
+    .exp-body-item + .exp-body-item { margin-top: 18px; }
+    .exp-body-item h4 {
+      font-size: 13px;
+      font-weight: 700;
+      letter-spacing: 0.06em;
+      color: var(--text);
+      margin-bottom: 6px;
+    }
+    .exp-body-item p {
+      font-size: 13px;
+      line-height: 1.75;
+      color: var(--muted);
+    }
+    .exp-body-hint {
+      margin: 6px 0 0;
+      text-align: right;
+      font-size: 8px;
+      letter-spacing: 0.08em;
+      color: rgba(255, 255, 255, 0.2);
+      flex: 0 0 auto;
+    }
+    .exp-station:not(.is-center) .exp-body-hint { display: none; }
+    .exp-body-viewport.is-paused { opacity: 0.92; }
+    @media (prefers-reduced-motion: reduce) {
+      .exp-body-inner { will-change: auto; }
+      .exp-body-viewport {
+        overflow-y: auto;
+      }
+      .exp-body-viewport::before,
+      .exp-body-viewport::after { display: none; }
+      .exp-body-progress { display: none; }
+    }
+
+    .exp-controls {
+      width: 124px;
+      cursor: default;
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      justify-content: center;
+      gap: 22px;
+    }
+    .exp-controls .exp-arrow { margin-left: -12px; }
+    .exp-arrow {
+      flex: 0 0 auto;
+      width: 36px;
+      height: 36px;
+      border: none;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.06);
+      color: var(--text);
+      display: grid;
+      place-items: center;
+      cursor: pointer;
+      transition: background 0.25s var(--ease), color 0.25s var(--ease), opacity 0.25s var(--ease);
+    }
+    .exp-arrow:hover:not(:disabled) {
+      background: var(--lime);
+      color: #0a0a0a;
+    }
+    .exp-arrow:disabled {
+      opacity: 0.25;
+      cursor: default;
+    }
+    .exp-steps {
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      gap: clamp(36px, 8vh, 72px);
+    }
+    .exp-steps-line {
+      position: absolute;
+      left: 5px;
+      top: 8px;
+      bottom: 26px;
+      width: 1px;
+      background: rgba(255, 255, 255, 0.12);
+      pointer-events: none;
+    }
+    .exp-steps-line > span {
+      display: block;
+      width: 100%;
+      height: 100%;
+      background: var(--lime);
+      transform-origin: center top;
+      transform: scaleY(var(--exp-progress, 0));
+      transition: transform 0.8s var(--ease);
+    }
+    .exp-step {
+      appearance: none;
+      height: 34px;
+      padding: 0;
+      border: none;
+      background: none;
+      font: inherit;
+      color: var(--muted);
+      cursor: pointer;
+      text-align: left;
+      display: grid;
+      grid-template-columns: 11px auto;
+      grid-template-rows: auto auto;
+      column-gap: 12px;
+      row-gap: 3px;
+      align-content: start;
+    }
+    .exp-step-dot {
+      position: relative;
+      z-index: 1;
+      grid-row: 1 / 3;
+      align-self: start;
+      margin-top: 3px;
+      width: 11px;
+      height: 11px;
+      border-radius: 50%;
+      background: var(--bg);
+      box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.3);
+      transition: background 0.35s var(--ease), box-shadow 0.35s var(--ease);
+    }
+    .exp-step.is-done .exp-step-dot {
+      background: rgba(204, 255, 0, 0.5);
+      box-shadow: none;
+    }
+    .exp-step.is-current .exp-step-dot {
+      background: var(--lime);
+      box-shadow: 0 0 0 4px rgba(204, 255, 0, 0.18);
+    }
+    .exp-step-label {
+      font-size: 13px;
+      font-weight: 600;
+      line-height: 1.3;
+      transition: color 0.35s var(--ease);
+    }
+    .exp-step:hover .exp-step-label,
+    .exp-step.is-current .exp-step-label { color: var(--text); }
+    .exp-step-years {
+      font-size: 9px;
+      letter-spacing: 0.06em;
+      color: rgba(255, 255, 255, 0.32);
+      white-space: nowrap;
+    }
+
+    @media (max-width: 760px) {
+      .exp-page {
+        height: calc(100dvh - var(--header-h) - 28px);
+        max-height: none;
+        grid-template-columns: minmax(0, 1fr);
+        grid-template-rows: clamp(110px, 20vh, 170px) minmax(0, 1fr) auto;
+        gap: 10px;
+      }
+      .exp-ip-slider { grid-row: 1; }
+      .exp-slider { grid-row: 2; }
+      .exp-controls {
+        grid-row: 3;
+        width: auto;
+        flex-direction: row;
+        align-items: center;
+        justify-content: center;
+        gap: 14px;
+      }
+      .exp-controls .exp-arrow { margin-left: 0; }
+      .exp-steps {
+        flex-direction: row;
+        gap: 18px;
+      }
+      .exp-steps-line { display: none; }
+      .exp-step {
+        height: auto;
+        grid-template-columns: 11px auto;
+        column-gap: 6px;
+      }
+      .exp-ip-index { font-size: 48px; }
+      .exp-station-card { padding: 14px; }
+      .exp-station-kpis { gap: 6px; }
+      .exp-station-kpis li { min-width: 0; padding: 8px; }
+      .exp-step-years { display: none; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .exp-slides,
+      .exp-ip-figure,
+      .exp-station,
+      .exp-ip,
+      .exp-steps-line > span { transition: none; }
+    }
+
+    /* —— Works 作品集（扇形纸叠 + 居中 IP） —— */
+    .slide--works {
+      overflow: visible;
+    }
+    .slide--works .slide-inner {
+      align-items: center;
+      justify-content: center;
+      min-height: calc(100dvh - var(--header-h) - 20px);
+      height: calc(100dvh - var(--header-h) - 20px);
+      width: 100%;
+      padding-top: 0;
+    }
+    .works-theater {
+      position: relative;
+      width: min(980px, 100%);
+      height: 100%;
+      max-height: calc(100dvh - var(--header-h) - 28px);
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      margin: 0 auto;
+    }
+    .works-theater.is-detail-open .works-arena {
+      filter: blur(5px) saturate(0.75);
+      transform: scale(0.98);
+      pointer-events: none;
+    }
+    .works-arena {
+      flex: 1;
+      min-height: 0;
+      position: relative;
+      background: transparent;
+      overflow: visible;
+      transition: filter 0.45s var(--ease), transform 0.45s var(--ease);
+    }
+    .works-arena-hint {
+      position: absolute;
+      left: 14px;
+      bottom: 10px;
+      z-index: 4;
+      margin: 0;
+      font-size: 9px;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: rgba(255, 255, 255, 0.28);
+      pointer-events: none;
+    }
+
+    .works-ip {
+      position: absolute;
+      left: 50%;
+      top: 58%;
+      z-index: 5;
+      width: min(38%, 220px);
+      height: min(52%, 320px);
+      transform: translate(-50%, -50%);
+      pointer-events: none;
+    }
+    .works-ip-seat {
+      position: absolute;
+      left: 50%;
+      bottom: 4%;
+      width: 78%;
+      height: 14%;
+      transform: translateX(-50%);
+      border-radius: 50%;
+      background: radial-gradient(ellipse at center, rgba(204, 255, 0, 0.28) 0%, rgba(204, 255, 0, 0.04) 55%, transparent 72%);
+      filter: blur(6px);
+    }
+    .works-ip-figure {
+      --ip-tx: 0px;
+      --ip-ty: 0px;
+      --ip-r: 0deg;
+      position: absolute;
+      inset: 0;
+      transform: translate3d(var(--ip-tx), var(--ip-ty), 0) rotate(var(--ip-r));
+      transform-origin: 50% 92%;
+      transition: transform 0.08s linear;
+    }
+    .works-ip-figure img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      object-position: bottom center;
+      transform: scale(0.88) translateY(6%);
+      filter: drop-shadow(0 16px 28px rgba(0, 0, 0, 0.55));
+    }
+
+    .works-fan {
+      position: absolute;
+      inset: 0;
+      z-index: 6;
+    }
+    .works-stack-btn {
+      position: absolute;
+      overflow: visible;
+      width: clamp(92px, 11vw, 118px);
+      padding: 0;
+      border: none;
+      background: transparent;
+      cursor: pointer;
+      font-family: var(--font-ui);
+      color: var(--text);
+      transform: translate(-50%, -50%) rotate(var(--fan-r, 0deg));
+      transition: transform 0.35s var(--ease), z-index 0s;
+      z-index: 6;
+    }
+    .works-stack-btn[data-fan-i="0"] { left: 20%; top: 17%; --fan-r: -14deg; }
+    .works-stack-btn[data-fan-i="1"] { left: 50%; top: 11%; --fan-r: 0deg; }
+    .works-stack-btn[data-fan-i="2"] { left: 80%; top: 17%; --fan-r: 14deg; }
+    .works-stack-btn[data-fan-i="3"] { left: 9%; top: 36%; --fan-r: -22deg; }
+    .works-stack-btn[data-fan-i="4"] { left: 7%; top: 56%; --fan-r: -16deg; }
+    .works-stack-btn[data-fan-i="5"] { left: 13%; top: 76%; --fan-r: -10deg; }
+    .works-stack-btn[data-fan-i="6"] { left: 91%; top: 36%; --fan-r: 22deg; }
+    .works-stack-btn[data-fan-i="7"] { left: 93%; top: 56%; --fan-r: 16deg; }
+    .works-stack-btn[data-fan-i="8"] { left: 87%; top: 76%; --fan-r: 10deg; }
+
+    .works-stack-btn:hover,
+    .works-stack-btn.is-active {
+      z-index: 20;
+      transform: translate(-50%, -50%) rotate(var(--fan-r, 0deg)) scale(1.06);
+    }
+    .works-stack-btn:focus-visible {
+      outline: 2px solid rgba(204, 255, 0, 0.55);
+      outline-offset: 4px;
+    }
+
+    .works-orb-rings {
+      --orb-accent: rgba(204, 255, 0, 0.55);
+      position: relative;
+      display: block;
+      width: clamp(58px, 7.2vw, 76px);
+      height: clamp(58px, 7.2vw, 76px);
+      margin: 0 auto 8px;
+    }
+    .works-stack-btn[data-series="alarm"] .works-orb-rings { --orb-accent: #ffb450; }
+    .works-stack-btn[data-series="fish"] .works-orb-rings { --orb-accent: #50c8dc; }
+    .works-stack-btn[data-series="health"] .works-orb-rings { --orb-accent: #78dc8c; }
+
+    .works-orb-rings span {
+      position: absolute;
+      border-radius: 50%;
+      border: 1px solid rgba(255, 255, 255, 0.14);
+      box-sizing: border-box;
+      pointer-events: none;
+    }
+    .works-orb-rings span:nth-child(1) {
+      inset: -7px;
+      opacity: 0.38;
+      border-color: rgba(255, 255, 255, 0.1);
+    }
+    .works-orb-rings span:nth-child(2) {
+      inset: 0;
+      opacity: 0.72;
+      background: radial-gradient(circle at 35% 28%, rgba(255, 255, 255, 0.07) 0%, transparent 45%),
+        rgba(12, 12, 14, 0.85);
+      box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.06);
+    }
+    .works-orb-rings span:nth-child(3) {
+      inset: 11px;
+      border: 2px solid var(--orb-accent);
+      background: radial-gradient(circle at 50% 38%, color-mix(in srgb, var(--orb-accent) 22%, transparent) 0%, transparent 62%),
+        #0a0a0c;
+      box-shadow: 0 0 18px color-mix(in srgb, var(--orb-accent) 35%, transparent);
+    }
+    .works-orb-mark {
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      transform: translate(-50%, -50%);
+      z-index: 2;
+      font-size: clamp(11px, 1.4vw, 13px);
+      font-weight: 700;
+      letter-spacing: 0.04em;
+      color: rgba(255, 255, 255, 0.88);
+      pointer-events: none;
+    }
+    .works-stack-btn:hover .works-orb-rings span:nth-child(3),
+    .works-stack-btn.is-active .works-orb-rings span:nth-child(3) {
+      border-color: color-mix(in srgb, var(--orb-accent) 70%, #ccff00);
+      box-shadow: 0 0 22px color-mix(in srgb, var(--orb-accent) 45%, #ccff00 35%);
+    }
+    .works-stack-btn.is-active .works-orb-rings span:nth-child(1) {
+      opacity: 0.55;
+      border-color: rgba(204, 255, 0, 0.2);
+    }
+
+    .works-stack-preview {
+      position: absolute;
+      left: 50%;
+      bottom: calc(100% + 6px);
+      width: clamp(96px, 11vw, 118px);
+      aspect-ratio: 9 / 16;
+      transform: translateX(-50%) translateY(10px) scale(0.9);
+      opacity: 0;
+      pointer-events: none;
+      border-radius: 14px;
+      border: 1px solid rgba(204, 255, 0, 0.35);
+      background: #0d0d0f;
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.65), 0 0 0 1px rgba(204, 255, 0, 0.08);
+      overflow: hidden;
+      transition: opacity 0.32s var(--ease), transform 0.32s var(--ease);
+    }
+    .works-stack-preview img,
+    .works-stack-preview video {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+    .works-stack-preview-fallback {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      height: 100%;
+      padding: 8px;
+      text-align: center;
+      font-size: 9px;
+      color: var(--muted);
+      background:
+        radial-gradient(circle at 50% 30%, rgba(204, 255, 0, 0.12) 0%, transparent 55%),
+        #111114;
+    }
+    .works-stack-preview-fallback strong {
+      font-size: 10px;
+      color: var(--text);
+      font-weight: 600;
+      line-height: 1.3;
+    }
+    .works-stack-preview-inner {
+      display: flex;
+      width: 100%;
+      height: 100%;
+      align-items: stretch;
+      justify-content: center;
+    }
+    .works-stack-preview-inner .works-stack-preview-fallback {
+      width: 100%;
+    }
+    .works-stack-btn:hover .works-stack-preview,
+    .works-stack-btn.is-touch-preview .works-stack-preview {
+      opacity: 1;
+      transform: translateX(-50%) translateY(-4px) scale(1);
+    }
+
+    .works-stack-body {
+      display: block;
+      text-align: center;
+      padding: 0 2px;
+    }
+    .works-stack-name {
+      display: block;
+      font-size: 11px;
+      font-weight: 700;
+      line-height: 1.35;
+      letter-spacing: 0.02em;
+    }
+    .works-stack-kpi {
+      display: block;
+      margin-top: 4px;
+      font-size: 9px;
+      color: rgba(204, 255, 0, 0.75);
+      letter-spacing: 0.04em;
+    }
+
+    .works-detail-overlay {
+      position: absolute;
+      inset: 0;
+      z-index: 30;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: clamp(12px, 3vw, 24px);
+      pointer-events: none;
+      opacity: 0;
+      visibility: hidden;
+      transition: opacity 0.4s var(--ease), visibility 0.4s;
+    }
+    .works-theater.is-detail-open .works-detail-overlay {
+      pointer-events: auto;
+      opacity: 1;
+      visibility: visible;
+    }
+    .works-detail-backdrop {
+      position: absolute;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.62);
+      backdrop-filter: blur(8px);
+    }
+    .works-detail-panel {
+      position: relative;
+      z-index: 1;
+      width: min(540px, 100%);
+      max-height: min(88%, calc(100dvh - var(--header-h) - 48px));
+      overflow-y: auto;
+      border-radius: 22px;
+      border: 1px solid rgba(204, 255, 0, 0.28);
+      background: linear-gradient(165deg, #141416 0%, #0a0a0c 100%);
+      box-shadow: 0 28px 80px rgba(0, 0, 0, 0.65), 0 0 0 1px rgba(204, 255, 0, 0.1);
+      padding: clamp(16px, 3vw, 22px);
+      animation: worksDetailIn 0.45s var(--ease) both;
+    }
+    @keyframes worksDetailIn {
+      from { opacity: 0; transform: translateY(16px) scale(0.96); }
+      to { opacity: 1; transform: translateY(0) scale(1); }
+    }
+    .works-detail-close {
+      position: absolute;
+      top: 12px;
+      right: 12px;
+      width: 32px;
+      height: 32px;
+      border-radius: 999px;
+      border: 1px solid var(--card-border);
+      background: rgba(255, 255, 255, 0.04);
+      color: var(--muted);
+      font-size: 18px;
+      line-height: 1;
+      cursor: pointer;
+      font-family: var(--font-ui);
+    }
+    .works-detail-close:hover { color: var(--lime); border-color: rgba(204, 255, 0, 0.35); }
+    .works-detail-media {
+      position: relative;
+      border-radius: 16px;
+      border: 1px solid var(--card-border);
+      background: #0d0d0f;
+      aspect-ratio: 16 / 10;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+      margin-bottom: 14px;
+    }
+    .works-detail-media video {
+      max-width: 100%;
+      max-height: 100%;
+      object-fit: contain;
+      display: none;
+    }
+    .works-detail-media video.is-on { display: block; }
+    .works-detail-media-fallback {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
+      padding: 16px;
+      text-align: center;
+      font-size: 12px;
+      color: var(--muted);
+    }
+    .works-detail-media-fallback.is-hidden { display: none; }
+    .works-detail-media-fallback code {
+      font-size: 10px;
+      color: rgba(204, 255, 0, 0.7);
+    }
+    .works-detail-series {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      margin: 0 0 6px;
+    }
+    .works-detail-series i {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      font-style: normal;
+    }
+    .works-detail-series[data-series="alarm"] i { background: #ffb450; }
+    .works-detail-series[data-series="fish"] i { background: #50c8dc; }
+    .works-detail-series[data-series="health"] i { background: #78dc8c; }
+    .works-detail-title {
+      margin: 0 0 12px;
+      font-size: clamp(18px, 2.4vw, 22px);
+      font-weight: 700;
+      line-height: 1.3;
+      padding-right: 36px;
+    }
+    .works-detail-rows {
+      display: grid;
+      gap: 8px;
+      font-size: 12px;
+      line-height: 1.55;
+      margin: 0 0 12px;
+    }
+    .works-detail-rows dt { font-weight: 600; color: var(--text); display: inline; }
+    .works-detail-rows dt::after { content: " · "; color: var(--muted); font-weight: 400; }
+    .works-detail-rows dd { display: inline; color: var(--muted); margin: 0; }
+    .works-detail-kpis {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+    }
+    .works-detail-kpi {
+      font-size: 10px;
+      padding: 5px 10px;
+      border-radius: 999px;
+      border: 1px solid rgba(204, 255, 0, 0.22);
+      background: rgba(204, 255, 0, 0.05);
+      color: var(--muted);
+    }
+    .works-detail-kpi em { font-style: normal; color: var(--lime); font-weight: 700; }
+
+    @media (max-width: 720px) {
+      .works-stack-btn { width: 82px; }
+      .works-orb-rings { width: 52px; height: 52px; }
+      .works-orb-rings span:nth-child(3) { inset: 9px; }
+      .works-stack-name { font-size: 10px; }
+      .works-stack-preview { width: 88px; }
+      .works-ip { width: 42%; top: 62%; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .works-ip-figure { transition: none; }
+      .works-stack-btn { transition: none; }
+      .works-stack-preview { transition: none; }
+      .works-detail-panel { animation: none; }
+    }
+
+    /* —— Projects 项目介绍（左栏选题 · BAR 阅读，区别于 Works 胶片） —— */
+    .slide--projects {
+      overflow-y: hidden;
+    }
+    .slide--projects.is-proj-detail {
+      overflow-y: hidden;
+    }
+    .slide--projects .slide-inner {
+      align-items: center;
+      justify-content: center;
+      min-height: calc(100dvh - var(--header-h) - 24px);
+      width: 100%;
+    }
+    .proj-page {
+      width: min(980px, 100%);
+      margin: 0 auto;
+      position: relative;
+    }
+    .proj-hub {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: min(520px, 72vh);
+      transition: opacity 0.35s var(--ease), transform 0.35s var(--ease);
+    }
+    .proj-page.is-detail .proj-hub {
+      opacity: 0;
+      transform: scale(0.96);
+      pointer-events: none;
+      position: absolute;
+      inset: 0;
+      visibility: hidden;
+    }
+    .proj-ip-cards {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: clamp(14px, 2.8vw, 28px);
+      width: 100%;
+      align-items: stretch;
+    }
+    @media (max-width: 720px) {
+      .proj-ip-cards {
+        grid-template-columns: 1fr;
+        max-width: 280px;
+        margin: 0 auto;
+      }
+    }
+    .proj-ip-card {
+      --ip-accent: var(--lime);
+      appearance: none;
+      font-family: var(--font-ui);
+      cursor: pointer;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 20px;
+      background: linear-gradient(180deg, rgba(255, 255, 255, 0.04) 0%, rgba(10, 10, 12, 0.95) 100%);
+      color: var(--text);
+      padding: clamp(14px, 2vw, 18px) clamp(12px, 1.8vw, 16px) clamp(16px, 2.2vw, 20px);
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 12px;
+      box-shadow: 0 12px 36px rgba(0, 0, 0, 0.35);
+      transition: transform 0.35s var(--ease), box-shadow 0.35s var(--ease), border-color 0.35s var(--ease);
+    }
+    .proj-ip-card[data-series="material"] { --ip-accent: #c4a1ff; }
+    .proj-ip-card[data-series="alarm"] { --ip-accent: #ffb450; }
+    .proj-ip-card[data-series="fish"] { --ip-accent: #50c8dc; }
+    .proj-ip-card:hover {
+      transform: translateY(-6px);
+      border-color: color-mix(in srgb, var(--ip-accent) 50%, transparent);
+      box-shadow: 0 0 0 1px color-mix(in srgb, var(--ip-accent) 30%, transparent), 0 22px 48px rgba(0, 0, 0, 0.48);
+    }
+    .proj-ip-card.is-visited {
+      box-shadow: 0 0 0 1px rgba(204, 255, 0, 0.22), 0 14px 36px rgba(0, 0, 0, 0.4);
+    }
+    .proj-ip-card:focus-visible {
+      outline: 2px solid rgba(204, 255, 0, 0.55);
+      outline-offset: 4px;
+    }
+    .proj-ip-avatar {
+      position: relative;
+      width: clamp(108px, 14vw, 140px);
+      height: clamp(108px, 14vw, 140px);
+      border-radius: 50%;
+      overflow: hidden;
+      flex-shrink: 0;
+      border: 2px solid color-mix(in srgb, var(--ip-accent) 55%, rgba(255, 255, 255, 0.12));
+      box-shadow: 0 0 28px color-mix(in srgb, var(--ip-accent) 28%, transparent);
+      background: #0a0a0c;
+    }
+    .proj-ip-avatar img {
+      width: 118%;
+      height: 118%;
+      margin: -4% 0 0 -9%;
+      object-fit: cover;
+      object-position: top center;
+      pointer-events: none;
+    }
+    .proj-ip-card[data-series="alarm"] .proj-ip-avatar img {
+      margin-left: -14%;
+      object-position: 58% top;
+    }
+    .proj-ip-card[data-series="fish"] .proj-ip-avatar img {
+      margin-left: -6%;
+      object-position: center 18%;
+    }
+    .proj-ip-copy {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 5px;
+      width: 100%;
+    }
+    .proj-ip-num {
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 0.14em;
+      color: var(--ip-accent);
+    }
+    .proj-ip-title {
+      font-size: clamp(12px, 1.5vw, 14px);
+      font-weight: 700;
+      line-height: 1.35;
+    }
+    .proj-ip-role {
+      font-size: 10px;
+      color: var(--muted);
+      letter-spacing: 0.04em;
+    }
+    .proj-ip-kpi {
+      margin-top: 2px;
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--lime);
+    }
+    .proj-hub-hint {
+      margin-top: clamp(24px, 4vh, 36px);
+      font-size: 10px;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: rgba(255, 255, 255, 0.28);
+    }
+
+    .proj-detail-layout {
+      display: grid;
+      gap: clamp(16px, 2.5vw, 24px);
+      align-items: start;
+    }
+    @media (min-width: 820px) {
+      .proj-detail-layout {
+        grid-template-columns: minmax(168px, 220px) minmax(0, 1fr);
+      }
+    }
+    .proj-host {
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-end;
+      min-height: min(360px, 50vh);
+      padding: 8px 0 4px;
+    }
+    @media (min-width: 820px) {
+      .proj-host {
+        position: sticky;
+        top: 8px;
+        min-height: min(480px, 68vh);
+      }
+    }
+    .proj-host-glow {
+      position: absolute;
+      left: 50%;
+      bottom: 8%;
+      width: 88%;
+      height: 22%;
+      transform: translateX(-50%);
+      border-radius: 50%;
+      background: radial-gradient(ellipse at center, rgba(204, 255, 0, 0.2) 0%, transparent 70%);
+      filter: blur(10px);
+      pointer-events: none;
+    }
+    .proj-host-figure {
+      position: relative;
+      z-index: 1;
+      width: 100%;
+      max-height: min(420px, 62vh);
+      object-fit: contain;
+      object-position: bottom center;
+      filter: drop-shadow(0 18px 32px rgba(0, 0, 0, 0.55));
+    }
+    .proj-host-hint {
+      position: relative;
+      z-index: 2;
+      margin: 8px 0 0;
+      font-size: 9px;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: rgba(255, 255, 255, 0.32);
+      text-align: center;
+      line-height: 1.45;
+      max-width: 14em;
+    }
+    .proj-switcher {
+      position: relative;
+      z-index: 3;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 10px;
+      margin-top: 14px;
+      width: 100%;
+      padding: 0 4px;
+    }
+    .proj-switch {
+      --ip-accent: var(--lime);
+      appearance: none;
+      font-family: var(--font-ui);
+      border: none;
+      background: transparent;
+      padding: 0;
+      cursor: pointer;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 5px;
+      opacity: 0.65;
+      transition: opacity 0.28s var(--ease), transform 0.28s var(--ease);
+    }
+    .proj-switch[data-series="material"] { --ip-accent: #c4a1ff; }
+    .proj-switch[data-series="alarm"] { --ip-accent: #ffb450; }
+    .proj-switch[data-series="fish"] { --ip-accent: #50c8dc; }
+    .proj-switch:hover {
+      opacity: 1;
+      transform: translateY(-2px);
+    }
+    .proj-switch.is-current {
+      opacity: 1;
+      cursor: default;
+      transform: none;
+    }
+    .proj-switch:focus-visible {
+      outline: 2px solid rgba(204, 255, 0, 0.5);
+      outline-offset: 4px;
+      border-radius: 8px;
+    }
+    .proj-switch-avatar {
+      width: 46px;
+      height: 46px;
+      border-radius: 50%;
+      overflow: hidden;
+      border: 2px solid color-mix(in srgb, var(--ip-accent) 45%, rgba(255, 255, 255, 0.12));
+      background: #0a0a0c;
+      box-shadow: 0 6px 18px rgba(0, 0, 0, 0.35);
+      transition: border-color 0.28s var(--ease), box-shadow 0.28s var(--ease);
+    }
+    .proj-switch.is-current .proj-switch-avatar {
+      border-color: color-mix(in srgb, var(--ip-accent) 75%, #ccff00);
+      box-shadow: 0 0 0 1px rgba(204, 255, 0, 0.25), 0 8px 22px rgba(0, 0, 0, 0.4);
+    }
+    .proj-switch-avatar img {
+      width: 118%;
+      height: 118%;
+      margin: -4% 0 0 -9%;
+      object-fit: cover;
+      object-position: top center;
+      pointer-events: none;
+    }
+    .proj-switch[data-series="alarm"] .proj-switch-avatar img {
+      margin-left: -14%;
+      object-position: 58% top;
+    }
+    .proj-switch[data-series="fish"] .proj-switch-avatar img {
+      margin-left: -6%;
+      object-position: center 18%;
+    }
+    .proj-switch-label {
+      font-size: 9px;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      color: var(--ip-accent);
+    }
+    .proj-detail-main {
+      min-width: 0;
+      max-height: min(calc(100dvh - var(--header-h) - 32px), 100%);
+      overflow-y: auto;
+      overscroll-behavior-y: contain;
+      scrollbar-width: none;
+      -ms-overflow-style: none;
+    }
+    .proj-detail-main::-webkit-scrollbar { display: none; }
+
+    .proj-detail-view {
+      display: none;
+      padding-bottom: 24px;
+    }
+    .proj-page.is-detail .proj-detail-view {
+      display: block;
+      animation: projPanelIn 0.45s var(--ease) both;
+    }
+    .proj-stage {
+      position: relative;
+      display: flex;
+      align-items: center;
+      min-height: min(480px, 68vh);
+    }
+    .proj-panel {
+      display: none;
+      flex-direction: column;
+      gap: clamp(16px, 2vh, 20px);
+      width: 100%;
+      padding: clamp(8px, 1.2vw, 12px) 0;
+      background: transparent;
+    }
+    .proj-panel.is-active {
+      display: flex;
+      animation: projPanelIn 0.45s var(--ease) both;
+    }
+    @keyframes projPanelIn {
+      from { opacity: 0; transform: translateY(12px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    .proj-panel-top {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: baseline;
+      justify-content: space-between;
+      gap: 8px 16px;
+    }
+    .proj-panel-top h3 {
+      font-size: clamp(18px, 2.2vw, 22px);
+      font-weight: 700;
+    }
+    .proj-panel-role {
+      font-size: 11px;
+      padding: 5px 12px;
+      border-radius: 999px;
+      border: 1px solid var(--card-border);
+      color: var(--lime);
+      font-weight: 600;
+    }
+    .proj-panel-body {
+      display: grid;
+      gap: clamp(16px, 2.5vw, 22px);
+      align-items: start;
+    }
+    @media (min-width: 720px) {
+      .proj-panel-body {
+        grid-template-columns: minmax(0, 1fr) minmax(200px, 34%);
+      }
+    }
+    .proj-media {
+      position: relative;
+      border-radius: 14px;
+      overflow: hidden;
+      background:
+        radial-gradient(ellipse 80% 60% at 50% 30%, rgba(204, 255, 0, 0.05) 0%, transparent 55%),
+        #0c0c0e;
+      border: 1px solid var(--card-border);
+      min-height: min(240px, 36vh);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    @media (min-width: 720px) {
+      .proj-media {
+        min-height: min(320px, 42vh);
+      }
+    }
+    .proj-media video {
+      width: 100%;
+      height: 100%;
+      max-height: min(42vh, 360px);
+      object-fit: contain;
+      display: none;
+    }
+    .proj-media video.is-on { display: block; }
+    .proj-media-placeholder {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
+      padding: 20px;
+      font-size: 11px;
+      color: var(--muted);
+      text-align: center;
+    }
+    .proj-media-placeholder.is-hidden { display: none; }
+    .proj-media-placeholder code {
+      font-size: 10px;
+      color: rgba(204, 255, 0, 0.65);
+    }
+    .proj-bar {
+      display: grid;
+      gap: 14px;
+      align-content: start;
+    }
+    .proj-bar-block h4 {
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--lime);
+      margin-bottom: 8px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .proj-bar-block h4::before {
+      content: "";
+      width: 6px;
+      height: 6px;
+      border-radius: 1px;
+      background: var(--lime);
+      transform: rotate(45deg);
+    }
+    .proj-bar-block p {
+      font-size: 13px;
+      color: var(--muted);
+      line-height: 1.75;
+    }
+    .proj-bar-block ul {
+      list-style: none;
+      font-size: 13px;
+      color: var(--muted);
+      line-height: 1.65;
+    }
+    .proj-bar-block li {
+      position: relative;
+      padding-left: 14px;
+      margin-bottom: 6px;
+    }
+    .proj-bar-block li::before {
+      content: "—";
+      position: absolute;
+      left: 0;
+      color: rgba(204, 255, 0, 0.5);
+      font-size: 11px;
+    }
+    .proj-metrics {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 4px;
+    }
+    .proj-metric {
+      font-size: 11px;
+      padding: 8px 12px;
+      border-radius: 10px;
+      background: rgba(204, 255, 0, 0.07);
+      border: 1px solid rgba(204, 255, 0, 0.2);
+      color: var(--text);
+    }
+    .proj-metric strong {
+      color: var(--lime);
+      font-weight: 800;
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .proj-panel.is-active { animation: none; }
+    }
+
+    .manifesto {
+      font-family: var(--font-serif);
+      font-size: clamp(20px, 2.8vw, 26px);
+      line-height: 1.65;
+      max-width: 28ch;
+    }
+    .manifesto em { font-style: normal; color: var(--lime); }
+
+    .contact-links {
+      font-size: clamp(20px, 3vw, 28px);
+      margin-bottom: 24px;
+    }
+    .contact-links a {
+      color: var(--text);
+      text-decoration: none;
+      border-bottom: 1px solid var(--card-border);
+    }
+    .contact-links a:hover { border-color: var(--lime); color: var(--lime); }
+
+    .contact-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 16px 28px;
+      margin-top: 20px;
+    }
+    .contact-row a {
+      color: var(--muted);
+      text-decoration: none;
+      font-size: 14px;
+    }
+    .contact-row a:hover { color: var(--lime); }
+
+    @media (max-width: 720px) {
+      .site-nav a:nth-child(n+5) { display: none; }
+      .site-brand-meta { display: none; }
+      .scroll-hint { display: none; }
+      .avatar-caption { font-size: 10px; padding: 8px 12px; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .track { scroll-behavior: auto; }
+    }
+  </style>
+</head>
+<body>
+  <div class="progress-line" id="progressLine" aria-hidden="true"></div>
+
+  <header class="site-header">
+    <div class="site-brand">
+      <span>Liu Min</span>
+      <span class="site-brand-sep" aria-hidden="true">|</span>
+      <span class="site-brand-meta">处女座 · INTP</span>
+    </div>
+    <nav class="site-nav" id="siteNav" aria-label="主菜单">
+      <a href="#home" class="nav-link is-active" data-index="0">Home</a>
+      <a href="#experience" class="nav-link" data-index="1">Experience</a>
+      <a href="#works" class="nav-link" data-index="2">Works</a>
+      <a href="#cases" class="nav-link" data-index="3">Projects</a>
+      <a href="#ai-lab" class="nav-link" data-index="4">AI Lab</a>
+      <a href="#life" class="nav-link" data-index="5">Life</a>
+    </nav>
+  </header>
+
+  <p class="page-indicator" id="pageIndicator" aria-live="polite">01 — Home</p>
+  <p class="scroll-hint" aria-hidden="true">← Swipe →</p>
+
+  <div class="track" id="track">
+    <!-- HOME -->
+    <section class="slide slide--home" id="home" data-index="0" aria-label="Home">
+      <div class="slide-inner">
+        <div class="home-center">
+        <div class="home-grid">
+          <div class="home-copy">
+            <p class="home-hello">Hello / 你好</p>
+            <h1 class="home-title">我是刘敏<br />产品经理</h1>
+            <p class="home-sub">用户体验 · AI应用 · 产品增长</p>
+            <p class="home-tag">
+              <span aria-hidden="true">🎓</span>
+              软件工程专业
+            </p>
+            <ul class="home-stats">
+              <li><strong>60+</strong><span>产品实践</span></li>
+              <li><strong>20+</strong><span>AI 开发项目</span></li>
+              <li><strong>0→1</strong><span>产品落地</span></li>
+            </ul>
+            <button type="button" class="home-cta" data-goto="2">查看我的作品 →</button>
+          </div>
+          <div class="home-visual" id="homeVisual">
+            <div class="avatar-wrap">
+              <div class="avatar-ring">
+                <div class="avatar-stack" id="avatarStack">
+                  <img class="is-show" src="assets/images/character-01-front.png" width="800" height="1200" alt="刘敏 IP 形象" data-view="front" decoding="async" />
+                  <img src="assets/images/character-01-front.png" width="800" height="1200" alt="" aria-hidden="true" data-view="side" decoding="async" />
+                  <img src="assets/images/character-01-front.png" width="800" height="1200" alt="" aria-hidden="true" data-view="back" decoding="async" />
+                </div>
+              </div>
+              <p class="avatar-caption">数据分析 · Vibe Coding · 3 年产品经验</p>
+            </div>
+          </div>
+        </div>
+        <div class="home-features">
+          <article class="skill-card skill-card--product">
+            <h3>产品开发</h3>
+            <p class="skill-card-en">Product</p>
+            <span class="skill-card-go" aria-hidden="true">→</span>
+            <svg class="skill-card-deco" viewBox="0 0 80 80" aria-hidden="true">
+              <rect x="18" y="38" width="22" height="22" rx="4" fill="#ccff00"/>
+              <rect x="32" y="24" width="22" height="22" rx="4" fill="#1a1a1a"/>
+              <rect x="46" y="10" width="18" height="18" rx="4" fill="#fff" stroke="#ddd"/>
+            </svg>
+          </article>
+          <article class="skill-card skill-card--data">
+            <h3>数据分析</h3>
+            <p class="skill-card-en">Data</p>
+            <span class="skill-card-go" aria-hidden="true">→</span>
+            <svg class="skill-card-deco" viewBox="0 0 80 80" aria-hidden="true">
+              <rect x="14" y="42" width="12" height="28" rx="3" fill="#ccff00"/>
+              <rect x="32" y="28" width="12" height="42" rx="3" fill="#1a1a1a"/>
+              <rect x="50" y="18" width="12" height="52" rx="3" fill="#fff" stroke="#ccc"/>
+            </svg>
+          </article>
+          <article class="skill-card skill-card--design">
+            <h3>UI/UX 设计</h3>
+            <p class="skill-card-en">Design</p>
+            <span class="skill-card-go" aria-hidden="true">→</span>
+            <svg class="skill-card-deco" viewBox="0 0 80 80" aria-hidden="true">
+              <path d="M52 8L68 52L12 68L28 24Z" fill="#ccff00"/>
+              <path d="M48 14L60 48L20 58L32 28Z" fill="#1a1a1a" opacity="0.85"/>
+            </svg>
+          </article>
+          <article class="skill-card skill-card--ai">
+            <h3>AI 技术理解</h3>
+            <p class="skill-card-en">AI Tech</p>
+            <span class="skill-card-go" aria-hidden="true">→</span>
+            <svg class="skill-card-deco" viewBox="0 0 80 80" aria-hidden="true">
+              <circle cx="44" cy="36" r="22" fill="#fff" stroke="#ddd"/>
+              <rect x="32" y="8" width="8" height="12" rx="4" fill="#ccff00"/>
+              <rect x="48" y="8" width="8" height="12" rx="4" fill="#ccff00"/>
+              <circle cx="38" cy="34" r="3" fill="#1a1a1a"/>
+              <circle cx="50" cy="34" r="3" fill="#1a1a1a"/>
+            </svg>
+          </article>
+          <article class="skill-card skill-card--flow">
+            <h3>工作流搭建</h3>
+            <p class="skill-card-en">Workflow</p>
+            <span class="skill-card-go" aria-hidden="true">→</span>
+            <svg class="skill-card-deco" viewBox="0 0 80 80" aria-hidden="true">
+              <rect x="20" y="20" width="40" height="28" rx="6" fill="#1a1a1a"/>
+              <rect x="26" y="26" width="28" height="8" rx="2" fill="#ccff00"/>
+              <rect x="26" y="38" width="20" height="6" rx="2" fill="#fff"/>
+            </svg>
+          </article>
+        </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- EXPERIENCE -->
+    <section class="slide slide--page slide--experience" id="experience" data-index="1" aria-label="Experience">
+      <div class="slide-inner">
+        <div class="exp-page" id="expPage">
+          <div class="exp-ip-slider" aria-hidden="true">
+            <div class="exp-slides" id="expIpSlides">
+              <div class="exp-ip">
+                <span class="exp-ip-index">01</span>
+                <div class="exp-ip-glow"></div>
+                <figure class="exp-ip-figure">
+                  <img src="assets/images/character-01-front.png" width="800" height="1200" alt="" decoding="async" />
+                </figure>
+              </div>
+              <div class="exp-ip">
+                <span class="exp-ip-index">02</span>
+                <div class="exp-ip-glow"></div>
+                <figure class="exp-ip-figure">
+                  <img src="assets/images/character-01-front.png" width="800" height="1200" alt="" decoding="async" />
+                </figure>
+              </div>
+              <div class="exp-ip">
+                <span class="exp-ip-index">03</span>
+                <div class="exp-ip-glow"></div>
+                <figure class="exp-ip-figure">
+                  <img src="assets/images/character-01-front.png" width="800" height="1200" alt="" decoding="async" />
+                </figure>
+              </div>
+            </div>
+          </div>
+
+          <div class="exp-controls">
+            <button type="button" class="exp-arrow" id="expPrev" aria-label="上一段经历">
+              <svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path d="M6 15l6-6 6 6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" /></svg>
+            </button>
+            <div class="exp-steps" id="expSteps" role="tablist" aria-orientation="vertical" aria-label="经历阶段">
+              <span class="exp-steps-line" aria-hidden="true"><span></span></span>
+              <button type="button" class="exp-step" role="tab"><span class="exp-step-dot"></span><span class="exp-step-label">大学</span><span class="exp-step-years">2019 — 2023</span></button>
+              <button type="button" class="exp-step" role="tab"><span class="exp-step-dot"></span><span class="exp-step-label">实习</span><span class="exp-step-years">2023.05 — 2023.10</span></button>
+              <button type="button" class="exp-step" role="tab"><span class="exp-step-dot"></span><span class="exp-step-label">正式工作</span><span class="exp-step-years">2024.10 — 至今</span></button>
+            </div>
+            <button type="button" class="exp-arrow" id="expNext" aria-label="下一段经历">
+              <svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path d="M6 9l6 6 6-6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" /></svg>
+            </button>
+          </div>
+
+          <div class="exp-slider" id="expSlider" aria-roledescription="carousel" aria-label="个人履历">
+            <div class="exp-slides" id="expSlides">
+                <article class="exp-station" data-exp-i="0" data-type="edu" aria-label="大学 2019 — 2023">
+                  <div class="exp-station-card">
+                    <div class="exp-station-head">
+                      <div class="exp-station-top">
+                        <time class="exp-station-when" datetime="2019/2023">2019 — 2023</time>
+                        <span class="exp-station-tag">大学</span>
+                      </div>
+                      <p class="exp-station-titleline">
+                        <span class="exp-station-company">西南科技大学</span>
+                        <span class="exp-station-role">软件工程 · 本科</span>
+                      </p>
+                    </div>
+                    <ul class="exp-station-kpis" aria-label="要点">
+                      <li><em>4 年</em>本科制</li>
+                      <li><em>工科</em>软件工程</li>
+                      <li><em>基础</em>产品 &amp; 技术理解</li>
+                    </ul>
+                    <div class="exp-station-body">
+                      <div class="exp-body-viewport" data-exp-body tabindex="0" aria-label="大学经历详情">
+                        <div class="exp-body-progress" aria-hidden="true"><span class="exp-body-bar"></span></div>
+                        <div class="exp-body-inner">
+                          <div class="exp-body-item">
+                            <h4>课程体系</h4>
+                            <p>软件工程、数据结构、数据库、软件项目管理等系统训练，建立从需求到交付的完整工程思维。</p>
+                          </div>
+                          <div class="exp-body-item">
+                            <h4>能力沉淀</h4>
+                            <p>为后续 C 端产品、数据分析与 AI 应用实践打下技术理解基础，能与研发高效协作。</p>
+                          </div>
+                          <div class="exp-body-item">
+                            <h4>实践方向</h4>
+                            <p>关注互联网产品与用户价值，逐步明确产品管理 + 运营增长的职业路径。</p>
+                          </div>
+                        </div>
+                      </div>
+                      <p class="exp-body-hint">悬停或按住暂停 · 滚轮可手动浏览</p>
+                    </div>
+                  </div>
+                </article>
+
+                <article class="exp-station" data-exp-i="1" data-type="intern" aria-label="实习 2023.05 — 2023.10">
+                  <div class="exp-station-card">
+                    <div class="exp-station-head">
+                      <div class="exp-station-top">
+                        <time class="exp-station-when" datetime="2023-05/2023-10">2023.05 — 2023.10</time>
+                        <span class="exp-station-tag">实习</span>
+                      </div>
+                      <p class="exp-station-titleline">
+                        <span class="exp-station-company">成都莱嗯信息技术有限公司（外企）</span>
+                        <span class="exp-station-role">产品助理 · 实习</span>
+                      </p>
+                    </div>
+                    <ul class="exp-station-kpis" aria-label="要点">
+                      <li><em>5 个月</em>产品实习</li>
+                      <li><em>2 个</em>版本迭代</li>
+                      <li><em>多份</em>竞品 &amp; 市场报告</li>
+                    </ul>
+                    <div class="exp-station-body">
+                      <div class="exp-body-viewport" data-exp-body tabindex="0" aria-label="实习经历详情">
+                        <div class="exp-body-progress" aria-hidden="true"><span class="exp-body-bar"></span></div>
+                        <div class="exp-body-inner">
+                          <div class="exp-body-item">
+                            <h4>需求与调研</h4>
+                            <p>竞品分析与市场调研，输出产品建议与功能清单，支持版本规划与优先级讨论。</p>
+                          </div>
+                          <div class="exp-body-item">
+                            <h4>设计与协同</h4>
+                            <p>协助 UI 优化与交互细节，跟进设计还原与验收；使用 Axure / Figma 维护原型与需求文档。</p>
+                          </div>
+                          <div class="exp-body-item">
+                            <h4>用户反馈</h4>
+                            <p>整理用户反馈并推动问题闭环，参与 2 个版本迭代交付，提升需求到设计协同效率。</p>
+                          </div>
+                          <div class="exp-body-item">
+                            <h4>实习收获</h4>
+                            <p>独立输出多份竞品与市场分析报告，形成从调研到原型落地的完整产品助理工作流。</p>
+                          </div>
+                        </div>
+                      </div>
+                      <p class="exp-body-hint">悬停或按住暂停 · 滚轮可手动浏览</p>
+                    </div>
+                  </div>
+                </article>
+
+                <article class="exp-station" data-exp-i="2" data-type="full" aria-label="正式工作 2024.10 — 至今">
+                  <div class="exp-station-card">
+                    <div class="exp-station-head">
+                      <div class="exp-station-top">
+                        <time class="exp-station-when" datetime="2024-10">2024.10 — 至今</time>
+                        <span class="exp-station-tag">正式工作</span>
+                      </div>
+                      <p class="exp-station-titleline">
+                        <span class="exp-station-company">成都琢森湖科技有限公司</span>
+                        <span class="exp-station-role">产品经理 / 运营 · 全职</span>
+                      </p>
+                    </div>
+                    <ul class="exp-station-kpis" aria-label="要点">
+                      <li><em>60+</em>App 运营迭代</li>
+                      <li><em>~80%</em>安卓市场上架率</li>
+                      <li><em>+150%</em>广告总收益</li>
+                    </ul>
+                    <div class="exp-station-body">
+                      <div class="exp-body-viewport" data-exp-body tabindex="0" aria-label="工作经历详情">
+                        <div class="exp-body-progress" aria-hidden="true"><span class="exp-body-bar"></span></div>
+                        <div class="exp-body-inner">
+                          <div class="exp-body-item">
+                            <h4>ASO 增长运营</h4>
+                            <p>负责 60+ App 运营，跟踪竞品动态、关键词与评论，优化商店素材与上架策略；累计 200+ 版本迭代，9 大安卓市场上架率约 80%，广告总收益提升约 150%。</p>
+                          </div>
+                          <div class="exp-body-item">
+                            <h4>数据驱动策略</h4>
+                            <p>跟踪用户行为埋点、广告 ARPU 与付费转化，搭建月度 / 季度数据看板，分析趋势并反哺功能迭代与增长实验优先级。</p>
+                          </div>
+                          <div class="exp-body-item">
+                            <h4>AI 应用开发</h4>
+                            <p>基于 Cursor 等 AI 工具完成 20+ App 从需求到上架的全流程，具备独立产品化开发能力，最快 0→1 仅需 1 天。</p>
+                          </div>
+                          <div class="exp-body-item">
+                            <h4>产品方案设计</h4>
+                            <p>负责需求拆解、逻辑梳理、交互流程与原型输出；累计 5+ 核心产品 PRD、10+ 高保真原型与 1000+ 视觉素材。</p>
+                          </div>
+                          <div class="exp-body-item">
+                            <h4>AI 功能落地</h4>
+                            <p>探索闹钟、健康、钓鱼等垂直场景的 AI 能力，率先将 AI 功能嵌入公司产品，并完成鸿蒙「小艺」智能体对接验证。</p>
+                          </div>
+                        </div>
+                      </div>
+                      <p class="exp-body-hint">悬停或按住暂停 · 滚轮可手动浏览</p>
+                    </div>
+                  </div>
+                </article>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- WORKS -->
+    <section class="slide slide--page slide--works" id="works" data-index="2" aria-label="Works">
+      <div class="slide-inner">
+        <div class="works-theater" id="worksTheater">
+          <div class="works-arena" id="worksArena" tabindex="0">
+            <p class="works-arena-hint">悬停预览 · 点击详情 · Esc 关闭</p>
+            <div class="works-ip" id="worksIp" aria-hidden="true">
+              <div class="works-ip-seat"></div>
+              <div class="works-ip-figure" id="worksIpFigure">
+                <img src="assets/images/character-01-front.png" width="800" height="1200" alt="" decoding="async" />
+              </div>
+            </div>
+            <div class="works-fan" id="worksFan" role="list">
+              <button type="button" class="works-stack-btn" role="listitem" data-fan-i="0" data-works-id="alarm-a" data-series="alarm" data-series-label="闹钟系列"
+                data-title="闹钟 App A（占位）" data-scene="强提醒与多场景闹钟"
+                data-role="产品规划 · 付费设计 · 增长实验" data-highlight="验证订阅与功能付费模型，提升留存与转化"
+                data-kpis="+130% 增长|7 天 0→1|100% 付费覆盖" data-video="" data-poster="" aria-label="闹钟 App A">
+                <span class="works-orb-rings" aria-hidden="true"><span></span><span></span><span></span><span class="works-orb-mark">A</span></span>
+                <span class="works-stack-preview" aria-hidden="true"><span class="works-stack-preview-inner"></span></span>
+                <span class="works-stack-body"><span class="works-stack-name">闹钟 App A</span><span class="works-stack-kpi">+130% 增长</span></span>
+              </button>
+              <button type="button" class="works-stack-btn" role="listitem" data-fan-i="1" data-works-id="alarm-b" data-series="alarm" data-series-label="闹钟系列"
+                data-title="闹钟 App B（占位）" data-scene="海外版本与 ASO"
+                data-role="上架策略 · 素材迭代" data-highlight="优化关键词与商店转化路径"
+                data-kpis="80% 上架率|+150% 广告收益" data-video="" data-poster="" aria-label="闹钟 App B">
+                <span class="works-orb-rings" aria-hidden="true"><span></span><span></span><span></span><span class="works-orb-mark">B</span></span>
+                <span class="works-stack-preview" aria-hidden="true"><span class="works-stack-preview-inner"></span></span>
+                <span class="works-stack-body"><span class="works-stack-name">闹钟 App B</span><span class="works-stack-kpi">80% 上架率</span></span>
+              </button>
+              <button type="button" class="works-stack-btn" role="listitem" data-fan-i="2" data-works-id="alarm-c" data-series="alarm" data-series-label="闹钟系列"
+                data-title="闹钟 App C（占位）" data-scene="小组件与系统联动"
+                data-role="功能拆解 · 体验优化" data-highlight="强化唤醒链路与通知触达"
+                data-kpis="留存提升|多机型适配" data-video="" data-poster="" aria-label="闹钟 App C">
+                <span class="works-orb-rings" aria-hidden="true"><span></span><span></span><span></span><span class="works-orb-mark">C</span></span>
+                <span class="works-stack-preview" aria-hidden="true"><span class="works-stack-preview-inner"></span></span>
+                <span class="works-stack-body"><span class="works-stack-name">闹钟 App C</span><span class="works-stack-kpi">留存提升</span></span>
+              </button>
+              <button type="button" class="works-stack-btn" role="listitem" data-fan-i="3" data-works-id="fish-a" data-series="fish" data-series-label="钓鱼系列"
+                data-title="钓鱼 App A（占位）" data-scene="钓点与天气工具"
+                data-role="场景挖掘 · AI 功能规划" data-highlight="垂直信息聚合与功能渗透"
+                data-kpis="+89% 增长|50+ AI 功能" data-video="" data-poster="" aria-label="钓鱼 App A">
+                <span class="works-orb-rings" aria-hidden="true"><span></span><span></span><span></span><span class="works-orb-mark">A</span></span>
+                <span class="works-stack-preview" aria-hidden="true"><span class="works-stack-preview-inner"></span></span>
+                <span class="works-stack-body"><span class="works-stack-name">钓鱼 App A</span><span class="works-stack-kpi">+89% 增长</span></span>
+              </button>
+              <button type="button" class="works-stack-btn" role="listitem" data-fan-i="4" data-works-id="fish-b" data-series="fish" data-series-label="钓鱼系列"
+                data-title="钓鱼 App B（占位）" data-scene="智能体问答"
+                data-role="Agent 边界验证" data-highlight="工具 + 对话式辅助决策"
+                data-kpis="Agent 场景|留存实验" data-video="" data-poster="" aria-label="钓鱼 App B">
+                <span class="works-orb-rings" aria-hidden="true"><span></span><span></span><span></span><span class="works-orb-mark">B</span></span>
+                <span class="works-stack-preview" aria-hidden="true"><span class="works-stack-preview-inner"></span></span>
+                <span class="works-stack-body"><span class="works-stack-name">钓鱼 App B</span><span class="works-stack-kpi">Agent 场景</span></span>
+              </button>
+              <button type="button" class="works-stack-btn" role="listitem" data-fan-i="5" data-works-id="fish-c" data-series="fish" data-series-label="钓鱼系列"
+                data-title="钓鱼 App C（占位）" data-scene="社区与内容"
+                data-role="增长与内容策略" data-highlight="UGC 与工具联动"
+                data-kpis="内容渗透|分享链路" data-video="" data-poster="" aria-label="钓鱼 App C">
+                <span class="works-orb-rings" aria-hidden="true"><span></span><span></span><span></span><span class="works-orb-mark">C</span></span>
+                <span class="works-stack-preview" aria-hidden="true"><span class="works-stack-preview-inner"></span></span>
+                <span class="works-stack-body"><span class="works-stack-name">钓鱼 App C</span><span class="works-stack-kpi">内容渗透</span></span>
+              </button>
+              <button type="button" class="works-stack-btn" role="listitem" data-fan-i="6" data-works-id="health-a" data-series="health" data-series-label="健康系列"
+                data-title="健康 App A（占位）" data-scene="习惯打卡与提醒"
+                data-role="功能设计 · 通知策略" data-highlight="低打扰、高触达的健康提醒链路"
+                data-kpis="留存优化|提醒到达率" data-video="" data-poster="" aria-label="健康 App A">
+                <span class="works-orb-rings" aria-hidden="true"><span></span><span></span><span></span><span class="works-orb-mark">A</span></span>
+                <span class="works-stack-preview" aria-hidden="true"><span class="works-stack-preview-inner"></span></span>
+                <span class="works-stack-body"><span class="works-stack-name">健康 App A</span><span class="works-stack-kpi">留存优化</span></span>
+              </button>
+              <button type="button" class="works-stack-btn" role="listitem" data-fan-i="7" data-works-id="health-b" data-series="health" data-series-label="健康系列"
+                data-title="健康 App B（占位）" data-scene="数据看板"
+                data-role="指标定义 · 可视化" data-highlight="核心行为数据一目了然"
+                data-kpis="行为埋点|看板迭代" data-video="" data-poster="" aria-label="健康 App B">
+                <span class="works-orb-rings" aria-hidden="true"><span></span><span></span><span></span><span class="works-orb-mark">B</span></span>
+                <span class="works-stack-preview" aria-hidden="true"><span class="works-stack-preview-inner"></span></span>
+                <span class="works-stack-body"><span class="works-stack-name">健康 App B</span><span class="works-stack-kpi">行为埋点</span></span>
+              </button>
+              <button type="button" class="works-stack-btn" role="listitem" data-fan-i="8" data-works-id="health-c" data-series="health" data-series-label="健康系列"
+                data-title="健康 App C（占位）" data-scene="订阅与会员"
+                data-role="商业化设计" data-highlight="权益分层与转化漏斗"
+                data-kpis="付费转化|ARPU" data-video="" data-poster="" aria-label="健康 App C">
+                <span class="works-orb-rings" aria-hidden="true"><span></span><span></span><span></span><span class="works-orb-mark">C</span></span>
+                <span class="works-stack-preview" aria-hidden="true"><span class="works-stack-preview-inner"></span></span>
+                <span class="works-stack-body"><span class="works-stack-name">健康 App C</span><span class="works-stack-kpi">付费转化</span></span>
+              </button>
+            </div>
+          </div>
+
+          <div class="works-detail-overlay" id="worksDetailOverlay" aria-hidden="true">
+            <div class="works-detail-backdrop" id="worksDetailBackdrop"></div>
+            <article class="works-detail-panel" id="worksDetailPanel" role="dialog" aria-modal="true" aria-labelledby="worksDetailTitle">
+              <button type="button" class="works-detail-close" id="worksDetailClose" aria-label="关闭">×</button>
+              <div class="works-detail-media" id="worksDetailMedia">
+                <video id="worksDetailVideo" muted loop playsinline preload="metadata"></video>
+                <div class="works-detail-media-fallback" id="worksDetailFallback">
+                  <span>演示视频占位</span>
+                  <code id="worksDetailVideoHint">works/your-demo.mp4</code>
+                </div>
+              </div>
+              <p class="works-detail-series" id="worksDetailSeries" data-series="alarm"><i aria-hidden="true"></i> 闹钟系列</p>
+              <h3 class="works-detail-title" id="worksDetailTitle">闹钟 App A（占位）</h3>
+              <dl class="works-detail-rows">
+                <div><dt>场景</dt><dd id="worksDetailScene"></dd></div>
+                <div><dt>职责</dt><dd id="worksDetailRole"></dd></div>
+                <div><dt>重点</dt><dd id="worksDetailHighlight"></dd></div>
+              </dl>
+              <div class="works-detail-kpis" id="worksDetailKpis"></div>
+            </article>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- PROJECTS 项目介绍 -->
+    <section class="slide slide--page slide--projects" id="cases" data-index="3" aria-label="Projects">
+      <div class="slide-inner">
+        <div class="proj-page" id="projPage">
+          <div class="proj-hub" id="projHub">
+            <div class="proj-ip-cards" role="list">
+              <button type="button" class="proj-ip-card" role="listitem" data-proj-index="0" data-series="material" data-ip-src="assets/images/character-01-front.png" aria-label="APP 素材平台">
+                <span class="proj-ip-avatar"><img src="assets/images/character-01-front.png" width="800" height="1200" alt="" decoding="async" /></span>
+                <span class="proj-ip-copy">
+                  <span class="proj-ip-num">01</span>
+                  <span class="proj-ip-title">APP 素材平台</span>
+                  <span class="proj-ip-role">产品支持</span>
+                  <span class="proj-ip-kpi">3h → 30min</span>
+                </span>
+              </button>
+              <button type="button" class="proj-ip-card" role="listitem" data-proj-index="1" data-series="alarm" data-ip-src="assets/images/character-01-front.png" aria-label="闹钟 App 系列">
+                <span class="proj-ip-avatar"><img src="assets/images/character-01-front.png" width="800" height="1200" alt="" decoding="async" /></span>
+                <span class="proj-ip-copy">
+                  <span class="proj-ip-num">02</span>
+                  <span class="proj-ip-title">闹钟 App 系列</span>
+                  <span class="proj-ip-role">产品负责人</span>
+                  <span class="proj-ip-kpi">收益 +190%</span>
+                </span>
+              </button>
+              <button type="button" class="proj-ip-card" role="listitem" data-proj-index="2" data-series="fish" data-ip-src="assets/images/character-01-front.png" aria-label="钓鱼 App 系列">
+                <span class="proj-ip-avatar"><img src="assets/images/character-01-front.png" width="800" height="1200" alt="" decoding="async" /></span>
+                <span class="proj-ip-copy">
+                  <span class="proj-ip-num">03</span>
+                  <span class="proj-ip-title">钓鱼 App 系列</span>
+                  <span class="proj-ip-role">产品负责人</span>
+                  <span class="proj-ip-kpi">留存 +80%</span>
+                </span>
+              </button>
+            </div>
+            <p class="proj-hub-hint">点击角色 · 进入案例详情</p>
+          </div>
+
+          <div class="proj-detail-view" id="projDetailView" aria-hidden="true">
+            <div class="proj-detail-layout">
+              <aside class="proj-host" id="projHost" aria-hidden="true">
+                <div class="proj-host-glow"></div>
+                <img class="proj-host-figure" id="projHostFigure" src="assets/images/character-01-front.png" width="800" height="1200" alt="" decoding="async" />
+                <p class="proj-host-hint">项目介绍人 · 点头像切换案例 · 左右滑切换栏目</p>
+                <div class="proj-switcher" id="projSwitcher" role="tablist" aria-label="切换项目">
+                  <button type="button" class="proj-switch" role="tab" data-proj-index="0" data-series="material" aria-label="APP 素材平台">
+                    <span class="proj-switch-avatar"><img src="assets/images/character-01-front.png" width="800" height="1200" alt="" decoding="async" /></span>
+                    <span class="proj-switch-label">01</span>
+                  </button>
+                  <button type="button" class="proj-switch" role="tab" data-proj-index="1" data-series="alarm" aria-label="闹钟 App 系列">
+                    <span class="proj-switch-avatar"><img src="assets/images/character-01-front.png" width="800" height="1200" alt="" decoding="async" /></span>
+                    <span class="proj-switch-label">02</span>
+                  </button>
+                  <button type="button" class="proj-switch" role="tab" data-proj-index="2" data-series="fish" aria-label="钓鱼 App 系列">
+                    <span class="proj-switch-avatar"><img src="assets/images/character-01-front.png" width="800" height="1200" alt="" decoding="async" /></span>
+                    <span class="proj-switch-label">03</span>
+                  </button>
+                </div>
+              </aside>
+              <div class="proj-detail-main">
+                <div class="proj-stage" id="projStage">
+              <article class="proj-panel" data-proj-index="0" data-ip-src="assets/images/character-01-front.png" data-video="" data-poster="">
+                <div class="proj-panel-top">
+                  <h3>APP 素材平台</h3>
+                  <span class="proj-panel-role">产品支持</span>
+                </div>
+                <div class="proj-panel-body">
+                  <div class="proj-bar">
+                    <section class="proj-bar-block">
+                      <h4>背景</h4>
+                      <p>图片、文案、音频、视频等素材人工复刻成本高，团队需要统一的素材生成与管理工具，缩短从需求到可交付素材的链路。</p>
+                    </section>
+                    <section class="proj-bar-block">
+                      <h4>行动</h4>
+                      <ul>
+                        <li>梳理需求，统一素材生成、管理与导出流程</li>
+                        <li>使用 Figma 完成快速原型，明确信息架构与关键路径</li>
+                        <li>接入 AI 文案与图像生成能力，支撑批量产出与迭代</li>
+                      </ul>
+                    </section>
+                    <section class="proj-bar-block">
+                      <h4>结果</h4>
+                      <div class="proj-metrics">
+                        <span class="proj-metric"><strong>≈2 个月</strong> 内部上线</span>
+                        <span class="proj-metric">单套素材 <strong>3h → 30min</strong></span>
+                      </div>
+                    </section>
+                  </div>
+                  <div class="proj-media">
+                    <video class="proj-video" muted loop playsinline preload="metadata"></video>
+                    <div class="proj-media-placeholder">
+                      <span>演示视频</span>
+                      <code>projects/material-platform.mp4</code>
+                    </div>
+                  </div>
+                </div>
+              </article>
+
+              <article class="proj-panel" data-proj-index="1" data-ip-src="assets/images/character-01-front.png" data-video="" data-poster="">
+                <div class="proj-panel-top">
+                  <h3>闹钟 App 系列</h3>
+                  <span class="proj-panel-role">产品负责人</span>
+                </div>
+                <div class="proj-panel-body">
+                  <div class="proj-bar">
+                    <section class="proj-bar-block">
+                      <h4>背景</h4>
+                      <p>产品同质化严重、付费转化偏弱，需要在强提醒场景中建立清晰差异，并验证商业化与增长策略。</p>
+                    </section>
+                    <section class="proj-bar-block">
+                      <h4>行动</h4>
+                      <ul>
+                        <li>规划强唤醒、天气闹钟、情感皮肤、成就墙等差异化功能</li>
+                        <li>推动鸿蒙 Live Window、桌面 widget 等系统能力落地</li>
+                        <li>基于用户反馈与数据，持续优化广告与付费策略</li>
+                      </ul>
+                    </section>
+                    <section class="proj-bar-block">
+                      <h4>结果</h4>
+                      <div class="proj-metrics">
+                        <span class="proj-metric">「早安闹钟」综合收益 <strong>TOP 5</strong></span>
+                        <span class="proj-metric">付费 <strong>0→1</strong> · 日付 <strong>20+</strong></span>
+                        <span class="proj-metric">综合收益 <strong>+190%</strong></span>
+                      </div>
+                    </section>
+                  </div>
+                  <div class="proj-media">
+                    <video class="proj-video" muted loop playsinline preload="metadata"></video>
+                    <div class="proj-media-placeholder">
+                      <span>演示视频</span>
+                      <code>projects/alarm-series.mp4</code>
+                    </div>
+                  </div>
+                </div>
+              </article>
+
+              <article class="proj-panel" data-proj-index="2" data-ip-src="assets/images/character-01-front.png" data-video="" data-poster="">
+                <div class="proj-panel-top">
+                  <h3>钓鱼 App 系列</h3>
+                  <span class="proj-panel-role">产品负责人</span>
+                </div>
+                <div class="proj-panel-body">
+                  <div class="proj-bar">
+                    <section class="proj-bar-block">
+                      <h4>背景</h4>
+                      <p>用户需求分散、核心使用场景不清晰，需要围绕垂直场景重构「找钓点 — 记录 — 分享」的完整闭环。</p>
+                    </section>
+                    <section class="proj-bar-block">
+                      <h4>行动</h4>
+                      <ul>
+                        <li>搭建「找钓点 → 记录渔获 → 生成海报」核心使用链路</li>
+                        <li>探索 AI 能力在垂直工具中的边界与体验</li>
+                        <li>完成华为小艺智能体接入与场景验证</li>
+                      </ul>
+                    </section>
+                    <section class="proj-bar-block">
+                      <h4>结果</h4>
+                      <div class="proj-metrics">
+                        <span class="proj-metric">留存 <strong>+80%</strong></span>
+                        <span class="proj-metric">付费转化 <strong>+45%</strong></span>
+                      </div>
+                    </section>
+                  </div>
+                  <div class="proj-media">
+                    <video class="proj-video" muted loop playsinline preload="metadata"></video>
+                    <div class="proj-media-placeholder">
+                      <span>演示视频</span>
+                      <code>projects/fishing-series.mp4</code>
+                    </div>
+                  </div>
+                </div>
+              </article>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- AI LAB -->
+    <section class="slide slide--page" id="ai-lab" data-index="4" aria-label="AI Lab">
+      <div class="slide-inner">
+        <div class="page-center">
+        <p class="slide-tag">AI Lab</p>
+        <h2 class="slide-title">AI 学习与实践</h2>
+        <p class="manifesto">
+          我使用 AI 做<em>快速验证</em>，而不是替代产品判断。
+        </p>
+        <article class="block" style="margin-top:40px">
+          <h3>Stack</h3>
+          <p>Cursor · Vibe Coding · Agent · RAG · Prompt Engineering · 飞书自动化</p>
+        </article>
+        <article class="block">
+          <h3>Output</h3>
+          <p>CSDN 输出与内部工具链实验（可继续扩展）。</p>
+        </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- LIFE -->
+    <section class="slide slide--page" id="life" data-index="5" aria-label="Life">
+      <div class="slide-inner">
+        <div class="page-center">
+        <p class="slide-tag">Life</p>
+        <h2 class="slide-title">生活与联系</h2>
+        <p class="contact-links">
+          <a href="assets/doc/resume.pdf">Download CV</a>
+        </p>
+        <p class="slide-lead">兴趣、人味内容与社交链接可写在这里。</p>
+        <div class="contact-row">
+          <a href="mailto:liumin_audrey@163.com">liumin_audrey@163.com</a>
+          <a href="tel:19114049215">19114049215</a>
+        </div>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <script>
+    (function () {
+      "use strict";
+
+      var track = document.getElementById("track");
+      var slides = document.querySelectorAll(".slide[data-index]");
+      var navLinks = document.querySelectorAll(".nav-link");
+      var progress = document.getElementById("progressLine");
+      var indicator = document.getElementById("pageIndicator");
+      var labels = ["Home", "Experience", "Works", "Projects", "AI Lab", "Life"];
+      var total = slides.length;
+      var reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+      function scrollToIndex(index) {
+        index = Math.max(0, Math.min(total - 1, index));
+        var slide = document.querySelector('.slide[data-index="' + index + '"]');
+        if (slide && track) {
+          track.scrollTo({ left: slide.offsetLeft, behavior: reduced ? "auto" : "smooth" });
+        }
+        setActive(index);
+      }
+
+      function setActive(index) {
+        navLinks.forEach(function (link) {
+          link.classList.toggle("is-active", Number(link.getAttribute("data-index")) === index);
+        });
+        if (progress) {
+          progress.style.width = ((index + 1) / total * 100) + "%";
+        }
+        if (indicator) {
+          indicator.textContent = String(index + 1).padStart(2, "0") + " — " + labels[index];
+        }
+        if (index !== 3 && typeof window.__projCloseDetail === "function") {
+          window.__projCloseDetail(false);
+        }
+        if (index !== 2 && typeof window.__worksCloseDetail === "function") {
+          window.__worksCloseDetail(false);
+        }
+        if (index !== 1 && typeof window.__expStoryStop === "function") {
+          window.__expStoryStop();
+        }
+        if (index === 1 && typeof window.__expOnEnter === "function") {
+          window.__expOnEnter();
+        }
+      }
+
+      navLinks.forEach(function (link) {
+        link.addEventListener("click", function (e) {
+          e.preventDefault();
+          scrollToIndex(Number(link.getAttribute("data-index")));
+        });
+      });
+
+      document.querySelectorAll("[data-goto]").forEach(function (btn) {
+        btn.addEventListener("click", function () {
+          scrollToIndex(Number(btn.getAttribute("data-goto")));
+        });
+      });
+
+      if (track) {
+        var scrollEndTimer;
+        track.addEventListener("scroll", function () {
+          clearTimeout(scrollEndTimer);
+          scrollEndTimer = setTimeout(function () {
+            var left = track.scrollLeft;
+            var w = track.clientWidth;
+            var index = Math.round(left / w);
+            if (index !== 3 && typeof window.__projCloseDetail === "function") {
+              window.__projCloseDetail(false);
+            }
+            setActive(index);
+          }, 80);
+        }, { passive: true });
+
+        if (!reduced) {
+          track.addEventListener("wheel", function (e) {
+            var expPageEl = e.target.closest && e.target.closest(".exp-page");
+            if (expPageEl && typeof window.__expWheel === "function" && window.__expWheel(e)) {
+              e.preventDefault();
+              return;
+            }
+
+            if (track.dataset.worksDetailLock === "1") {
+              return;
+            }
+            if (e.target.closest && e.target.closest(".works-arena")) {
+              return;
+            }
+
+            if (Math.abs(e.deltaY) <= Math.abs(e.deltaX)) return;
+
+            var slide = e.target.closest && e.target.closest(".slide");
+            if (!slide && slides.length) {
+              var i = Math.round(track.scrollLeft / track.clientWidth);
+              slide = slides[i] || slides[0];
+            }
+            if (slide) {
+              var scrollEl = slide;
+              var projMain = e.target.closest && e.target.closest(".proj-detail-main");
+              if (projMain && projMain.scrollHeight > projMain.clientHeight + 2) {
+                scrollEl = projMain;
+              }
+              var overflow = scrollEl.scrollHeight - scrollEl.clientHeight;
+              if (overflow > 2) {
+                var atTop = scrollEl.scrollTop <= 0;
+                var atBottom = scrollEl.scrollTop + scrollEl.clientHeight >= scrollEl.scrollHeight - 2;
+                if (e.deltaY > 0 && !atBottom) return;
+                if (e.deltaY < 0 && !atTop) return;
+              }
+            }
+
+            e.preventDefault();
+            track.scrollLeft += e.deltaY;
+          }, { passive: false });
+        }
+
+        window.addEventListener("keydown", function (e) {
+          var current = Math.round(track.scrollLeft / track.clientWidth);
+          if (current === 1 && (e.key === "ArrowDown" || e.key === "ArrowUp") && typeof window.__expKey === "function") {
+            e.preventDefault();
+            if (window.__expKey(e.key === "ArrowDown" ? 1 : -1)) return;
+            scrollToIndex(current + (e.key === "ArrowDown" ? 1 : -1));
+            return;
+          }
+          if (e.key === "ArrowRight") scrollToIndex(current + 1);
+          if (e.key === "ArrowLeft") scrollToIndex(current - 1);
+        });
+      }
+
+      var observer = new IntersectionObserver(
+        function (entries) {
+          entries.forEach(function (entry) {
+            if (entry.isIntersecting && entry.intersectionRatio >= 0.55) {
+              setActive(Number(entry.target.getAttribute("data-index")));
+            }
+          });
+        },
+        { root: track, threshold: [0.55] }
+      );
+      slides.forEach(function (s) { observer.observe(s); });
+
+      setActive(0);
+
+      /* Avatar: mouse follow + slow view cycle */
+      var home = document.getElementById("home");
+      var stack = document.getElementById("avatarStack");
+      var imgs = stack ? stack.querySelectorAll("img") : [];
+      var viewIndex = 0;
+
+      if (!reduced && stack && home) {
+        var ipAim = { rx: 0, ry: 0, tx: 0, ty: 0 };
+        var ipCur = { rx: 0, ry: 0, tx: 0, ty: 0 };
+
+        home.addEventListener("mousemove", function (e) {
+          var rect = home.getBoundingClientRect();
+          var nx = (e.clientX - rect.left) / rect.width - 0.5;
+          var ny = (e.clientY - rect.top) / rect.height - 0.5;
+          ipAim.rx = nx * 16;
+          ipAim.ry = ny * -10;
+          ipAim.tx = nx * 20;
+          ipAim.ty = ny * -12;
+        }, { passive: true });
+
+        home.addEventListener("mouseleave", function () {
+          ipAim.rx = ipAim.ry = ipAim.tx = ipAim.ty = 0;
+        });
+
+        (function tick() {
+          var ease = 0.11;
+          ipCur.rx += (ipAim.rx - ipCur.rx) * ease;
+          ipCur.ry += (ipAim.ry - ipCur.ry) * ease;
+          ipCur.tx += (ipAim.tx - ipCur.tx) * ease;
+          ipCur.ty += (ipAim.ty - ipCur.ty) * ease;
+          stack.style.setProperty("--ip-rx", ipCur.rx.toFixed(3) + "deg");
+          stack.style.setProperty("--ip-ry", ipCur.ry.toFixed(3) + "deg");
+          stack.style.setProperty("--ip-tx", ipCur.tx.toFixed(2) + "px");
+          stack.style.setProperty("--ip-ty", ipCur.ty.toFixed(2) + "px");
+          requestAnimationFrame(tick);
+        })();
+
+        setInterval(function () {
+          if (!imgs.length) return;
+          imgs[viewIndex].classList.remove("is-show");
+          viewIndex = (viewIndex + 1) % imgs.length;
+          imgs[viewIndex].classList.add("is-show");
+        }, 6000);
+      }
+
+      /* Experience：左 IP + 右经历，整屏横滑切换 + 逐段自动预览 */
+      var EXP_TOUR_DWELL_MS = 2600;
+      var EXP_WHEEL_COOLDOWN_MS = 900;
+      var expPage = document.getElementById("expPage");
+      var expSlider = document.getElementById("expSlider");
+      var expIpItems = document.querySelectorAll("#expIpSlides .exp-ip");
+      var expTracks = expPage ? expPage.querySelectorAll(".exp-slides") : [];
+      var expSlidesEl = document.getElementById("expSlides");
+      var expPrevBtn = document.getElementById("expPrev");
+      var expNextBtn = document.getElementById("expNext");
+      var expStepsEl = document.getElementById("expSteps");
+      var expStepBtns = expStepsEl ? expStepsEl.querySelectorAll(".exp-step") : [];
+      var expStations = expSlidesEl ? expSlidesEl.querySelectorAll(".exp-station") : [];
+      var expTourTimer;
+      var expTourActive = false;
+      var expOnPage = false;
+      var expWheelAccum = 0;
+      var expWheelResetTimer;
+      var expLastStepAt = 0;
+      var expBodyLastWheelAt = 0;
+      var expStoryViewport = null;
+      var expStoryInner = null;
+      var expStoryBar = null;
+      var EXP_STORY_DELAY_MS = 1400;
+      var EXP_STORY_SPEED = 20;
+      var EXP_STORY_END_HOLD_MS = 2200;
+      var expStoryRaf = 0;
+      var expStoryOffset = 0;
+      var expStoryRunning = false;
+      var expStoryPause = false;
+      var expStoryDelayTimer;
+      var expStoryHoldTimer;
+      var expStoryLastTick = 0;
+      var expCenterIndex = -1;
+
+      function expStoryBindStation(index) {
+        if (!expStations.length || !expStations[index]) {
+          expStoryViewport = null;
+          expStoryInner = null;
+          expStoryBar = null;
+          return;
+        }
+        var st = expStations[index];
+        expStoryViewport = st.querySelector("[data-exp-body]");
+        expStoryInner = st.querySelector(".exp-body-inner");
+        expStoryBar = st.querySelector(".exp-body-bar");
+      }
+
+      function expStoryMaxScroll() {
+        if (!expStoryViewport || !expStoryInner) return 0;
+        return Math.max(0, expStoryInner.scrollHeight - expStoryViewport.clientHeight);
+      }
+
+      function expStoryApplyOffset() {
+        if (!expStoryInner) return;
+        expStoryInner.style.transform = "translate3d(0," + (-expStoryOffset) + "px,0)";
+        if (expStoryBar) {
+          var max = expStoryMaxScroll();
+          var p = max > 0 ? expStoryOffset / max : 0;
+          expStoryBar.style.transform = "scaleX(" + Math.min(1, Math.max(0, p)) + ")";
+        }
+      }
+
+      function expStoryReset() {
+        expStoryOffset = 0;
+        if (expSlidesEl) {
+          expSlidesEl.querySelectorAll(".exp-body-inner").forEach(function (el) {
+            el.style.transform = "";
+          });
+          expSlidesEl.querySelectorAll(".exp-body-bar").forEach(function (el) {
+            el.style.transform = "scaleX(0)";
+          });
+        } else {
+          expStoryApplyOffset();
+        }
+      }
+
+      function expStoryStop() {
+        if (expStoryRaf) {
+          cancelAnimationFrame(expStoryRaf);
+          expStoryRaf = 0;
+        }
+        expStoryRunning = false;
+        clearTimeout(expStoryDelayTimer);
+        clearTimeout(expStoryHoldTimer);
+        if (expStoryViewport) expStoryViewport.classList.remove("is-paused");
+      }
+
+      function expStoryIsEligible() {
+        if (reduced || !expOnPage || !expStoryViewport || !expStoryInner) return false;
+        if (!expStations[expCenterIndex] || !expStations[expCenterIndex].classList.contains("is-center")) return false;
+        if (expTourActive) return false;
+        return expStoryMaxScroll() > 12;
+      }
+
+      function expStoryTick(now) {
+        if (!expStoryRunning) return;
+        if (!expStoryIsEligible()) {
+          expStoryStop();
+          expStoryReset();
+          return;
+        }
+        if (expStoryPause) {
+          expStoryLastTick = now;
+          expStoryRaf = requestAnimationFrame(expStoryTick);
+          return;
+        }
+        if (!expStoryLastTick) expStoryLastTick = now;
+        var dt = Math.min(0.05, (now - expStoryLastTick) / 1000);
+        expStoryLastTick = now;
+        var max = expStoryMaxScroll();
+        expStoryOffset = Math.min(max, expStoryOffset + EXP_STORY_SPEED * dt);
+        expStoryApplyOffset();
+        if (expStoryOffset >= max - 0.5) {
+          expStoryRunning = false;
+          expStoryRaf = 0;
+          expStoryHoldTimer = setTimeout(function () {
+            if (!expStoryIsEligible()) return;
+            expStoryReset();
+            expStoryBeginAfterDelay();
+          }, EXP_STORY_END_HOLD_MS);
+          return;
+        }
+        expStoryRaf = requestAnimationFrame(expStoryTick);
+      }
+
+      function expStoryStartNow() {
+        expStoryStop();
+        if (!expStoryIsEligible()) return;
+        expStoryReset();
+        expStoryRunning = true;
+        expStoryLastTick = 0;
+        expStoryRaf = requestAnimationFrame(expStoryTick);
+      }
+
+      function expStoryBeginAfterDelay() {
+        clearTimeout(expStoryDelayTimer);
+        expStoryDelayTimer = setTimeout(function () {
+          expStoryStartNow();
+        }, EXP_STORY_DELAY_MS);
+      }
+
+      function expGoTo(index, opts) {
+        if (!expStations.length) return false;
+        opts = opts || {};
+        var i = Math.max(0, Math.min(expStations.length - 1, Number(index)));
+        var last = expStations.length - 1;
+        if (opts.instant) {
+          expTracks.forEach(function (t) { t.style.transition = "none"; });
+        }
+        if (expPage) {
+          expPage.style.setProperty("--exp-i", String(i));
+          expPage.style.setProperty("--exp-drag", "0px");
+        }
+        if (opts.instant) {
+          expTracks.forEach(function (t) {
+            void t.offsetWidth;
+            t.style.transition = "";
+          });
+        }
+        expStations.forEach(function (st, idx) {
+          st.classList.toggle("is-center", idx === i);
+          st.toggleAttribute("inert", idx !== i);
+        });
+        expIpItems.forEach(function (ip, idx) {
+          ip.classList.toggle("is-center", idx === i);
+        });
+        expStepBtns.forEach(function (btn, idx) {
+          btn.classList.toggle("is-current", idx === i);
+          btn.classList.toggle("is-done", idx < i);
+          btn.setAttribute("aria-selected", idx === i ? "true" : "false");
+        });
+        if (expStepsEl) expStepsEl.style.setProperty("--exp-progress", last > 0 ? String(i / last) : "0");
+        if (expPrevBtn) expPrevBtn.disabled = i === 0;
+        if (expNextBtn) expNextBtn.disabled = i === last;
+        var changed = i !== expCenterIndex;
+        expCenterIndex = i;
+        expStoryBindStation(i);
+        if (changed) {
+          expStoryStop();
+          expStoryReset();
+        }
+        if (!expTourActive) expStoryBeginAfterDelay();
+        return changed;
+      }
+
+      function expStep(dir) {
+        var target = expCenterIndex + dir;
+        if (target < 0 || target >= expStations.length) return false;
+        expGoTo(target);
+        return true;
+      }
+
+      function expCancelTour() {
+        clearTimeout(expTourTimer);
+        expTourActive = false;
+      }
+
+      function expRunEnterTour() {
+        if (!expStations.length) return;
+        expCancelTour();
+        var last = expStations.length - 1;
+        if (reduced) {
+          expGoTo(last, { instant: true });
+          return;
+        }
+        expTourActive = true;
+        expGoTo(0, { instant: true });
+        var i = 0;
+        function next() {
+          if (!expTourActive) return;
+          i += 1;
+          if (i >= last) {
+            expTourActive = false;
+            expGoTo(last);
+            return;
+          }
+          expGoTo(i);
+          expTourTimer = setTimeout(next, EXP_TOUR_DWELL_MS);
+        }
+        expTourTimer = setTimeout(next, EXP_TOUR_DWELL_MS);
+      }
+
+      window.__expOnEnter = function () {
+        if (expOnPage) return;
+        expOnPage = true;
+        expRunEnterTour();
+      };
+      window.__expStoryStop = function () {
+        expOnPage = false;
+        expCancelTour();
+        expStoryStop();
+        expStoryReset();
+      };
+      window.__expKey = function (dir) {
+        expCancelTour();
+        return expStep(dir);
+      };
+      window.__expWheel = function (e) {
+        var now = performance.now();
+        if (now - expLastStepAt < EXP_WHEEL_COOLDOWN_MS) return true;
+        if (Math.abs(e.deltaX) > Math.abs(e.deltaY)) return false;
+        var d = e.deltaY;
+        if (!d) return false;
+        var dir = d > 0 ? 1 : -1;
+        var target = expCenterIndex + dir;
+        if (target < 0 || target >= expStations.length) return false;
+        if (expWheelAccum && (expWheelAccum > 0) !== (d > 0)) expWheelAccum = 0;
+        expWheelAccum += d;
+        clearTimeout(expWheelResetTimer);
+        expWheelResetTimer = setTimeout(function () { expWheelAccum = 0; }, 220);
+        if (Math.abs(expWheelAccum) >= 40) {
+          expWheelAccum = 0;
+          expLastStepAt = now;
+          expCancelTour();
+          expGoTo(target);
+        }
+        return true;
+      };
+
+      if (expSlidesEl) {
+        expSlidesEl.querySelectorAll("[data-exp-body]").forEach(function (vp) {
+          vp.addEventListener("mouseenter", function () {
+            expStoryPause = true;
+            vp.classList.add("is-paused");
+          });
+          vp.addEventListener("mouseleave", function () {
+            expStoryPause = false;
+            vp.classList.remove("is-paused");
+          });
+          vp.addEventListener("pointerdown", function () {
+            expStoryPause = true;
+            vp.classList.add("is-paused");
+          });
+        });
+        window.addEventListener("pointerup", function () {
+          expStoryPause = false;
+          expSlidesEl.querySelectorAll("[data-exp-body].is-paused").forEach(function (vp) {
+            vp.classList.remove("is-paused");
+          });
+        });
+      }
+
+      if (expSlider) {
+        expSlider.addEventListener("wheel", function (e) {
+          var vp = e.target.closest("[data-exp-body]");
+          if (!vp || !vp.closest(".exp-station.is-center")) return;
+          if (Math.abs(e.deltaX) > Math.abs(e.deltaY)) return;
+          var max = expStoryMaxScroll();
+          if (max <= 0) return;
+          var now = performance.now();
+          var atEdge = (e.deltaY > 0 && expStoryOffset >= max - 1) || (e.deltaY < 0 && expStoryOffset <= 0);
+          if (atEdge && now - expBodyLastWheelAt > 320) return;
+          e.preventDefault();
+          e.stopPropagation();
+          expBodyLastWheelAt = now;
+          expCancelTour();
+          expStoryStop();
+          expStoryOffset = Math.min(max, Math.max(0, expStoryOffset + e.deltaY * 0.85));
+          expStoryApplyOffset();
+        }, { passive: false });
+      }
+
+      if (expPage) {
+        var expDrag = null;
+        expPage.addEventListener("pointerdown", function (e) {
+          if (e.pointerType === "mouse" && e.button !== 0) return;
+          if (e.target.closest(".exp-controls")) return;
+          var inBody = !!e.target.closest("[data-exp-body]");
+          expDrag = {
+            id: e.pointerId,
+            x: e.clientX,
+            y: e.clientY,
+            pull: 0,
+            active: false,
+            max: inBody ? expStoryMaxScroll() : 0,
+            startOffset: inBody ? expStoryOffset : 0
+          };
+        });
+        expPage.addEventListener("pointermove", function (e) {
+          if (!expDrag || e.pointerId !== expDrag.id) return;
+          var dx = e.clientX - expDrag.x;
+          var dy = e.clientY - expDrag.y;
+          if (!expDrag.active) {
+            if (Math.abs(dx) < 8 && Math.abs(dy) < 8) return;
+            if (Math.abs(dx) > Math.abs(dy)) {
+              expDrag = null;
+              return;
+            }
+            expDrag.active = true;
+            expCancelTour();
+            expStoryStop();
+            expPage.classList.add("is-dragging");
+            if (window.getSelection) window.getSelection().removeAllRanges();
+            try { expPage.setPointerCapture(e.pointerId); } catch (err) {}
+          }
+          var wanted = expDrag.startOffset - dy;
+          var clamped = Math.min(expDrag.max, Math.max(0, wanted));
+          if (expDrag.max > 0) {
+            expStoryOffset = clamped;
+            expStoryApplyOffset();
+          }
+          var pull = wanted - clamped;
+          var atEdge = (pull < 0 && expCenterIndex === 0) || (pull > 0 && expCenterIndex === expStations.length - 1);
+          expDrag.pull = pull;
+          expPage.style.setProperty("--exp-drag", (-pull * (atEdge ? 0.3 : 1)) + "px");
+        });
+        function expEndDrag(e) {
+          if (!expDrag || e.pointerId !== expDrag.id) return;
+          var d = expDrag;
+          expDrag = null;
+          if (!d.active) return;
+          expPage.classList.remove("is-dragging");
+          var threshold = Math.min(90, expPage.clientHeight * 0.12);
+          if (d.pull >= threshold && expStep(1)) return;
+          if (d.pull <= -threshold && expStep(-1)) return;
+          expGoTo(expCenterIndex);
+        }
+        expPage.addEventListener("pointerup", expEndDrag);
+        expPage.addEventListener("pointercancel", expEndDrag);
+        expPage.addEventListener("dragstart", function (e) { e.preventDefault(); });
+      }
+
+      if (expPrevBtn) {
+        expPrevBtn.addEventListener("click", function () {
+          expCancelTour();
+          expStep(-1);
+        });
+      }
+      if (expNextBtn) {
+        expNextBtn.addEventListener("click", function () {
+          expCancelTour();
+          expStep(1);
+        });
+      }
+      expStepBtns.forEach(function (btn, idx) {
+        btn.addEventListener("click", function () {
+          expCancelTour();
+          expGoTo(idx);
+        });
+      });
+
+      window.addEventListener("resize", function () {
+        if (expStoryOffset > expStoryMaxScroll()) {
+          expStoryOffset = expStoryMaxScroll();
+          expStoryApplyOffset();
+        }
+      });
+
+      expGoTo(0, { instant: true });
+
+      /* Works：扇形纸叠 + IP 跟随 + 居中详情浮层 */
+      var worksTheater = document.getElementById("worksTheater");
+      var worksArena = document.getElementById("worksArena");
+      var worksIpFigure = document.getElementById("worksIpFigure");
+      var worksFan = document.getElementById("worksFan");
+      var worksStackBtns = worksFan ? worksFan.querySelectorAll(".works-stack-btn") : [];
+      var worksDetailOverlay = document.getElementById("worksDetailOverlay");
+      var worksDetailBackdrop = document.getElementById("worksDetailBackdrop");
+      var worksDetailClose = document.getElementById("worksDetailClose");
+      var worksDetailVideo = document.getElementById("worksDetailVideo");
+      var worksDetailFallback = document.getElementById("worksDetailFallback");
+      var worksDetailVideoHint = document.getElementById("worksDetailVideoHint");
+      var worksDetailSeries = document.getElementById("worksDetailSeries");
+      var worksDetailTitle = document.getElementById("worksDetailTitle");
+      var worksDetailScene = document.getElementById("worksDetailScene");
+      var worksDetailRole = document.getElementById("worksDetailRole");
+      var worksDetailHighlight = document.getElementById("worksDetailHighlight");
+      var worksDetailKpis = document.getElementById("worksDetailKpis");
+      var worksHoverCapable = window.matchMedia("(hover: hover)").matches;
+      var worksTouchPreviewId = "";
+      var worksOpenCard = null;
+
+      function worksParseKpis(raw) {
+        if (!raw) return [];
+        return raw.split("|").map(function (s) { return s.trim(); }).filter(Boolean);
+      }
+
+      function worksRenderKpis(container, raw) {
+        if (!container) return;
+        container.innerHTML = "";
+        worksParseKpis(raw).forEach(function (item) {
+          var pill = document.createElement("span");
+          pill.className = "works-detail-kpi";
+          var segs = item.split(" ");
+          if (segs.length > 1 && /^[+\d%→]/.test(segs[0])) {
+            pill.innerHTML = "<em>" + segs[0] + "</em> " + segs.slice(1).join(" ");
+          } else {
+            pill.textContent = item;
+          }
+          container.appendChild(pill);
+        });
+      }
+
+      function worksPreviewHtml(btn) {
+        var title = btn.getAttribute("data-title") || "App";
+        var poster = (btn.getAttribute("data-poster") || "").trim();
+        var video = (btn.getAttribute("data-video") || "").trim();
+        if (poster) {
+          return "<img src=\"" + poster.replace(/"/g, "&quot;") + "\" alt=\"\" loading=\"lazy\" decoding=\"async\" />";
+        }
+        if (video) {
+          return "<video src=\"" + video.replace(/"/g, "&quot;") + "\" muted loop playsinline preload=\"metadata\"></video>";
+        }
+        return "<span class=\"works-stack-preview-fallback\"><strong>" + title.replace(/</g, "&lt;") + "</strong>主界面预览</span>";
+      }
+
+      function worksInitPreviews() {
+        worksStackBtns.forEach(function (btn) {
+          var inner = btn.querySelector(".works-stack-preview-inner");
+          if (inner) inner.innerHTML = worksPreviewHtml(btn);
+        });
+      }
+
+      function worksFillDetail(btn) {
+        if (!btn) return;
+        if (worksDetailSeries) {
+          worksDetailSeries.textContent = "";
+          var dot = document.createElement("i");
+          dot.setAttribute("aria-hidden", "true");
+          worksDetailSeries.appendChild(dot);
+          worksDetailSeries.appendChild(document.createTextNode(" " + (btn.getAttribute("data-series-label") || "")));
+          worksDetailSeries.setAttribute("data-series", btn.getAttribute("data-series") || "");
+        }
+        if (worksDetailTitle) worksDetailTitle.textContent = btn.getAttribute("data-title") || "";
+        if (worksDetailScene) worksDetailScene.textContent = btn.getAttribute("data-scene") || "";
+        if (worksDetailRole) worksDetailRole.textContent = btn.getAttribute("data-role") || "";
+        if (worksDetailHighlight) worksDetailHighlight.textContent = btn.getAttribute("data-highlight") || "";
+        worksRenderKpis(worksDetailKpis, btn.getAttribute("data-kpis"));
+
+        var src = (btn.getAttribute("data-video") || "").trim();
+        var poster = (btn.getAttribute("data-poster") || "").trim();
+        if (worksDetailVideoHint) worksDetailVideoHint.textContent = src || "works/your-demo.mp4";
+        if (worksDetailVideo) {
+          worksDetailVideo.pause();
+          worksDetailVideo.classList.remove("is-on");
+          if (poster) worksDetailVideo.setAttribute("poster", poster);
+          else worksDetailVideo.removeAttribute("poster");
+          if (src) {
+            worksDetailVideo.src = src;
+            worksDetailVideo.classList.add("is-on");
+            if (worksDetailFallback) worksDetailFallback.classList.add("is-hidden");
+            worksDetailVideo.play().catch(function () {});
+          } else {
+            worksDetailVideo.removeAttribute("src");
+            if (worksDetailFallback) worksDetailFallback.classList.remove("is-hidden");
+          }
+        }
+      }
+
+      function worksOpenDetail(btn) {
+        if (!worksTheater || !worksDetailOverlay || !btn) return;
+        worksOpenCard = btn;
+        worksStackBtns.forEach(function (b) { b.classList.toggle("is-active", b === btn); });
+        worksFillDetail(btn);
+        worksTheater.classList.add("is-detail-open");
+        worksDetailOverlay.setAttribute("aria-hidden", "false");
+        if (track) track.dataset.worksDetailLock = "1";
+        if (worksDetailClose) worksDetailClose.focus({ preventScroll: true });
+      }
+
+      function worksCloseDetail(focusArena) {
+        if (!worksTheater || !worksTheater.classList.contains("is-detail-open")) return;
+        worksTheater.classList.remove("is-detail-open");
+        if (worksDetailOverlay) worksDetailOverlay.setAttribute("aria-hidden", "true");
+        if (track) delete track.dataset.worksDetailLock;
+        worksStackBtns.forEach(function (b) { b.classList.remove("is-active"); });
+        if (worksDetailVideo) {
+          worksDetailVideo.pause();
+          worksDetailVideo.classList.remove("is-on");
+        }
+        worksOpenCard = null;
+        if (focusArena && worksArena) worksArena.focus({ preventScroll: true });
+      }
+      window.__worksCloseDetail = worksCloseDetail;
+
+      worksInitPreviews();
+
+      worksStackBtns.forEach(function (btn) {
+        btn.addEventListener("click", function () {
+          if (!worksHoverCapable && worksTouchPreviewId !== btn.getAttribute("data-works-id")) {
+            worksStackBtns.forEach(function (b) { b.classList.remove("is-touch-preview"); });
+            btn.classList.add("is-touch-preview");
+            worksTouchPreviewId = btn.getAttribute("data-works-id") || "";
+            var v = btn.querySelector(".works-stack-preview video");
+            if (v) v.play().catch(function () {});
+            return;
+          }
+          worksOpenDetail(btn);
+        });
+        btn.addEventListener("mouseenter", function () {
+          var v = btn.querySelector(".works-stack-preview video");
+          if (v) v.play().catch(function () {});
+        });
+        btn.addEventListener("mouseleave", function () {
+          var v = btn.querySelector(".works-stack-preview video");
+          if (v) {
+            v.pause();
+            v.currentTime = 0;
+          }
+        });
+      });
+
+      if (worksDetailClose) {
+        worksDetailClose.addEventListener("click", function () { worksCloseDetail(true); });
+      }
+      if (worksDetailBackdrop) {
+        worksDetailBackdrop.addEventListener("click", function () { worksCloseDetail(true); });
+      }
+
+      if (track && worksArena) {
+        worksArena.addEventListener("pointerdown", function () {
+          track.dataset.worksArenaLock = "1";
+        });
+        window.addEventListener("pointerup", function () {
+          delete track.dataset.worksArenaLock;
+        });
+      }
+
+      if (!reduced && worksArena && worksIpFigure) {
+        worksArena.addEventListener("mousemove", function (e) {
+          var rect = worksArena.getBoundingClientRect();
+          var nx = (e.clientX - rect.left) / rect.width - 0.5;
+          var ny = (e.clientY - rect.top) / rect.height - 0.5;
+          nx = Math.max(-0.5, Math.min(0.5, nx));
+          ny = Math.max(-0.5, Math.min(0.5, ny));
+          worksIpFigure.style.setProperty("--ip-tx", (nx * 22).toFixed(1) + "px");
+          worksIpFigure.style.setProperty("--ip-ty", (ny * 14).toFixed(1) + "px");
+          worksIpFigure.style.setProperty("--ip-r", (nx * 5).toFixed(2) + "deg");
+        }, { passive: true });
+        worksArena.addEventListener("mouseleave", function () {
+          worksIpFigure.style.setProperty("--ip-tx", "0px");
+          worksIpFigure.style.setProperty("--ip-ty", "0px");
+          worksIpFigure.style.setProperty("--ip-r", "0deg");
+        });
+      }
+
+      /* Projects：三圆入口 → 二级 BAR 详情 */
+      var projPage = document.getElementById("projPage");
+      var projDetailView = document.getElementById("projDetailView");
+      var casesSlide = document.getElementById("cases");
+      var projPanels = document.querySelectorAll(".proj-panel");
+      var projIpCards = document.querySelectorAll(".proj-ip-card");
+      var projHostFigure = document.getElementById("projHostFigure");
+      var projSwitcher = document.getElementById("projSwitcher");
+      var projSwitchBtns = projSwitcher ? projSwitcher.querySelectorAll(".proj-switch") : [];
+      var projDetailMain = document.querySelector(".proj-detail-main");
+      var projCurrentIndex = 0;
+
+      function projSyncSwitcher(index) {
+        index = Number(index);
+        projCurrentIndex = index;
+        projSwitchBtns.forEach(function (btn) {
+          var on = Number(btn.getAttribute("data-proj-index")) === index;
+          btn.classList.toggle("is-current", on);
+          btn.setAttribute("aria-selected", on ? "true" : "false");
+          btn.tabIndex = on ? -1 : 0;
+        });
+      }
+
+      function projSetHostFigure(index) {
+        if (!projHostFigure) return;
+        var panel = document.querySelector('.proj-panel[data-proj-index="' + index + '"]');
+        var card = document.querySelector('.proj-ip-card[data-proj-index="' + index + '"]');
+        var src = (panel && panel.getAttribute("data-ip-src")) ||
+          (card && card.getAttribute("data-ip-src")) || "assets/images/character-01-front.png";
+        if (projHostFigure.getAttribute("src") !== src) {
+          projHostFigure.src = src;
+        }
+      }
+
+      function projActivate(index) {
+        index = Number(index);
+        if (!projPanels.length) return;
+        projPanels.forEach(function (panel) {
+          var on = Number(panel.getAttribute("data-proj-index")) === index;
+          panel.classList.toggle("is-active", on);
+          if (on) {
+            var video = panel.querySelector(".proj-video");
+            var ph = panel.querySelector(".proj-media-placeholder");
+            var src = (panel.getAttribute("data-video") || "").trim();
+            var poster = (panel.getAttribute("data-poster") || "").trim();
+            projPanels.forEach(function (p) {
+              var v = p.querySelector(".proj-video");
+              if (v && v !== video) {
+                v.pause();
+                v.classList.remove("is-on");
+              }
+            });
+            if (video) {
+              video.pause();
+              video.classList.remove("is-on");
+              if (poster) video.setAttribute("poster", poster);
+              else video.removeAttribute("poster");
+              if (src) {
+                video.src = src;
+                video.classList.add("is-on");
+                if (ph) ph.classList.add("is-hidden");
+                video.play().catch(function () {});
+              } else {
+                video.removeAttribute("src");
+                if (ph) ph.classList.remove("is-hidden");
+              }
+            }
+          }
+        });
+      }
+
+      function projSelectProject(index, opts) {
+        index = Number(index);
+        if (Number.isNaN(index)) return;
+        projActivate(index);
+        projSetHostFigure(index);
+        projSyncSwitcher(index);
+        var card = document.querySelector('.proj-ip-card[data-proj-index="' + index + '"]');
+        if (card) card.classList.add("is-visited");
+        if (opts && opts.resetScroll) {
+          if (casesSlide) casesSlide.scrollTop = 0;
+          if (projDetailMain) projDetailMain.scrollTop = 0;
+        }
+      }
+
+      function projOpenDetail(index) {
+        if (!projPage || !projDetailView) return;
+        var opening = !projPage.classList.contains("is-detail");
+        projPage.classList.add("is-detail");
+        projDetailView.setAttribute("aria-hidden", "false");
+        if (casesSlide) casesSlide.classList.add("is-proj-detail");
+        projSelectProject(index, { resetScroll: opening });
+        var curSwitch = projSwitcher && projSwitcher.querySelector('.proj-switch[data-proj-index="' + index + '"]');
+        if (curSwitch) curSwitch.focus({ preventScroll: true });
+      }
+
+      function projCloseDetail(focusHub) {
+        if (!projPage || !projPage.classList.contains("is-detail")) return;
+        projPage.classList.remove("is-detail");
+        projDetailView.setAttribute("aria-hidden", "true");
+        if (casesSlide) casesSlide.classList.remove("is-proj-detail");
+        projPanels.forEach(function (panel) {
+          panel.classList.remove("is-active");
+          var video = panel.querySelector(".proj-video");
+          if (video) {
+            video.pause();
+            video.classList.remove("is-on");
+          }
+        });
+        if (focusHub !== false && projIpCards.length) {
+          projIpCards[0].focus({ preventScroll: true });
+        }
+      }
+      window.__projCloseDetail = projCloseDetail;
+
+      projIpCards.forEach(function (card) {
+        card.addEventListener("click", function () {
+          projOpenDetail(card.getAttribute("data-proj-index"));
+        });
+      });
+      projSwitchBtns.forEach(function (btn) {
+        btn.addEventListener("click", function () {
+          if (btn.classList.contains("is-current")) return;
+          if (!projPage || !projPage.classList.contains("is-detail")) {
+            projOpenDetail(btn.getAttribute("data-proj-index"));
+            return;
+          }
+          projSelectProject(btn.getAttribute("data-proj-index"), { resetScroll: true });
+        });
+      });
+      window.addEventListener("keydown", function (e) {
+        if (e.key === "Escape" && worksTheater && worksTheater.classList.contains("is-detail-open")) {
+          worksCloseDetail(true);
+          return;
+        }
+        if (e.key === "Escape" && projPage && projPage.classList.contains("is-detail")) {
+          projCloseDetail(true);
+        }
+      });
+    })();
+  </script>
+</body>
+</html>
