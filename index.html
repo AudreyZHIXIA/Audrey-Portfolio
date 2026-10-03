@@ -498,9 +498,10 @@
       max-height: 780px;
       margin: 0 auto;
       display: grid;
-      grid-template-columns: minmax(180px, 30%) auto minmax(0, 1fr);
+      grid-template-columns: minmax(150px, 22%) auto minmax(0, 640px);
+      justify-content: center;
       align-items: stretch;
-      gap: clamp(16px, 2.6vw, 36px);
+      gap: clamp(12px, 2vw, 28px);
       cursor: grab;
     }
     .exp-page.is-dragging {
@@ -760,6 +761,7 @@
       line-height: 1.75;
       color: var(--muted);
     }
+    .exp-body-item p + p { margin-top: 6px; }
     .exp-body-hint {
       margin: 6px 0 0;
       text-align: right;
@@ -774,119 +776,176 @@
       .exp-body-inner { will-change: auto; }
       .exp-body-viewport {
         overflow-y: auto;
+        scrollbar-width: thin;
+        scrollbar-color: rgba(204, 255, 0, 0.35) transparent;
       }
       .exp-body-viewport::before,
       .exp-body-viewport::after { display: none; }
       .exp-body-progress { display: none; }
     }
 
-    .exp-controls {
-      width: 124px;
-      cursor: default;
+    /* 中间时间条：每段经历一节「结束 — 竖线 — 开始」，与角色 / 经历同步竖向滑动；上下相邻节渐隐露出 */
+    .exp-timebar {
+      --tl-peek: 16%;
+      width: 76px;
+      min-height: 0;
       display: flex;
       flex-direction: column;
-      align-items: flex-start;
-      justify-content: center;
-      gap: 22px;
+      align-items: center;
+      user-select: none;
     }
-    .exp-controls .exp-arrow { margin-left: -12px; }
-    .exp-arrow {
-      flex: 0 0 auto;
-      width: 36px;
-      height: 36px;
-      border: none;
-      border-radius: 50%;
-      background: rgba(255, 255, 255, 0.06);
-      color: var(--text);
-      display: grid;
-      place-items: center;
-      cursor: pointer;
-      transition: background 0.25s var(--ease), color 0.25s var(--ease), opacity 0.25s var(--ease);
-    }
-    .exp-arrow:hover:not(:disabled) {
-      background: var(--lime);
-      color: #0a0a0a;
-    }
-    .exp-arrow:disabled {
-      opacity: 0.25;
-      cursor: default;
-    }
-    .exp-steps {
+    .exp-tl-viewport {
       position: relative;
+      flex: 1 1 auto;
+      width: 100%;
+      min-height: 0;
+      overflow: hidden;
+      -webkit-mask-image: linear-gradient(180deg, transparent 0, #000 var(--tl-peek), #000 calc(100% - var(--tl-peek)), transparent 100%);
+      mask-image: linear-gradient(180deg, transparent 0, #000 var(--tl-peek), #000 calc(100% - var(--tl-peek)), transparent 100%);
+    }
+    .exp-tl-track {
+      position: absolute;
+      left: 0;
+      right: 0;
+      top: var(--tl-peek);
+      height: calc(100% - var(--tl-peek) * 2);
       display: flex;
       flex-direction: column;
-      gap: clamp(36px, 8vh, 72px);
+      transform: translate3d(0, calc((var(--exp-drag-p, 0) - var(--exp-i, 0)) * 100%), 0);
+      transition: transform 0.8s var(--ease);
+      will-change: transform;
     }
-    .exp-steps-line {
+    .exp-page.is-dragging .exp-tl-track { transition: none; }
+    .exp-tl-seg {
+      position: relative;
+      flex: 0 0 100%;
+      min-height: 0;
+      box-sizing: border-box;
+      padding-block: 18px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 10px;
+      opacity: 0;
+      transition: opacity 0.6s var(--ease);
+    }
+    .exp-tl-seg.is-center { opacity: 1; }
+    /* 上下延伸线：伸进渐隐区，暗示时间条连续、可继续滑动；高度 24% ≈ --tl-peek 相对本节高度 */
+    .exp-tl-seg::before,
+    .exp-tl-seg::after {
+      content: "";
       position: absolute;
-      left: 5px;
-      top: 8px;
-      bottom: 26px;
-      width: 1px;
-      background: rgba(255, 255, 255, 0.12);
+      left: 50%;
+      width: 2px;
+      height: calc(24% + 10px);
+      margin-left: -1px;
+      border-radius: 2px;
       pointer-events: none;
     }
-    .exp-steps-line > span {
-      display: block;
-      width: 100%;
-      height: 100%;
-      background: var(--lime);
-      transform-origin: center top;
-      transform: scaleY(var(--exp-progress, 0));
-      transition: transform 0.8s var(--ease);
+    .exp-tl-seg::before {
+      top: -24%;
+      background: linear-gradient(180deg, transparent, rgba(204, 255, 0, 0.6));
     }
-    .exp-step {
-      appearance: none;
-      height: 34px;
-      padding: 0;
-      border: none;
-      background: none;
-      font: inherit;
-      color: var(--muted);
-      cursor: pointer;
-      text-align: left;
-      display: grid;
-      grid-template-columns: 11px auto;
-      grid-template-rows: auto auto;
-      column-gap: 12px;
-      row-gap: 3px;
-      align-content: start;
+    .exp-tl-seg::after {
+      bottom: -24%;
+      background: linear-gradient(0deg, transparent, rgba(204, 255, 0, 0.6));
     }
-    .exp-step-dot {
-      position: relative;
-      z-index: 1;
-      grid-row: 1 / 3;
-      align-self: start;
-      margin-top: 3px;
-      width: 11px;
-      height: 11px;
-      border-radius: 50%;
-      background: var(--bg);
-      box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.3);
-      transition: background 0.35s var(--ease), box-shadow 0.35s var(--ease);
-    }
-    .exp-step.is-done .exp-step-dot {
-      background: rgba(204, 255, 0, 0.5);
-      box-shadow: none;
-    }
-    .exp-step.is-current .exp-step-dot {
-      background: var(--lime);
-      box-shadow: 0 0 0 4px rgba(204, 255, 0, 0.18);
-    }
-    .exp-step-label {
-      font-size: 13px;
-      font-weight: 600;
-      line-height: 1.3;
-      transition: color 0.35s var(--ease);
-    }
-    .exp-step:hover .exp-step-label,
-    .exp-step.is-current .exp-step-label { color: var(--text); }
-    .exp-step-years {
-      font-size: 9px;
+    .exp-tl-seg:first-child::before,
+    .exp-tl-seg:last-child::after { display: none; }
+    .exp-tl-date {
+      flex: 0 0 auto;
+      font-size: 15px;
+      font-weight: 700;
+      line-height: 1.2;
       letter-spacing: 0.06em;
-      color: rgba(255, 255, 255, 0.32);
+      font-variant-numeric: tabular-nums;
+      color: var(--text);
       white-space: nowrap;
     }
+    .exp-tl-date.is-now { color: var(--lime); }
+    .exp-time-dot {
+      position: relative;
+      flex: 0 0 auto;
+      width: 9px;
+      height: 9px;
+      border-radius: 50%;
+      background: var(--lime);
+      box-shadow: 0 0 0 4px rgba(204, 255, 0, 0.14);
+    }
+    .exp-time-dot.is-start {
+      background: var(--bg);
+      box-shadow: inset 0 0 0 2px rgba(204, 255, 0, 0.7);
+    }
+    .exp-time-dot::after {
+      content: "";
+      position: absolute;
+      inset: -4px;
+      border-radius: 50%;
+      border: 1px solid var(--lime);
+      opacity: 0;
+    }
+    .exp-tl-seg.is-center[data-exp-ongoing] .exp-time-dot:not(.is-start)::after {
+      animation: expTimePulse 1.8s ease-out infinite;
+    }
+    @keyframes expTimePulse {
+      0% { transform: scale(0.6); opacity: 0.8; }
+      100% { transform: scale(2.2); opacity: 0; }
+    }
+    .exp-time-line {
+      position: relative;
+      flex: 1 1 auto;
+      width: 2px;
+      min-height: 24px;
+      border-radius: 2px;
+      overflow: hidden;
+      background: var(--lime);
+      box-shadow: 0 0 8px rgba(204, 255, 0, 0.35);
+    }
+    .exp-time-sweep {
+      position: absolute;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 32%;
+      background: linear-gradient(180deg, transparent, #f2ffb3 50%, transparent);
+      opacity: 0;
+    }
+    .exp-timebar.is-sweep-up .exp-tl-seg.is-center .exp-time-sweep { animation: expSweepUp 0.8s var(--ease); }
+    .exp-timebar.is-sweep-down .exp-tl-seg.is-center .exp-time-sweep { animation: expSweepDown 0.8s var(--ease); }
+    @keyframes expSweepUp {
+      0% { transform: translateY(320%); opacity: 0; }
+      15% { opacity: 1; }
+      100% { transform: translateY(-100%); opacity: 0.2; }
+    }
+    @keyframes expSweepDown {
+      0% { transform: translateY(-100%); opacity: 0; }
+      15% { opacity: 1; }
+      100% { transform: translateY(320%); opacity: 0.2; }
+    }
+    .exp-time-more {
+      flex: 0 0 auto;
+      margin: 10px 0 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 4px;
+      font-size: 11px;
+      letter-spacing: 0.08em;
+      color: var(--muted);
+      white-space: nowrap;
+      transition: opacity 0.4s var(--ease);
+    }
+    .exp-time-more-arrow {
+      color: var(--lime);
+      font-size: 12px;
+      line-height: 1;
+      animation: expMoreBob 1.6s ease-in-out infinite;
+    }
+    @keyframes expMoreBob {
+      0%, 100% { transform: translateY(0); opacity: 0.5; }
+      50% { transform: translateY(4px); opacity: 1; }
+    }
+    .exp-timebar.is-last .exp-time-more { opacity: 0; }
 
     @media (max-width: 760px) {
       .exp-page {
@@ -898,30 +957,38 @@
       }
       .exp-ip-slider { grid-row: 1; }
       .exp-slider { grid-row: 2; }
-      .exp-controls {
+      .exp-timebar {
         grid-row: 3;
+        --tl-peek: 0%;
         width: auto;
-        flex-direction: row;
-        align-items: center;
+        height: 30px;
+      }
+      .exp-tl-viewport {
+        -webkit-mask-image: none;
+        mask-image: none;
+      }
+      .exp-tl-seg {
+        flex-direction: row-reverse;
         justify-content: center;
-        gap: 14px;
+        padding-block: 0;
+        gap: 8px;
       }
-      .exp-controls .exp-arrow { margin-left: 0; }
-      .exp-steps {
-        flex-direction: row;
-        gap: 18px;
+      .exp-tl-seg::before,
+      .exp-tl-seg::after { display: none; }
+      .exp-tl-date { font-size: 13px; }
+      .exp-time-line {
+        flex: 0 0 min(140px, 30vw);
+        width: auto;
+        height: 2px;
+        min-height: 0;
+        margin: 0 4px;
       }
-      .exp-steps-line { display: none; }
-      .exp-step {
-        height: auto;
-        grid-template-columns: 11px auto;
-        column-gap: 6px;
-      }
+      .exp-time-sweep,
+      .exp-time-more { display: none; }
       .exp-ip-index { font-size: 48px; }
       .exp-station-card { padding: 14px; }
       .exp-station-kpis { gap: 6px; }
       .exp-station-kpis li { min-width: 0; padding: 8px; }
-      .exp-step-years { display: none; }
     }
 
     @media (prefers-reduced-motion: reduce) {
@@ -929,7 +996,11 @@
       .exp-ip-figure,
       .exp-station,
       .exp-ip,
-      .exp-steps-line > span { transition: none; }
+      .exp-tl-track,
+      .exp-tl-seg { transition: none; }
+      .exp-time-sweep,
+      .exp-time-dot::after,
+      .exp-time-more-arrow { animation: none !important; }
     }
 
     /* —— Works 作品集（扇形纸叠 + 居中 IP） —— */
@@ -1039,15 +1110,16 @@
       transition: transform 0.35s var(--ease), z-index 0s;
       z-index: 6;
     }
-    .works-stack-btn[data-fan-i="0"] { left: 20%; top: 17%; --fan-r: -14deg; }
-    .works-stack-btn[data-fan-i="1"] { left: 50%; top: 11%; --fan-r: 0deg; }
-    .works-stack-btn[data-fan-i="2"] { left: 80%; top: 17%; --fan-r: 14deg; }
-    .works-stack-btn[data-fan-i="3"] { left: 9%; top: 36%; --fan-r: -22deg; }
-    .works-stack-btn[data-fan-i="4"] { left: 7%; top: 56%; --fan-r: -16deg; }
-    .works-stack-btn[data-fan-i="5"] { left: 13%; top: 76%; --fan-r: -10deg; }
-    .works-stack-btn[data-fan-i="6"] { left: 91%; top: 36%; --fan-r: 22deg; }
-    .works-stack-btn[data-fan-i="7"] { left: 93%; top: 56%; --fan-r: 16deg; }
-    .works-stack-btn[data-fan-i="8"] { left: 87%; top: 76%; --fan-r: 10deg; }
+    .works-stack-btn[data-fan-i="0"] { left: 8%; top: 78%; --fan-r: -20deg; }
+    .works-stack-btn[data-fan-i="1"] { left: 10%; top: 52%; --fan-r: -16deg; }
+    .works-stack-btn[data-fan-i="2"] { left: 16%; top: 28%; --fan-r: -12deg; }
+    .works-stack-btn[data-fan-i="3"] { left: 28%; top: 12%; --fan-r: -6deg; }
+    .works-stack-btn[data-fan-i="4"] { left: 42%; top: 7%; --fan-r: -2deg; }
+    .works-stack-btn[data-fan-i="5"] { left: 58%; top: 7%; --fan-r: 2deg; }
+    .works-stack-btn[data-fan-i="6"] { left: 72%; top: 12%; --fan-r: 6deg; }
+    .works-stack-btn[data-fan-i="7"] { left: 84%; top: 28%; --fan-r: 12deg; }
+    .works-stack-btn[data-fan-i="8"] { left: 90%; top: 52%; --fan-r: 16deg; }
+    .works-stack-btn[data-fan-i="9"] { left: 92%; top: 78%; --fan-r: 20deg; }
 
     .works-stack-btn:hover,
     .works-stack-btn.is-active {
@@ -1108,6 +1180,53 @@
       letter-spacing: 0.04em;
       color: rgba(255, 255, 255, 0.88);
       pointer-events: none;
+    }
+    /* 有真实素材的作品：icon + 名称 + 亮点组合成一个圆形徽章 */
+    .works-stack-btn:has(.works-badge) { width: auto; }
+    .works-badge {
+      --orb-accent: rgba(204, 255, 0, 0.55);
+      width: var(--badge-s, clamp(88px, 11.5vw, 128px));
+      aspect-ratio: 1;
+      box-sizing: border-box;
+      padding: calc(var(--badge-s, 128px) * 0.094);
+      border-radius: 50%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 3px;
+      text-align: center;
+      background:
+        radial-gradient(circle at 50% 30%, color-mix(in srgb, var(--orb-accent) 16%, transparent) 0%, transparent 62%),
+        rgba(14, 14, 16, 0.92);
+      border: 1px solid color-mix(in srgb, var(--orb-accent) 45%, transparent);
+      box-shadow: 0 0 22px color-mix(in srgb, var(--orb-accent) 22%, transparent), 0 12px 30px rgba(0, 0, 0, 0.45);
+      transition: border-color 0.35s var(--ease), box-shadow 0.35s var(--ease);
+    }
+    .works-stack-btn[data-series="alarm"] .works-badge { --orb-accent: #ffb450; }
+    .works-stack-btn[data-series="fish"] .works-badge { --orb-accent: #50c8dc; }
+    .works-stack-btn[data-series="health"] .works-badge { --orb-accent: #78dc8c; }
+    .works-badge-icon {
+      width: 42%;
+      height: auto;
+      aspect-ratio: 1;
+      margin-bottom: 3px;
+      border-radius: 24%;
+      box-shadow: 0 6px 14px rgba(0, 0, 0, 0.45);
+      pointer-events: none;
+    }
+    .works-badge .works-stack-name {
+      max-width: 100%;
+      font-size: clamp(8.5px, calc(var(--badge-s, 128px) * 0.1), 11px);
+      line-height: 1.25;
+      text-align: center;
+      word-break: keep-all;
+    }
+    .works-badge .works-stack-kpi { margin-top: 0; white-space: nowrap; }
+    .works-stack-btn:hover .works-badge,
+    .works-stack-btn.is-active .works-badge {
+      border-color: color-mix(in srgb, var(--orb-accent) 75%, #ccff00);
+      box-shadow: 0 0 30px color-mix(in srgb, var(--orb-accent) 40%, #ccff00 20%), 0 12px 30px rgba(0, 0, 0, 0.45);
     }
     .works-stack-btn:hover .works-orb-rings span:nth-child(3),
     .works-stack-btn.is-active .works-orb-rings span:nth-child(3) {
@@ -1178,6 +1297,112 @@
       opacity: 1;
       transform: translateX(-50%) translateY(-4px) scale(1);
     }
+    .works-stack-btn[data-shots] .works-stack-preview { display: none; }
+
+    /* 悬停浮层：主功能视频按序号并排循环播放 */
+    .works-ip { transition: opacity 0.35s var(--ease); }
+    .works-stack-btn { transition: transform 0.35s var(--ease), opacity 0.35s var(--ease), z-index 0s; }
+    .works-arena.is-showcasing .works-ip { opacity: 0.06; }
+    .works-arena.is-showcasing .works-stack-btn:not(.is-showcase-src) { opacity: 0.08; }
+    .works-showcase {
+      --n: 5;
+      --phone-w: min(150px, 15vw, 24vh, calc((88vw - (var(--n) - 1) * 16px) / var(--n)));
+      position: absolute;
+      inset: 0 -6%;
+      z-index: 25;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      pointer-events: none;
+      opacity: 0;
+      visibility: hidden;
+      background: radial-gradient(ellipse 60% 62% at 50% 50%, rgba(0, 0, 0, 0.86) 0%, rgba(0, 0, 0, 0.6) 62%, transparent 100%);
+      transition: opacity 0.35s var(--ease), visibility 0.35s;
+    }
+    .works-showcase.is-on {
+      opacity: 1;
+      visibility: visible;
+    }
+    .works-showcase-box {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 14px;
+    }
+    .works-showcase-row {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+    .works-phone {
+      --phone-r: 18px;
+      margin: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
+    }
+    .works-phone-screen {
+      position: relative;
+      width: var(--phone-w);
+      aspect-ratio: 720 / 1590;
+      padding: 4px;
+      border-radius: var(--phone-r);
+      background: #050506;
+      border: 1px solid rgba(255, 255, 255, 0.16);
+      box-shadow: 0 22px 50px rgba(0, 0, 0, 0.6), 0 0 0 1px rgba(255, 180, 80, 0.08);
+      overflow: hidden;
+    }
+    .works-phone.is-landscape .works-phone-screen { width: calc(var(--phone-w) * var(--u, 2)); }
+    .works-phone.is-error .works-phone-screen::after {
+      content: "视频暂不可播放";
+      position: absolute;
+      inset: 0;
+      display: grid;
+      place-items: center;
+      padding: 8px;
+      font-size: 10px;
+      letter-spacing: 0.06em;
+      text-align: center;
+      color: var(--muted);
+    }
+    .works-phone video {
+      display: block;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      border-radius: calc(var(--phone-r) - 4px);
+      background: #111114;
+    }
+    .works-phone figcaption {
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 0.14em;
+      color: rgba(255, 255, 255, 0.5);
+    }
+    .works-showcase .works-phone {
+      position: relative;
+      opacity: 0;
+      transform: translateY(18px) scale(0.96);
+      cursor: pointer;
+      transition:
+        opacity 0.45s var(--ease) calc(var(--i, 0) * 45ms),
+        transform 0.45s var(--ease) calc(var(--i, 0) * 45ms),
+        scale 0.3s var(--ease),
+        filter 0.3s var(--ease);
+    }
+    .works-showcase.is-on .works-phone {
+      opacity: 1;
+      transform: none;
+    }
+    .works-showcase.is-on .works-showcase-row { pointer-events: auto; }
+    .works-showcase .works-phone:first-child { transform-origin: left center; }
+    .works-showcase .works-phone:last-child { transform-origin: right center; }
+    .works-showcase .works-phone.is-zoomed {
+      z-index: 2;
+      scale: var(--zoom, 1.6);
+    }
+    .works-showcase-row.is-zooming .works-phone:not(.is-zoomed) { filter: brightness(0.45); }
 
     .works-stack-body {
       display: block;
@@ -1286,6 +1511,24 @@
       color: var(--muted);
     }
     .works-detail-media-fallback.is-hidden { display: none; }
+    .works-detail-media[hidden] { display: none; }
+    .works-detail-panel {
+      scrollbar-width: thin;
+      scrollbar-color: rgba(204, 255, 0, 0.3) transparent;
+    }
+    .works-detail-panel.has-shots { width: min(860px, 100%); }
+    .works-detail-shots {
+      --n: 5;
+      --phone-w: min(18vh, calc((min(816px, 100vw - 80px) - (var(--n) - 1) * 10px) / var(--n)));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      margin: 4px 0 16px;
+      padding-top: 28px;
+    }
+    .works-detail-shots[hidden] { display: none; }
+    .works-detail-shots .works-phone { --phone-r: 16px; }
     .works-detail-media-fallback code {
       font-size: 10px;
       color: rgba(204, 255, 0, 0.7);
@@ -1348,12 +1591,19 @@
       .works-stack-name { font-size: 10px; }
       .works-stack-preview { width: 88px; }
       .works-ip { width: 42%; top: 62%; }
+      .works-showcase { --phone-w: calc((92vw - (var(--n) - 1) * 6px) / var(--n)); inset: 0 -4%; }
+      .works-showcase-row { gap: 6px; }
+      .works-phone { --phone-r: 10px; }
+      .works-phone-screen { padding: 2px; }
+      .works-detail-shots { gap: 6px; --phone-w: calc((100vw - 64px - (var(--n) - 1) * 6px) / var(--n)); }
     }
 
     @media (prefers-reduced-motion: reduce) {
       .works-ip-figure { transition: none; }
       .works-stack-btn { transition: none; }
       .works-stack-preview { transition: none; }
+      .works-showcase,
+      .works-showcase .works-phone { transition: none; }
       .works-detail-panel { animation: none; }
     }
 
@@ -1393,15 +1643,15 @@
     }
     .proj-ip-cards {
       display: grid;
-      grid-template-columns: repeat(3, minmax(0, 1fr));
-      gap: clamp(14px, 2.8vw, 28px);
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: clamp(12px, 2vw, 22px);
       width: 100%;
       align-items: stretch;
     }
     @media (max-width: 720px) {
       .proj-ip-cards {
-        grid-template-columns: 1fr;
-        max-width: 280px;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        max-width: 420px;
         margin: 0 auto;
       }
     }
@@ -1426,6 +1676,7 @@
     .proj-ip-card[data-series="material"] { --ip-accent: #c4a1ff; }
     .proj-ip-card[data-series="alarm"] { --ip-accent: #ffb450; }
     .proj-ip-card[data-series="fish"] { --ip-accent: #50c8dc; }
+    .proj-ip-card[data-series="health"] { --ip-accent: #ff8fa3; }
     .proj-ip-card:hover {
       transform: translateY(-6px);
       border-color: color-mix(in srgb, var(--ip-accent) 50%, transparent);
@@ -1440,8 +1691,8 @@
     }
     .proj-ip-avatar {
       position: relative;
-      width: clamp(108px, 14vw, 140px);
-      height: clamp(108px, 14vw, 140px);
+      width: clamp(96px, 12vw, 132px);
+      height: clamp(96px, 12vw, 132px);
       border-radius: 50%;
       overflow: hidden;
       flex-shrink: 0;
@@ -1567,7 +1818,7 @@
       display: flex;
       flex-wrap: wrap;
       justify-content: center;
-      gap: 10px;
+      gap: 8px;
       margin-top: 14px;
       width: 100%;
       padding: 0 4px;
@@ -1590,6 +1841,7 @@
     .proj-switch[data-series="material"] { --ip-accent: #c4a1ff; }
     .proj-switch[data-series="alarm"] { --ip-accent: #ffb450; }
     .proj-switch[data-series="fish"] { --ip-accent: #50c8dc; }
+    .proj-switch[data-series="health"] { --ip-accent: #ff8fa3; }
     .proj-switch:hover {
       opacity: 1;
       transform: translateY(-2px);
@@ -1605,8 +1857,8 @@
       border-radius: 8px;
     }
     .proj-switch-avatar {
-      width: 46px;
-      height: 46px;
+      width: 40px;
+      height: 40px;
       border-radius: 50%;
       overflow: hidden;
       border: 2px solid color-mix(in srgb, var(--ip-accent) 45%, rgba(255, 255, 255, 0.12));
@@ -2003,58 +2255,94 @@
                   <img src="assets/images/character-01-front.png" width="800" height="1200" alt="" decoding="async" />
                 </figure>
               </div>
+              <div class="exp-ip">
+                <span class="exp-ip-index">04</span>
+                <div class="exp-ip-glow"></div>
+                <figure class="exp-ip-figure">
+                  <img src="assets/images/character-01-front.png" width="800" height="1200" alt="" decoding="async" />
+                </figure>
+              </div>
             </div>
           </div>
 
-          <div class="exp-controls">
-            <button type="button" class="exp-arrow" id="expPrev" aria-label="上一段经历">
-              <svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path d="M6 15l6-6 6 6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" /></svg>
-            </button>
-            <div class="exp-steps" id="expSteps" role="tablist" aria-orientation="vertical" aria-label="经历阶段">
-              <span class="exp-steps-line" aria-hidden="true"><span></span></span>
-              <button type="button" class="exp-step" role="tab"><span class="exp-step-dot"></span><span class="exp-step-label">大学</span><span class="exp-step-years">2019 — 2023</span></button>
-              <button type="button" class="exp-step" role="tab"><span class="exp-step-dot"></span><span class="exp-step-label">实习</span><span class="exp-step-years">2023.05 — 2023.10</span></button>
-              <button type="button" class="exp-step" role="tab"><span class="exp-step-dot"></span><span class="exp-step-label">正式工作</span><span class="exp-step-years">2024.10 — 至今</span></button>
+          <div class="exp-timebar" id="expTimebar" aria-hidden="true">
+            <div class="exp-tl-viewport">
+              <div class="exp-tl-track">
+                <div class="exp-tl-seg" data-exp-ongoing>
+                  <span class="exp-tl-date is-now">至今</span>
+                  <span class="exp-time-dot"></span>
+                  <span class="exp-time-line"><span class="exp-time-sweep"></span></span>
+                  <span class="exp-time-dot is-start"></span>
+                  <span class="exp-tl-date">2024.10</span>
+                </div>
+                <div class="exp-tl-seg">
+                  <span class="exp-tl-date">2023.10</span>
+                  <span class="exp-time-dot"></span>
+                  <span class="exp-time-line"><span class="exp-time-sweep"></span></span>
+                  <span class="exp-time-dot is-start"></span>
+                  <span class="exp-tl-date">2023.05</span>
+                </div>
+                <div class="exp-tl-seg">
+                  <span class="exp-tl-date">2023.03</span>
+                  <span class="exp-time-dot"></span>
+                  <span class="exp-time-line"><span class="exp-time-sweep"></span></span>
+                  <span class="exp-time-dot is-start"></span>
+                  <span class="exp-tl-date">2022.09</span>
+                </div>
+                <div class="exp-tl-seg">
+                  <span class="exp-tl-date">2023.07</span>
+                  <span class="exp-time-dot"></span>
+                  <span class="exp-time-line"><span class="exp-time-sweep"></span></span>
+                  <span class="exp-time-dot is-start"></span>
+                  <span class="exp-tl-date">2019.09</span>
+                </div>
+              </div>
             </div>
-            <button type="button" class="exp-arrow" id="expNext" aria-label="下一段经历">
-              <svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path d="M6 9l6 6 6-6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" /></svg>
-            </button>
+            <p class="exp-time-more"><span class="exp-time-more-arrow">↓</span>更早经历</p>
           </div>
 
           <div class="exp-slider" id="expSlider" aria-roledescription="carousel" aria-label="个人履历">
             <div class="exp-slides" id="expSlides">
-                <article class="exp-station" data-exp-i="0" data-type="edu" aria-label="大学 2019 — 2023">
+                <article class="exp-station" data-exp-i="0" data-type="full" aria-label="正式工作 2024.10 — 至今">
                   <div class="exp-station-card">
                     <div class="exp-station-head">
                       <div class="exp-station-top">
-                        <time class="exp-station-when" datetime="2019/2023">2019 — 2023</time>
-                        <span class="exp-station-tag">大学</span>
+                        <time class="exp-station-when" datetime="2024-10">2024.10 — 至今</time>
+                        <span class="exp-station-tag">正式工作</span>
                       </div>
                       <p class="exp-station-titleline">
-                        <span class="exp-station-company">西南科技大学</span>
-                        <span class="exp-station-role">软件工程 · 本科</span>
+                        <span class="exp-station-company">成都琢森湖科技有限公司</span>
+                        <span class="exp-station-role">产品经理 / 运营 · 全职</span>
                       </p>
                     </div>
                     <ul class="exp-station-kpis" aria-label="要点">
-                      <li><em>4 年</em>本科制</li>
-                      <li><em>工科</em>软件工程</li>
-                      <li><em>基础</em>产品 &amp; 技术理解</li>
+                      <li><em>60+</em>App 运营迭代</li>
+                      <li><em>~80%</em>安卓市场上架率</li>
+                      <li><em>+150%</em>广告总收益</li>
                     </ul>
                     <div class="exp-station-body">
-                      <div class="exp-body-viewport" data-exp-body tabindex="0" aria-label="大学经历详情">
+                      <div class="exp-body-viewport" data-exp-body tabindex="0" aria-label="工作经历详情">
                         <div class="exp-body-progress" aria-hidden="true"><span class="exp-body-bar"></span></div>
                         <div class="exp-body-inner">
                           <div class="exp-body-item">
-                            <h4>课程体系</h4>
-                            <p>软件工程、数据结构、数据库、软件项目管理等系统训练，建立从需求到交付的完整工程思维。</p>
+                            <h4>ASO 增长运营</h4>
+                            <p>负责 60+ App 运营，跟踪竞品动态、关键词与评论，优化商店素材与上架策略；累计 200+ 版本迭代，9 大安卓市场上架率约 80%，广告总收益提升约 150%。</p>
                           </div>
                           <div class="exp-body-item">
-                            <h4>能力沉淀</h4>
-                            <p>为后续 C 端产品、数据分析与 AI 应用实践打下技术理解基础，能与研发高效协作。</p>
+                            <h4>数据驱动策略</h4>
+                            <p>跟踪用户行为埋点、广告 ARPU 与付费转化，搭建月度 / 季度数据看板，分析趋势并反哺功能迭代与增长实验优先级。</p>
                           </div>
                           <div class="exp-body-item">
-                            <h4>实践方向</h4>
-                            <p>关注互联网产品与用户价值，逐步明确产品管理 + 运营增长的职业路径。</p>
+                            <h4>AI 应用开发</h4>
+                            <p>基于 Cursor 等 AI 工具完成 20+ App 从需求到上架的全流程，具备独立产品化开发能力，最快 0→1 仅需 1 天。</p>
+                          </div>
+                          <div class="exp-body-item">
+                            <h4>产品方案设计</h4>
+                            <p>负责需求拆解、逻辑梳理、交互流程与原型输出；累计 5+ 核心产品 PRD、10+ 高保真原型与 1000+ 视觉素材。</p>
+                          </div>
+                          <div class="exp-body-item">
+                            <h4>AI 功能落地</h4>
+                            <p>探索闹钟、健康、钓鱼等垂直场景的 AI 能力，率先将 AI 功能嵌入公司产品，并完成鸿蒙「小艺」智能体对接验证。</p>
                           </div>
                         </div>
                       </div>
@@ -2107,46 +2395,75 @@
                   </div>
                 </article>
 
-                <article class="exp-station" data-exp-i="2" data-type="full" aria-label="正式工作 2024.10 — 至今">
+                <article class="exp-station" data-exp-i="2" data-type="intern" aria-label="实习 2022.09 — 2023.03">
                   <div class="exp-station-card">
                     <div class="exp-station-head">
                       <div class="exp-station-top">
-                        <time class="exp-station-when" datetime="2024-10">2024.10 — 至今</time>
-                        <span class="exp-station-tag">正式工作</span>
+                        <time class="exp-station-when" datetime="2022-09/2023-03">2022.09 — 2023.03</time>
+                        <span class="exp-station-tag">实习</span>
                       </div>
                       <p class="exp-station-titleline">
-                        <span class="exp-station-company">成都琢森湖科技有限公司</span>
-                        <span class="exp-station-role">产品经理 / 运营 · 全职</span>
+                        <span class="exp-station-company">北京直真科技有限公司</span>
+                        <span class="exp-station-role">软件测试 · 实习</span>
                       </p>
                     </div>
                     <ul class="exp-station-kpis" aria-label="要点">
-                      <li><em>60+</em>App 运营迭代</li>
-                      <li><em>~80%</em>安卓市场上架率</li>
-                      <li><em>+150%</em>广告总收益</li>
+                      <li><em>600+</em>测试任务</li>
+                      <li><em>2000+</em>SQL 测试数据</li>
+                      <li><em>3 类</em>功能 / 接口 / 性能</li>
                     </ul>
                     <div class="exp-station-body">
-                      <div class="exp-body-viewport" data-exp-body tabindex="0" aria-label="工作经历详情">
+                      <div class="exp-body-viewport" data-exp-body tabindex="0" aria-label="软件测试实习详情">
                         <div class="exp-body-progress" aria-hidden="true"><span class="exp-body-bar"></span></div>
                         <div class="exp-body-inner">
                           <div class="exp-body-item">
-                            <h4>ASO 增长运营</h4>
-                            <p>负责 60+ App 运营，跟踪竞品动态、关键词与评论，优化商店素材与上架策略；累计 200+ 版本迭代，9 大安卓市场上架率约 80%，广告总收益提升约 150%。</p>
+                            <h4>全流程测试执行</h4>
+                            <p>围绕功能测试、接口测试、性能测试三大方向，累计完成 600+ 项测试任务，独立定位并跟进缺陷闭环，确保项目高质量交付。</p>
                           </div>
                           <div class="exp-body-item">
-                            <h4>数据驱动策略</h4>
-                            <p>跟踪用户行为埋点、广告 ARPU 与付费转化，搭建月度 / 季度数据看板，分析趋势并反哺功能迭代与增长实验优先级。</p>
+                            <h4>数据质量 &amp; 测试数据集</h4>
+                            <p>核查数据库数据一致性，清洗脏数据，显著降低误报 / 漏报率，提升测试结果可信度。</p>
+                            <p>基于业务场景，使用 SQL 构造 2000+ 条可复用测试数据，覆盖正常、边界、异常等多种用例，提升测试覆盖度。</p>
+                          </div>
+                        </div>
+                      </div>
+                      <p class="exp-body-hint">悬停或按住暂停 · 滚轮可手动浏览</p>
+                    </div>
+                  </div>
+                </article>
+
+                <article class="exp-station" data-exp-i="3" data-type="edu" aria-label="大学 2019.09 — 2023.07">
+                  <div class="exp-station-card">
+                    <div class="exp-station-head">
+                      <div class="exp-station-top">
+                        <time class="exp-station-when" datetime="2019-09/2023-07">2019.09 — 2023.07</time>
+                        <span class="exp-station-tag">大学</span>
+                      </div>
+                      <p class="exp-station-titleline">
+                        <span class="exp-station-company">西南科技大学</span>
+                        <span class="exp-station-role">软件工程 · 本科</span>
+                      </p>
+                    </div>
+                    <ul class="exp-station-kpis" aria-label="要点">
+                      <li><em>4 年</em>本科制</li>
+                      <li><em>工科</em>软件工程</li>
+                      <li><em>基础</em>产品 &amp; 技术理解</li>
+                    </ul>
+                    <div class="exp-station-body">
+                      <div class="exp-body-viewport" data-exp-body tabindex="0" aria-label="大学经历详情">
+                        <div class="exp-body-progress" aria-hidden="true"><span class="exp-body-bar"></span></div>
+                        <div class="exp-body-inner">
+                          <div class="exp-body-item">
+                            <h4>课程体系</h4>
+                            <p>软件工程、数据结构、数据库、软件项目管理等系统训练，建立从需求到交付的完整工程思维。</p>
                           </div>
                           <div class="exp-body-item">
-                            <h4>AI 应用开发</h4>
-                            <p>基于 Cursor 等 AI 工具完成 20+ App 从需求到上架的全流程，具备独立产品化开发能力，最快 0→1 仅需 1 天。</p>
+                            <h4>能力沉淀</h4>
+                            <p>为后续 C 端产品、数据分析与 AI 应用实践打下技术理解基础，能与研发高效协作。</p>
                           </div>
                           <div class="exp-body-item">
-                            <h4>产品方案设计</h4>
-                            <p>负责需求拆解、逻辑梳理、交互流程与原型输出；累计 5+ 核心产品 PRD、10+ 高保真原型与 1000+ 视觉素材。</p>
-                          </div>
-                          <div class="exp-body-item">
-                            <h4>AI 功能落地</h4>
-                            <p>探索闹钟、健康、钓鱼等垂直场景的 AI 能力，率先将 AI 功能嵌入公司产品，并完成鸿蒙「小艺」智能体对接验证。</p>
+                            <h4>实践方向</h4>
+                            <p>关注互联网产品与用户价值，逐步明确产品管理 + 运营增长的职业路径。</p>
                           </div>
                         </div>
                       </div>
@@ -2173,78 +2490,151 @@
               </div>
             </div>
             <div class="works-fan" id="worksFan" role="list">
-              <button type="button" class="works-stack-btn" role="listitem" data-fan-i="0" data-works-id="alarm-a" data-series="alarm" data-series-label="闹钟系列"
-                data-title="闹钟 App A（占位）" data-scene="强提醒与多场景闹钟"
+              <button type="button" class="works-stack-btn" role="listitem" data-fan-i="3" data-works-id="alarm-a" data-series="alarm" data-series-label="闹钟系列"
+                data-title="语音闹钟UClock" data-scene="强提醒与多场景闹钟"
                 data-role="产品规划 · 付费设计 · 增长实验" data-highlight="验证订阅与功能付费模型，提升留存与转化"
-                data-kpis="+130% 增长|7 天 0→1|100% 付费覆盖" data-video="" data-poster="" aria-label="闹钟 App A">
-                <span class="works-orb-rings" aria-hidden="true"><span></span><span></span><span></span><span class="works-orb-mark">A</span></span>
+                data-kpis="+130% 增长|7 天 0→1|100% 付费覆盖" data-video="" data-poster=""
+                data-icon="assets/works/clock_01/icon.png"
+                data-shots="assets/works/clock_01/show_01.mp4|assets/works/clock_01/show_02.mp4|assets/works/clock_01/show_03.mp4|assets/works/clock_01/show_04.mp4|assets/works/clock_01/show_05.mp4"
+                aria-label="语音闹钟UClock">
+                <span class="works-badge">
+                  <img class="works-badge-icon" src="assets/works/clock_01/icon.png" width="216" height="216" alt="" decoding="async" />
+                  <span class="works-stack-name">语音闹钟UClock</span>
+                  <span class="works-stack-kpi">+130% 增长</span>
+                </span>
                 <span class="works-stack-preview" aria-hidden="true"><span class="works-stack-preview-inner"></span></span>
-                <span class="works-stack-body"><span class="works-stack-name">闹钟 App A</span><span class="works-stack-kpi">+130% 增长</span></span>
               </button>
-              <button type="button" class="works-stack-btn" role="listitem" data-fan-i="1" data-works-id="alarm-b" data-series="alarm" data-series-label="闹钟系列"
-                data-title="闹钟 App B（占位）" data-scene="海外版本与 ASO"
+              <button type="button" class="works-stack-btn" role="listitem" data-fan-i="2" data-works-id="alarm-b" data-series="alarm" data-series-label="闹钟系列"
+                data-title="桌面数字时钟" data-scene="海外版本与 ASO"
                 data-role="上架策略 · 素材迭代" data-highlight="优化关键词与商店转化路径"
-                data-kpis="80% 上架率|+150% 广告收益" data-video="" data-poster="" aria-label="闹钟 App B">
-                <span class="works-orb-rings" aria-hidden="true"><span></span><span></span><span></span><span class="works-orb-mark">B</span></span>
+                data-kpis="80% 上架率|+150% 广告收益" data-video="" data-poster=""
+                data-icon="assets/works/clock_02/icon.png"
+                data-shots="assets/works/clock_02/show_01.mp4|assets/works/clock_02/show_02.mp4|assets/works/clock_02/show_03.mp4|assets/works/clock_02/show_04.mp4|assets/works/clock_02/show_05.mp4"
+                aria-label="桌面数字时钟">
+                <span class="works-badge">
+                  <img class="works-badge-icon" src="assets/works/clock_02/icon.png" width="216" height="216" alt="" decoding="async" />
+                  <span class="works-stack-name">桌面数字时钟</span>
+                  <span class="works-stack-kpi">80% 上架率</span>
+                </span>
                 <span class="works-stack-preview" aria-hidden="true"><span class="works-stack-preview-inner"></span></span>
-                <span class="works-stack-body"><span class="works-stack-name">闹钟 App B</span><span class="works-stack-kpi">80% 上架率</span></span>
               </button>
-              <button type="button" class="works-stack-btn" role="listitem" data-fan-i="2" data-works-id="alarm-c" data-series="alarm" data-series-label="闹钟系列"
+              <button type="button" class="works-stack-btn" role="listitem" data-fan-i="1" data-works-id="alarm-c" data-series="alarm" data-series-label="闹钟系列"
                 data-title="闹钟 App C（占位）" data-scene="小组件与系统联动"
                 data-role="功能拆解 · 体验优化" data-highlight="强化唤醒链路与通知触达"
-                data-kpis="留存提升|多机型适配" data-video="" data-poster="" aria-label="闹钟 App C">
-                <span class="works-orb-rings" aria-hidden="true"><span></span><span></span><span></span><span class="works-orb-mark">C</span></span>
+                data-kpis="留存提升|多机型适配" data-video="" data-poster=""
+                data-icon="assets/works/clock_03/icon.png"
+                data-shots="assets/works/clock_03/show_01.mp4|assets/works/clock_03/show_02.mp4|assets/works/clock_03/show_03.mp4|assets/works/clock_03/show_04.mp4|assets/works/clock_03/show_05.mp4|assets/works/clock_03/show_06.mp4"
+                aria-label="闹钟 App C">
+                <span class="works-badge">
+                  <img class="works-badge-icon" src="assets/works/clock_03/icon.png" width="216" height="216" alt="" decoding="async" />
+                  <span class="works-stack-name">闹钟 App C</span>
+                  <span class="works-stack-kpi">留存提升</span>
+                </span>
                 <span class="works-stack-preview" aria-hidden="true"><span class="works-stack-preview-inner"></span></span>
-                <span class="works-stack-body"><span class="works-stack-name">闹钟 App C</span><span class="works-stack-kpi">留存提升</span></span>
               </button>
-              <button type="button" class="works-stack-btn" role="listitem" data-fan-i="3" data-works-id="fish-a" data-series="fish" data-series-label="钓鱼系列"
-                data-title="钓鱼 App A（占位）" data-scene="钓点与天气工具"
-                data-role="场景挖掘 · AI 功能规划" data-highlight="垂直信息聚合与功能渗透"
-                data-kpis="+89% 增长|50+ AI 功能" data-video="" data-poster="" aria-label="钓鱼 App A">
-                <span class="works-orb-rings" aria-hidden="true"><span></span><span></span><span></span><span class="works-orb-mark">A</span></span>
+              <button type="button" class="works-stack-btn" role="listitem" data-fan-i="0" data-works-id="alarm-d" data-series="alarm" data-series-label="闹钟系列"
+                data-title="闹钟 App D（占位）" data-scene="待补充"
+                data-role="待补充" data-highlight="待补充"
+                data-kpis="数据待补充" data-video="" data-poster=""
+                data-icon="assets/works/clock_04/icon_256.png"
+                data-shots="assets/works/clock_04/show_001.mp4|assets/works/clock_04/show_002.mp4|assets/works/clock_04/show_003.mp4|assets/works/clock_04/show_004.mp4|assets/works/clock_04/show_005.mp4|assets/works/clock_04/show_006.mp4"
+                aria-label="闹钟 App D">
+                <span class="works-badge">
+                  <img class="works-badge-icon" src="assets/works/clock_04/icon_256.png" width="216" height="216" alt="" decoding="async" />
+                  <span class="works-stack-name">闹钟 App D</span>
+                  <span class="works-stack-kpi">数据待补充</span>
+                </span>
                 <span class="works-stack-preview" aria-hidden="true"><span class="works-stack-preview-inner"></span></span>
-                <span class="works-stack-body"><span class="works-stack-name">钓鱼 App A</span><span class="works-stack-kpi">+89% 增长</span></span>
               </button>
-              <button type="button" class="works-stack-btn" role="listitem" data-fan-i="4" data-works-id="fish-b" data-series="fish" data-series-label="钓鱼系列"
-                data-title="钓鱼 App B（占位）" data-scene="智能体问答"
-                data-role="Agent 边界验证" data-highlight="工具 + 对话式辅助决策"
-                data-kpis="Agent 场景|留存实验" data-video="" data-poster="" aria-label="钓鱼 App B">
-                <span class="works-orb-rings" aria-hidden="true"><span></span><span></span><span></span><span class="works-orb-mark">B</span></span>
+              <button type="button" class="works-stack-btn" role="listitem" data-fan-i="9" data-works-id="health-d" data-series="health" data-series-label="健康系列"
+                data-title="Online体重管理营21天" data-scene="待补充"
+                data-role="待补充" data-highlight="待补充"
+                data-kpis="数据待补充" data-video="" data-poster=""
+                data-icon="assets/works/fitness_04/icon.png"
+                data-shots="assets/works/fitness_04/show_01.mp4|assets/works/fitness_04/show_02.mp4|assets/works/fitness_04/show_03.mp4|assets/works/fitness_04/show_04.mp4|assets/works/fitness_04/show_05.mp4"
+                aria-label="Online体重管理营21天">
+                <span class="works-badge">
+                  <img class="works-badge-icon" src="assets/works/fitness_04/icon.png" width="216" height="216" alt="" decoding="async" />
+                  <span class="works-stack-name">Online<wbr />体重管理营21天</span>
+                  <span class="works-stack-kpi">数据待补充</span>
+                </span>
                 <span class="works-stack-preview" aria-hidden="true"><span class="works-stack-preview-inner"></span></span>
-                <span class="works-stack-body"><span class="works-stack-name">钓鱼 App B</span><span class="works-stack-kpi">Agent 场景</span></span>
-              </button>
-              <button type="button" class="works-stack-btn" role="listitem" data-fan-i="5" data-works-id="fish-c" data-series="fish" data-series-label="钓鱼系列"
-                data-title="钓鱼 App C（占位）" data-scene="社区与内容"
-                data-role="增长与内容策略" data-highlight="UGC 与工具联动"
-                data-kpis="内容渗透|分享链路" data-video="" data-poster="" aria-label="钓鱼 App C">
-                <span class="works-orb-rings" aria-hidden="true"><span></span><span></span><span></span><span class="works-orb-mark">C</span></span>
-                <span class="works-stack-preview" aria-hidden="true"><span class="works-stack-preview-inner"></span></span>
-                <span class="works-stack-body"><span class="works-stack-name">钓鱼 App C</span><span class="works-stack-kpi">内容渗透</span></span>
               </button>
               <button type="button" class="works-stack-btn" role="listitem" data-fan-i="6" data-works-id="health-a" data-series="health" data-series-label="健康系列"
-                data-title="健康 App A（占位）" data-scene="习惯打卡与提醒"
-                data-role="功能设计 · 通知策略" data-highlight="低打扰、高触达的健康提醒链路"
-                data-kpis="留存优化|提醒到达率" data-video="" data-poster="" aria-label="健康 App A">
-                <span class="works-orb-rings" aria-hidden="true"><span></span><span></span><span></span><span class="works-orb-mark">A</span></span>
+                data-title="懒人减肥" data-scene="待补充"
+                data-role="待补充" data-highlight="待补充"
+                data-kpis="数据待补充" data-video="" data-poster=""
+                data-icon="assets/works/fitness_01/icon.png"
+                data-shots="assets/works/fitness_01/show_01.mp4|assets/works/fitness_01/show_02.mp4|assets/works/fitness_01/show_03.mp4|assets/works/fitness_01/show_04.mp4|assets/works/fitness_01/show_05.mp4"
+                aria-label="懒人减肥">
+                <span class="works-badge">
+                  <img class="works-badge-icon" src="assets/works/fitness_01/icon.png" width="216" height="216" alt="" decoding="async" />
+                  <span class="works-stack-name">懒人减肥</span>
+                  <span class="works-stack-kpi">数据待补充</span>
+                </span>
                 <span class="works-stack-preview" aria-hidden="true"><span class="works-stack-preview-inner"></span></span>
-                <span class="works-stack-body"><span class="works-stack-name">健康 App A</span><span class="works-stack-kpi">留存优化</span></span>
               </button>
               <button type="button" class="works-stack-btn" role="listitem" data-fan-i="7" data-works-id="health-b" data-series="health" data-series-label="健康系列"
-                data-title="健康 App B（占位）" data-scene="数据看板"
-                data-role="指标定义 · 可视化" data-highlight="核心行为数据一目了然"
-                data-kpis="行为埋点|看板迭代" data-video="" data-poster="" aria-label="健康 App B">
-                <span class="works-orb-rings" aria-hidden="true"><span></span><span></span><span></span><span class="works-orb-mark">B</span></span>
+                data-title="体重日记BMI减肥打卡" data-scene="待补充"
+                data-role="待补充" data-highlight="待补充"
+                data-kpis="数据待补充" data-video="" data-poster=""
+                data-icon="assets/works/fitness_02/icon.png"
+                data-shots="assets/works/fitness_02/show_01.mp4|assets/works/fitness_02/show_02.mp4|assets/works/fitness_02/show_03.mp4|assets/works/fitness_02/show_04.mp4|assets/works/fitness_02/show_05.mp4"
+                aria-label="体重日记BMI减肥打卡">
+                <span class="works-badge">
+                  <img class="works-badge-icon" src="assets/works/fitness_02/icon.png" width="216" height="216" alt="" decoding="async" />
+                  <span class="works-stack-name">体重日记<wbr />BMI减肥打卡</span>
+                  <span class="works-stack-kpi">数据待补充</span>
+                </span>
                 <span class="works-stack-preview" aria-hidden="true"><span class="works-stack-preview-inner"></span></span>
-                <span class="works-stack-body"><span class="works-stack-name">健康 App B</span><span class="works-stack-kpi">行为埋点</span></span>
               </button>
               <button type="button" class="works-stack-btn" role="listitem" data-fan-i="8" data-works-id="health-c" data-series="health" data-series-label="健康系列"
-                data-title="健康 App C（占位）" data-scene="订阅与会员"
-                data-role="商业化设计" data-highlight="权益分层与转化漏斗"
-                data-kpis="付费转化|ARPU" data-video="" data-poster="" aria-label="健康 App C">
-                <span class="works-orb-rings" aria-hidden="true"><span></span><span></span><span></span><span class="works-orb-mark">C</span></span>
+                data-title="体重管理营" data-scene="待补充"
+                data-role="待补充" data-highlight="待补充"
+                data-kpis="数据待补充" data-video="" data-poster=""
+                data-icon="assets/works/fitness_03/icon.png"
+                data-shots="assets/works/fitness_03/show_01.mp4|assets/works/fitness_03/show_02.mp4|assets/works/fitness_03/show_03.mp4|assets/works/fitness_03/show_04.mp4|assets/works/fitness_03/show_05.mp4|assets/works/fitness_03/show_06.mp4|assets/works/fitness_03/show_07.mp4"
+                aria-label="体重管理营">
+                <span class="works-badge">
+                  <img class="works-badge-icon" src="assets/works/fitness_03/icon.png" width="216" height="216" alt="" decoding="async" />
+                  <span class="works-stack-name">体重管理营</span>
+                  <span class="works-stack-kpi">数据待补充</span>
+                </span>
                 <span class="works-stack-preview" aria-hidden="true"><span class="works-stack-preview-inner"></span></span>
-                <span class="works-stack-body"><span class="works-stack-name">健康 App C</span><span class="works-stack-kpi">付费转化</span></span>
               </button>
+              <button type="button" class="works-stack-btn" role="listitem" data-fan-i="4" data-works-id="fish-a" data-series="fish" data-series-label="钓鱼系列"
+                data-title="潮汐表（爆护日记）" data-scene="待补充"
+                data-role="待补充" data-highlight="待补充"
+                data-kpis="数据待补充" data-video="" data-poster=""
+                data-icon="assets/works/fish_01/icon.png"
+                data-shots="assets/works/fish_01/show_01.mp4|assets/works/fish_01/show_02.mp4|assets/works/fish_01/show_03.mp4|assets/works/fish_01/show_04.mp4|assets/works/fish_01/show_05.mp4|assets/works/fish_01/show_06.mp4"
+                aria-label="潮汐表（爆护日记）">
+                <span class="works-badge">
+                  <img class="works-badge-icon" src="assets/works/fish_01/icon.png" width="216" height="216" alt="" decoding="async" />
+                  <span class="works-stack-name">潮汐表<wbr />（爆护日记）</span>
+                  <span class="works-stack-kpi">数据待补充</span>
+                </span>
+                <span class="works-stack-preview" aria-hidden="true"><span class="works-stack-preview-inner"></span></span>
+              </button>
+              <button type="button" class="works-stack-btn" role="listitem" data-fan-i="5" data-works-id="fish-b" data-series="fish" data-series-label="钓鱼系列"
+                data-title="钓鱼气象实时版" data-scene="待补充"
+                data-role="待补充" data-highlight="待补充"
+                data-kpis="数据待补充" data-video="" data-poster=""
+                data-icon="assets/works/fish_02/icon.png"
+                data-shots="assets/works/fish_02/show_01.mp4|assets/works/fish_02/show_02.mp4|assets/works/fish_02/show_03.mp4|assets/works/fish_02/show_04.mp4|assets/works/fish_02/show_05.mp4"
+                aria-label="钓鱼气象实时版">
+                <span class="works-badge">
+                  <img class="works-badge-icon" src="assets/works/fish_02/icon.png" width="216" height="216" alt="" decoding="async" />
+                  <span class="works-stack-name">钓鱼气象实时版</span>
+                  <span class="works-stack-kpi">数据待补充</span>
+                </span>
+                <span class="works-stack-preview" aria-hidden="true"><span class="works-stack-preview-inner"></span></span>
+              </button>
+            <div class="works-showcase" id="worksShowcase" aria-hidden="true">
+              <div class="works-showcase-box">
+                <div class="works-showcase-row" id="worksShowcaseRow"></div>
+              </div>
+            </div>
             </div>
           </div>
 
@@ -2259,8 +2649,9 @@
                   <code id="worksDetailVideoHint">works/your-demo.mp4</code>
                 </div>
               </div>
+              <div class="works-detail-shots" id="worksDetailShots" hidden></div>
               <p class="works-detail-series" id="worksDetailSeries" data-series="alarm"><i aria-hidden="true"></i> 闹钟系列</p>
-              <h3 class="works-detail-title" id="worksDetailTitle">闹钟 App A（占位）</h3>
+              <h3 class="works-detail-title" id="worksDetailTitle"></h3>
               <dl class="works-detail-rows">
                 <div><dt>场景</dt><dd id="worksDetailScene"></dd></div>
                 <div><dt>职责</dt><dd id="worksDetailRole"></dd></div>
@@ -2306,6 +2697,15 @@
                   <span class="proj-ip-kpi">留存 +80%</span>
                 </span>
               </button>
+              <button type="button" class="proj-ip-card" role="listitem" data-proj-index="3" data-series="health" data-ip-src="assets/images/character-01-front.png" aria-label="健康 App 系列">
+                <span class="proj-ip-avatar"><img src="assets/images/character-01-front.png" width="800" height="1200" alt="" decoding="async" /></span>
+                <span class="proj-ip-copy">
+                  <span class="proj-ip-num">04</span>
+                  <span class="proj-ip-title">健康 App 系列</span>
+                  <span class="proj-ip-role">产品规划</span>
+                  <span class="proj-ip-kpi">AI 功能落地</span>
+                </span>
+              </button>
             </div>
             <p class="proj-hub-hint">点击角色 · 进入案例详情</p>
           </div>
@@ -2328,6 +2728,10 @@
                   <button type="button" class="proj-switch" role="tab" data-proj-index="2" data-series="fish" aria-label="钓鱼 App 系列">
                     <span class="proj-switch-avatar"><img src="assets/images/character-01-front.png" width="800" height="1200" alt="" decoding="async" /></span>
                     <span class="proj-switch-label">03</span>
+                  </button>
+                  <button type="button" class="proj-switch" role="tab" data-proj-index="3" data-series="health" aria-label="健康 App 系列">
+                    <span class="proj-switch-avatar"><img src="assets/images/character-01-front.png" width="800" height="1200" alt="" decoding="async" /></span>
+                    <span class="proj-switch-label">04</span>
                   </button>
                 </div>
               </aside>
@@ -2440,6 +2844,43 @@
                     <div class="proj-media-placeholder">
                       <span>演示视频</span>
                       <code>projects/fishing-series.mp4</code>
+                    </div>
+                  </div>
+                </div>
+              </article>
+
+              <article class="proj-panel" data-proj-index="3" data-ip-src="assets/images/character-01-front.png" data-video="" data-poster="">
+                <div class="proj-panel-top">
+                  <h3>健康 App 系列</h3>
+                  <span class="proj-panel-role">产品规划</span>
+                </div>
+                <div class="proj-panel-body">
+                  <div class="proj-bar">
+                    <section class="proj-bar-block">
+                      <h4>背景</h4>
+                      <p>健康记录类工具功能同质、用户难以长期坚持，需要找到 AI 能真正带来价值的健康场景，并验证其可行性。</p>
+                    </section>
+                    <section class="proj-bar-block">
+                      <h4>行动</h4>
+                      <ul>
+                        <li>负责健康系列产品规划，结合运动健身类海外竞品拆解经验提炼差异化方向</li>
+                        <li>完成 AI 健康能力的需求定义、场景设计与可行性验证</li>
+                        <li>推动 AI 功能嵌入产品，跟踪数据反馈持续迭代</li>
+                      </ul>
+                    </section>
+                    <section class="proj-bar-block">
+                      <h4>结果</h4>
+                      <div class="proj-metrics">
+                        <span class="proj-metric">AI 功能 <strong>已落地</strong></span>
+                        <span class="proj-metric">需求定义 → 验证 <strong>全流程</strong></span>
+                      </div>
+                    </section>
+                  </div>
+                  <div class="proj-media">
+                    <video class="proj-video" muted loop playsinline preload="metadata"></video>
+                    <div class="proj-media-placeholder">
+                      <span>演示视频</span>
+                      <code>projects/health-series.mp4</code>
                     </div>
                   </div>
                 </div>
@@ -2680,21 +3121,16 @@
         }, 6000);
       }
 
-      /* Experience：左 IP + 右经历，整屏横滑切换 + 逐段自动预览 */
-      var EXP_TOUR_DWELL_MS = 2600;
+      /* Experience：IP · 时间条 · 经历，竖向切换（上新下旧），进页停在最新一段 */
       var EXP_WHEEL_COOLDOWN_MS = 900;
       var expPage = document.getElementById("expPage");
       var expSlider = document.getElementById("expSlider");
       var expIpItems = document.querySelectorAll("#expIpSlides .exp-ip");
-      var expTracks = expPage ? expPage.querySelectorAll(".exp-slides") : [];
+      var expTracks = expPage ? expPage.querySelectorAll(".exp-slides, .exp-tl-track") : [];
+      var expTlSegs = expPage ? expPage.querySelectorAll(".exp-tl-seg") : [];
       var expSlidesEl = document.getElementById("expSlides");
-      var expPrevBtn = document.getElementById("expPrev");
-      var expNextBtn = document.getElementById("expNext");
-      var expStepsEl = document.getElementById("expSteps");
-      var expStepBtns = expStepsEl ? expStepsEl.querySelectorAll(".exp-step") : [];
+      var expTimebar = document.getElementById("expTimebar");
       var expStations = expSlidesEl ? expSlidesEl.querySelectorAll(".exp-station") : [];
-      var expTourTimer;
-      var expTourActive = false;
       var expOnPage = false;
       var expWheelAccum = 0;
       var expWheelResetTimer;
@@ -2771,7 +3207,6 @@
       function expStoryIsEligible() {
         if (reduced || !expOnPage || !expStoryViewport || !expStoryInner) return false;
         if (!expStations[expCenterIndex] || !expStations[expCenterIndex].classList.contains("is-center")) return false;
-        if (expTourActive) return false;
         return expStoryMaxScroll() > 12;
       }
 
@@ -2826,13 +3261,13 @@
         if (!expStations.length) return false;
         opts = opts || {};
         var i = Math.max(0, Math.min(expStations.length - 1, Number(index)));
-        var last = expStations.length - 1;
         if (opts.instant) {
           expTracks.forEach(function (t) { t.style.transition = "none"; });
         }
         if (expPage) {
           expPage.style.setProperty("--exp-i", String(i));
           expPage.style.setProperty("--exp-drag", "0px");
+          expPage.style.setProperty("--exp-drag-p", "0");
         }
         if (opts.instant) {
           expTracks.forEach(function (t) {
@@ -2847,22 +3282,25 @@
         expIpItems.forEach(function (ip, idx) {
           ip.classList.toggle("is-center", idx === i);
         });
-        expStepBtns.forEach(function (btn, idx) {
-          btn.classList.toggle("is-current", idx === i);
-          btn.classList.toggle("is-done", idx < i);
-          btn.setAttribute("aria-selected", idx === i ? "true" : "false");
+        expTlSegs.forEach(function (seg, idx) {
+          seg.classList.toggle("is-center", idx === i);
         });
-        if (expStepsEl) expStepsEl.style.setProperty("--exp-progress", last > 0 ? String(i / last) : "0");
-        if (expPrevBtn) expPrevBtn.disabled = i === 0;
-        if (expNextBtn) expNextBtn.disabled = i === last;
         var changed = i !== expCenterIndex;
+        if (expTimebar) {
+          expTimebar.classList.toggle("is-last", i === expStations.length - 1);
+          if (changed && !opts.instant && expCenterIndex >= 0) {
+            expTimebar.classList.remove("is-sweep-up", "is-sweep-down");
+            void expTimebar.offsetWidth;
+            expTimebar.classList.add(i > expCenterIndex ? "is-sweep-up" : "is-sweep-down");
+          }
+        }
         expCenterIndex = i;
         expStoryBindStation(i);
         if (changed) {
           expStoryStop();
           expStoryReset();
         }
-        if (!expTourActive) expStoryBeginAfterDelay();
+        expStoryBeginAfterDelay();
         return changed;
       }
 
@@ -2873,49 +3311,17 @@
         return true;
       }
 
-      function expCancelTour() {
-        clearTimeout(expTourTimer);
-        expTourActive = false;
-      }
-
-      function expRunEnterTour() {
-        if (!expStations.length) return;
-        expCancelTour();
-        var last = expStations.length - 1;
-        if (reduced) {
-          expGoTo(last, { instant: true });
-          return;
-        }
-        expTourActive = true;
-        expGoTo(0, { instant: true });
-        var i = 0;
-        function next() {
-          if (!expTourActive) return;
-          i += 1;
-          if (i >= last) {
-            expTourActive = false;
-            expGoTo(last);
-            return;
-          }
-          expGoTo(i);
-          expTourTimer = setTimeout(next, EXP_TOUR_DWELL_MS);
-        }
-        expTourTimer = setTimeout(next, EXP_TOUR_DWELL_MS);
-      }
-
       window.__expOnEnter = function () {
         if (expOnPage) return;
         expOnPage = true;
-        expRunEnterTour();
+        expGoTo(0, { instant: true });
       };
       window.__expStoryStop = function () {
         expOnPage = false;
-        expCancelTour();
         expStoryStop();
         expStoryReset();
       };
       window.__expKey = function (dir) {
-        expCancelTour();
         return expStep(dir);
       };
       window.__expWheel = function (e) {
@@ -2934,7 +3340,6 @@
         if (Math.abs(expWheelAccum) >= 40) {
           expWheelAccum = 0;
           expLastStepAt = now;
-          expCancelTour();
           expGoTo(target);
         }
         return true;
@@ -2976,7 +3381,6 @@
           e.preventDefault();
           e.stopPropagation();
           expBodyLastWheelAt = now;
-          expCancelTour();
           expStoryStop();
           expStoryOffset = Math.min(max, Math.max(0, expStoryOffset + e.deltaY * 0.85));
           expStoryApplyOffset();
@@ -2987,7 +3391,6 @@
         var expDrag = null;
         expPage.addEventListener("pointerdown", function (e) {
           if (e.pointerType === "mouse" && e.button !== 0) return;
-          if (e.target.closest(".exp-controls")) return;
           var inBody = !!e.target.closest("[data-exp-body]");
           expDrag = {
             id: e.pointerId,
@@ -3010,7 +3413,6 @@
               return;
             }
             expDrag.active = true;
-            expCancelTour();
             expStoryStop();
             expPage.classList.add("is-dragging");
             if (window.getSelection) window.getSelection().removeAllRanges();
@@ -3025,7 +3427,10 @@
           var pull = wanted - clamped;
           var atEdge = (pull < 0 && expCenterIndex === 0) || (pull > 0 && expCenterIndex === expStations.length - 1);
           expDrag.pull = pull;
-          expPage.style.setProperty("--exp-drag", (-pull * (atEdge ? 0.3 : 1)) + "px");
+          var shift = -pull * (atEdge ? 0.3 : 1);
+          var trackH = (expSlider && expSlider.clientHeight) || expPage.clientHeight || 1;
+          expPage.style.setProperty("--exp-drag", shift + "px");
+          expPage.style.setProperty("--exp-drag-p", String(shift / trackH));
         });
         function expEndDrag(e) {
           if (!expDrag || e.pointerId !== expDrag.id) return;
@@ -3042,25 +3447,6 @@
         expPage.addEventListener("pointercancel", expEndDrag);
         expPage.addEventListener("dragstart", function (e) { e.preventDefault(); });
       }
-
-      if (expPrevBtn) {
-        expPrevBtn.addEventListener("click", function () {
-          expCancelTour();
-          expStep(-1);
-        });
-      }
-      if (expNextBtn) {
-        expNextBtn.addEventListener("click", function () {
-          expCancelTour();
-          expStep(1);
-        });
-      }
-      expStepBtns.forEach(function (btn, idx) {
-        btn.addEventListener("click", function () {
-          expCancelTour();
-          expGoTo(idx);
-        });
-      });
 
       window.addEventListener("resize", function () {
         if (expStoryOffset > expStoryMaxScroll()) {
@@ -3089,13 +3475,212 @@
       var worksDetailRole = document.getElementById("worksDetailRole");
       var worksDetailHighlight = document.getElementById("worksDetailHighlight");
       var worksDetailKpis = document.getElementById("worksDetailKpis");
+      var worksDetailPanel = document.getElementById("worksDetailPanel");
+      var worksDetailMedia = document.getElementById("worksDetailMedia");
+      var worksDetailShots = document.getElementById("worksDetailShots");
+      var worksShowcase = document.getElementById("worksShowcase");
+      var worksShowcaseRow = document.getElementById("worksShowcaseRow");
       var worksHoverCapable = window.matchMedia("(hover: hover)").matches;
       var worksTouchPreviewId = "";
       var worksOpenCard = null;
+      var worksShowcaseBtn = null;
+      var worksShowcaseHideTimer;
+      var worksShowcaseCache = {};
+      var WORKS_SHOWCASE_HIDE_MS = 250;
+      var WORKS_PHONE_ZOOM = 1.6;
+      var worksZoomedFig = null;
+      var WORKS_SHOWCASE_FADE_MS = reduced ? 0 : 350;
+      var worksShowcaseFadeTimer;
+      var worksShowcaseFading = null;
+      var worksHoverBtn = null;
 
       function worksParseKpis(raw) {
         if (!raw) return [];
         return raw.split("|").map(function (s) { return s.trim(); }).filter(Boolean);
+      }
+
+      function worksBuildPhones(list, preload) {
+        return list.map(function (src, i) {
+          var fig = document.createElement("figure");
+          fig.className = "works-phone";
+          fig.style.setProperty("--i", String(i));
+          var screen = document.createElement("div");
+          screen.className = "works-phone-screen";
+          var video = document.createElement("video");
+          video.muted = true;
+          video.loop = true;
+          video.playsInline = true;
+          video.setAttribute("muted", "");
+          video.setAttribute("playsinline", "");
+          video.preload = preload;
+          video.addEventListener("loadedmetadata", function () {
+            var w = video.videoWidth;
+            var h = video.videoHeight;
+            if (!w || !h) return;
+            screen.style.aspectRatio = w + " / " + h;
+            fig.classList.toggle("is-landscape", w > h);
+            fig.style.setProperty("--u", (w > h ? w / h : 1).toFixed(3));
+            worksSyncUnits(fig.parentNode);
+          });
+          video.addEventListener("error", function () { fig.classList.add("is-error"); });
+          video.src = src;
+          screen.appendChild(video);
+          var cap = document.createElement("figcaption");
+          cap.textContent = (i < 9 ? "0" : "") + (i + 1);
+          fig.appendChild(screen);
+          fig.appendChild(cap);
+          return fig;
+        });
+      }
+
+      /* 横屏视频按「宽 / 高」倍的竖屏宽度计入，整排宽度据此缩放 */
+      function worksSyncUnits(container) {
+        if (!container || !container.children) return;
+        var units = 0;
+        Array.prototype.forEach.call(container.children, function (fig) {
+          units += parseFloat(fig.style.getPropertyValue("--u")) || 1;
+        });
+        if (!units) return;
+        var target = container === worksShowcaseRow ? worksShowcase : container;
+        if (target) target.style.setProperty("--n", units.toFixed(3));
+      }
+
+      function worksPlayAll(container) {
+        if (!container) return;
+        container.querySelectorAll("video").forEach(function (v) {
+          v.play().catch(function () {});
+        });
+      }
+
+      function worksPauseAll(container) {
+        if (!container) return;
+        container.querySelectorAll("video").forEach(function (v) { v.pause(); });
+      }
+
+      function worksShowShowcase(btn) {
+        if (!worksShowcase || !worksShowcaseRow || !worksArena) return;
+        var shots = worksParseKpis(btn.getAttribute("data-shots"));
+        if (!shots.length) return;
+        if (worksShowcaseBtn) {
+          if (worksShowcaseBtn === btn) clearTimeout(worksShowcaseHideTimer);
+          return;
+        }
+        if (worksShowcaseFading && worksShowcaseFading !== btn) return;
+        clearTimeout(worksShowcaseFadeTimer);
+        worksShowcaseFading = null;
+        worksShowcaseBtn = btn;
+        var id = btn.getAttribute("data-works-id") || "";
+        if (!worksShowcaseCache[id]) worksShowcaseCache[id] = worksBuildPhones(shots, "auto");
+        worksShowcaseRow.replaceChildren.apply(worksShowcaseRow, worksShowcaseCache[id]);
+        worksSyncUnits(worksShowcaseRow);
+        btn.classList.add("is-showcase-src");
+        worksArena.classList.add("is-showcasing");
+        worksShowcase.classList.remove("is-on");
+        void worksShowcase.offsetWidth;
+        worksShowcase.classList.add("is-on");
+        worksPlayAll(worksShowcaseRow);
+      }
+
+      function worksWarmShowcase() {
+        worksStackBtns.forEach(function (btn) {
+          var id = btn.getAttribute("data-works-id") || "";
+          var shots = worksParseKpis(btn.getAttribute("data-shots"));
+          if (shots.length && !worksShowcaseCache[id]) worksShowcaseCache[id] = worksBuildPhones(shots, "auto");
+        });
+      }
+
+      function worksHideShowcase(immediate) {
+        clearTimeout(worksShowcaseHideTimer);
+        if (immediate) {
+          clearTimeout(worksShowcaseFadeTimer);
+          worksShowcaseFading = null;
+        }
+        function hide() {
+          if (!worksShowcaseBtn) return;
+          var src = worksShowcaseBtn;
+          worksZoomPhone(null);
+          worksPauseAll(worksShowcaseRow);
+          src.classList.remove("is-showcase-src");
+          worksShowcaseBtn = null;
+          if (worksShowcase) worksShowcase.classList.remove("is-on");
+          if (worksArena) worksArena.classList.remove("is-showcasing");
+          if (immediate) return;
+          worksShowcaseFading = src;
+          worksShowcaseFadeTimer = setTimeout(function () {
+            worksShowcaseFading = null;
+            var next = worksHoverBtn;
+            if (!worksHoverCapable || !next || next === src || !next.hasAttribute("data-shots")) return;
+            if (worksTheater && worksTheater.classList.contains("is-detail-open")) return;
+            worksShowShowcase(next);
+          }, WORKS_SHOWCASE_FADE_MS);
+        }
+        if (immediate) hide();
+        else worksShowcaseHideTimer = setTimeout(hide, WORKS_SHOWCASE_HIDE_MS);
+      }
+
+      /* 放大后整台手机（含序号）不超出浮层的可视高度与宽度 */
+      function worksZoomPhone(fig) {
+        if (fig === worksZoomedFig) return;
+        if (worksZoomedFig) worksZoomedFig.classList.remove("is-zoomed");
+        worksZoomedFig = fig;
+        if (worksShowcaseRow) worksShowcaseRow.classList.toggle("is-zooming", !!fig);
+        if (!fig || !worksShowcase) return;
+        var z = Math.min(
+          WORKS_PHONE_ZOOM,
+          (worksShowcase.clientHeight - 24) / (fig.offsetHeight || 1),
+          (worksShowcase.clientWidth * 0.92) / (fig.offsetWidth || 1)
+        );
+        fig.style.setProperty("--zoom", Math.max(1, z).toFixed(3));
+        fig.classList.add("is-zoomed");
+      }
+
+      function worksLayoutFan() {
+        if (!worksFan || worksStackBtns.length < 2) return;
+        var W = worksFan.clientWidth;
+        var H = worksFan.clientHeight;
+        if (!W || !H) return;
+        var btns = Array.prototype.slice.call(worksStackBtns).sort(function (a, b) {
+          return Number(a.getAttribute("data-fan-i")) - Number(b.getAttribute("data-fan-i"));
+        });
+        var n = btns.length;
+        var sMax = window.innerWidth <= 720 ? 88 : 128;
+        var GAP = 14, PAD = 12, PAD_B = 34, STEPS = 360;
+        var TH = (115 * Math.PI) / 180;
+        var s = sMax;
+        var pts = [];
+        for (var pass = 0; pass < 6; pass++) {
+          var cx = W / 2;
+          var cy = H * 0.56;
+          var ry = Math.max(30, Math.min(cy - s / 2 - PAD, (H - PAD_B - s / 2 - cy) / Math.abs(Math.cos(TH))));
+          var rx = Math.max(30, Math.min(W / 2 - s / 2 - PAD, Math.max(ry * 2.6, 240)));
+          var samples = [];
+          var acc = [0];
+          for (var i = 0; i <= STEPS; i++) {
+            var t = -TH + (2 * TH * i) / STEPS;
+            var p = { x: cx + rx * Math.sin(t), y: cy - ry * Math.cos(t), t: t };
+            if (i) acc.push(acc[i - 1] + Math.hypot(p.x - samples[i - 1].x, p.y - samples[i - 1].y));
+            samples.push(p);
+          }
+          pts = [];
+          for (var k = 0, j = 0; k < n; k++) {
+            var target = (acc[STEPS] * k) / (n - 1);
+            while (j < STEPS && acc[j] < target) j++;
+            pts.push(samples[j]);
+          }
+          var minD = Infinity;
+          for (k = 1; k < n; k++) minD = Math.min(minD, Math.hypot(pts[k].x - pts[k - 1].x, pts[k].y - pts[k - 1].y));
+          var fit = Math.min(sMax, minD - GAP);
+          if (fit >= s - 0.5) break;
+          s = Math.max(56, fit);
+        }
+        worksFan.style.setProperty("--badge-s", s.toFixed(1) + "px");
+        btns.forEach(function (btn, idx) {
+          var pt = pts[idx];
+          var r = Math.max(-20, Math.min(20, ((pt.t * 180) / Math.PI) * 0.18));
+          btn.style.left = pt.x.toFixed(1) + "px";
+          btn.style.top = pt.y.toFixed(1) + "px";
+          btn.style.setProperty("--fan-r", r.toFixed(1) + "deg");
+        });
       }
 
       function worksRenderKpis(container, raw) {
@@ -3150,6 +3735,26 @@
         if (worksDetailHighlight) worksDetailHighlight.textContent = btn.getAttribute("data-highlight") || "";
         worksRenderKpis(worksDetailKpis, btn.getAttribute("data-kpis"));
 
+        var shots = worksParseKpis(btn.getAttribute("data-shots"));
+        var hasShots = shots.length > 0 && !!worksDetailShots;
+        if (worksDetailPanel) worksDetailPanel.classList.toggle("has-shots", hasShots);
+        if (worksDetailMedia) worksDetailMedia.hidden = hasShots;
+        if (worksDetailShots) {
+          worksPauseAll(worksDetailShots);
+          worksDetailShots.hidden = !hasShots;
+          if (hasShots) {
+            worksDetailShots.replaceChildren.apply(worksDetailShots, worksBuildPhones(shots, "metadata"));
+            worksSyncUnits(worksDetailShots);
+            worksPlayAll(worksDetailShots);
+          } else {
+            worksDetailShots.replaceChildren();
+          }
+        }
+        if (hasShots) {
+          if (worksDetailVideo) worksDetailVideo.pause();
+          return;
+        }
+
         var src = (btn.getAttribute("data-video") || "").trim();
         var poster = (btn.getAttribute("data-poster") || "").trim();
         if (worksDetailVideoHint) worksDetailVideoHint.textContent = src || "works/your-demo.mp4";
@@ -3172,6 +3777,7 @@
 
       function worksOpenDetail(btn) {
         if (!worksTheater || !worksDetailOverlay || !btn) return;
+        worksHideShowcase(true);
         worksOpenCard = btn;
         worksStackBtns.forEach(function (b) { b.classList.toggle("is-active", b === btn); });
         worksFillDetail(btn);
@@ -3191,19 +3797,66 @@
           worksDetailVideo.pause();
           worksDetailVideo.classList.remove("is-on");
         }
+        if (worksDetailShots) {
+          worksPauseAll(worksDetailShots);
+          worksDetailShots.replaceChildren();
+        }
         worksOpenCard = null;
         if (focusArena && worksArena) worksArena.focus({ preventScroll: true });
       }
-      window.__worksCloseDetail = worksCloseDetail;
+      window.__worksCloseDetail = function (focusArena) {
+        worksHideShowcase(true);
+        worksCloseDetail(focusArena);
+      };
 
       worksInitPreviews();
+      worksLayoutFan();
+      if (window.ResizeObserver && worksFan) new ResizeObserver(worksLayoutFan).observe(worksFan);
+      else window.addEventListener("resize", worksLayoutFan);
+      if (worksArena) worksArena.addEventListener("pointerenter", worksWarmShowcase, { once: true });
+
+      if (worksShowcaseRow) {
+        worksShowcaseRow.addEventListener("mouseenter", function () {
+          if (worksShowcaseBtn) clearTimeout(worksShowcaseHideTimer);
+        });
+        worksShowcaseRow.addEventListener("mouseleave", function () {
+          worksZoomPhone(null);
+          if (worksHoverCapable && worksShowcaseBtn && worksHoverBtn !== worksShowcaseBtn) worksHideShowcase(false);
+        });
+        worksShowcaseRow.addEventListener("mouseover", function (e) {
+          if (!worksHoverCapable) return;
+          var fig = e.target.closest ? e.target.closest(".works-phone") : null;
+          worksZoomPhone(fig && worksShowcaseRow.contains(fig) ? fig : null);
+        });
+        worksShowcaseRow.addEventListener("click", function (e) {
+          var fig = e.target.closest ? e.target.closest(".works-phone") : null;
+          if (fig && worksShowcaseBtn) worksOpenDetail(worksShowcaseBtn);
+        });
+      }
+      if (worksArena) {
+        worksArena.addEventListener("click", function (e) {
+          if (worksHoverCapable || !worksShowcaseBtn) return;
+          if (e.target.closest(".works-stack-btn, .works-showcase-row")) return;
+          worksHideShowcase(true);
+          worksStackBtns.forEach(function (b) { b.classList.remove("is-touch-preview"); });
+          worksTouchPreviewId = "";
+        });
+      }
 
       worksStackBtns.forEach(function (btn) {
         btn.addEventListener("click", function () {
+          if (!worksHoverCapable && worksShowcaseBtn && worksShowcaseBtn !== btn) {
+            worksHideShowcase(true);
+            worksStackBtns.forEach(function (b) { b.classList.remove("is-touch-preview"); });
+            worksTouchPreviewId = "";
+            return;
+          }
           if (!worksHoverCapable && worksTouchPreviewId !== btn.getAttribute("data-works-id")) {
             worksStackBtns.forEach(function (b) { b.classList.remove("is-touch-preview"); });
             btn.classList.add("is-touch-preview");
             worksTouchPreviewId = btn.getAttribute("data-works-id") || "";
+            if (btn.hasAttribute("data-shots")) worksShowShowcase(btn);
+            else worksHideShowcase(true);
             var v = btn.querySelector(".works-stack-preview video");
             if (v) v.play().catch(function () {});
             return;
@@ -3211,10 +3864,14 @@
           worksOpenDetail(btn);
         });
         btn.addEventListener("mouseenter", function () {
+          worksHoverBtn = btn;
+          if (btn.hasAttribute("data-shots")) worksShowShowcase(btn);
           var v = btn.querySelector(".works-stack-preview video");
           if (v) v.play().catch(function () {});
         });
         btn.addEventListener("mouseleave", function () {
+          if (worksHoverBtn === btn) worksHoverBtn = null;
+          if (worksHoverCapable && btn === worksShowcaseBtn) worksHideShowcase(false);
           var v = btn.querySelector(".works-stack-preview video");
           if (v) {
             v.pause();
