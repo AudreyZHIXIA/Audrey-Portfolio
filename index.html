@@ -924,9 +924,9 @@
       display: block;
       width: 100%;
       height: 140%;
-      margin-top: -6%;
+      margin-top: 2%;
       object-fit: cover;
-      object-position: 48% 6%;
+      object-position: 50% 0;
       filter: saturate(0.92);
     }
     .exp-visual::after {
@@ -2155,21 +2155,15 @@
       background: #0a0a0c;
     }
     .proj-ip-avatar img {
-      width: 118%;
-      height: 118%;
-      margin: -4% 0 0 -9%;
-      object-fit: cover;
-      object-position: top center;
+      display: block;
+      width: 160%;
+      max-width: none;
+      height: auto;
+      margin: 6% 0 0 -30%;
       pointer-events: none;
     }
-    .proj-ip-card[data-series="alarm"] .proj-ip-avatar img {
-      margin-left: -14%;
-      object-position: 58% top;
-    }
-    .proj-ip-card[data-series="fish"] .proj-ip-avatar img {
-      margin-left: -6%;
-      object-position: center 18%;
-    }
+    .proj-ip-card[data-series="alarm"] .proj-ip-avatar img { margin-left: -42%; }
+    .proj-ip-card[data-series="fish"] .proj-ip-avatar img { margin-left: -38%; }
     .proj-ip-copy {
       display: flex;
       flex-direction: column;
@@ -4503,7 +4497,7 @@
           <div class="exp-cross">
             <article class="exp-row" aria-label="正式工作 2024.10 — 至今">
               <div class="exp-visual has-stats">
-                <img src="assets/images/character-01-front.png" width="800" height="1200" alt="" decoding="async" />
+                <img src="assets/images/01.png" width="1086" height="1448" alt="" decoding="async" />
                 <div class="exp-visual-data">
                   <span class="exp-visual-kicker">产品经理 · 全职 · 2 年</span>
                   <dl class="exp-visual-stats is-pair">
@@ -4558,7 +4552,7 @@
 
             <article class="exp-row is-flip" aria-label="实习 2023.05 — 2023.10">
               <div class="exp-visual has-stats">
-                <img src="assets/images/character-01-front.png" width="800" height="1200" alt="" decoding="async" />
+                <img src="assets/images/02.png" width="1086" height="1448" alt="" decoding="async" />
                 <div class="exp-visual-data">
                   <span class="exp-visual-kicker">产品助理 · 实习 · 5 个月</span>
                   <dl class="exp-visual-stats">
@@ -4587,7 +4581,7 @@
 
             <article class="exp-row" aria-label="实习 2022.09 — 2023.03">
               <div class="exp-visual has-stats">
-                <img src="assets/images/character-01-front.png" width="800" height="1200" alt="" decoding="async" />
+                <img src="assets/images/03.png" width="1086" height="1448" alt="" decoding="async" />
                 <div class="exp-visual-data">
                   <span class="exp-visual-kicker">软件测试 · 实习 · 6 个月</span>
                   <dl class="exp-visual-stats is-pair">
@@ -4618,7 +4612,7 @@
 
             <article class="exp-row is-flip" aria-label="大学 2019.09 — 2023.07">
               <div class="exp-visual has-stats">
-                <img src="assets/images/character-01-front.png" width="800" height="1200" alt="" decoding="async" />
+                <img src="assets/images/04.png" width="1024" height="1536" alt="" decoding="async" />
                 <div class="exp-visual-data">
                   <span class="exp-visual-kicker">软件工程 · 本科 · 4 年</span>
                   <dl class="exp-visual-stats">
@@ -4910,8 +4904,8 @@
           </header>
           <div class="proj-hub" id="projHub">
             <div class="proj-ip-cards" role="list">
-              <button type="button" class="proj-ip-card" role="listitem" data-proj-index="0" data-series="material" data-ip-src="assets/images/character-01-front.png" aria-label="APP 素材平台">
-                <span class="proj-ip-avatar"><img src="assets/images/character-01-front.png" width="800" height="1200" alt="" decoding="async" /></span>
+              <button type="button" class="proj-ip-card" role="listitem" data-proj-index="0" data-series="material" data-ip-src="assets/images/project01.png" aria-label="APP 素材平台">
+                <span class="proj-ip-avatar"><img src="assets/images/project01.png" width="1086" height="1448" alt="" decoding="async" /></span>
                 <span class="proj-ip-copy">
                   <span class="proj-ip-num">01</span>
                   <span class="proj-ip-title">APP 素材平台</span>
@@ -4919,8 +4913,8 @@
                   <span class="proj-ip-kpi">3h → 30min</span>
                 </span>
               </button>
-              <button type="button" class="proj-ip-card" role="listitem" data-proj-index="1" data-series="alarm" data-ip-src="assets/images/character-01-front.png" aria-label="闹钟 App 系列">
-                <span class="proj-ip-avatar"><img src="assets/images/character-01-front.png" width="800" height="1200" alt="" decoding="async" /></span>
+              <button type="button" class="proj-ip-card" role="listitem" data-proj-index="1" data-series="alarm" data-ip-src="assets/images/project02.png" aria-label="闹钟 App 系列">
+                <span class="proj-ip-avatar"><img src="assets/images/project02.png" width="1086" height="1448" alt="" decoding="async" /></span>
                 <span class="proj-ip-copy">
                   <span class="proj-ip-num">02</span>
                   <span class="proj-ip-title">闹钟 App 系列</span>
@@ -4928,8 +4922,8 @@
                   <span class="proj-ip-kpi">收益同比 ≈21 倍</span>
                 </span>
               </button>
-              <button type="button" class="proj-ip-card" role="listitem" data-proj-index="2" data-series="fish" data-ip-src="assets/images/character-01-front.png" aria-label="钓鱼 App 系列">
-                <span class="proj-ip-avatar"><img src="assets/images/character-01-front.png" width="800" height="1200" alt="" decoding="async" /></span>
+              <button type="button" class="proj-ip-card" role="listitem" data-proj-index="2" data-series="fish" data-ip-src="assets/images/project03.png" aria-label="钓鱼 App 系列">
+                <span class="proj-ip-avatar"><img src="assets/images/project03.png" width="1086" height="1448" alt="" decoding="async" /></span>
                 <span class="proj-ip-copy">
                   <span class="proj-ip-num">03</span>
                   <span class="proj-ip-title">钓鱼 App 系列</span>
@@ -4955,7 +4949,7 @@
           <div class="proj-detail-view" id="projDetailView">
             <div class="proj-detail-main">
               <div class="proj-stage" id="projStage">
-              <article class="proj-panel has-player" id="projIntro0" data-proj-index="0" data-ip-src="assets/images/character-01-front.png" data-video="assets/projects/appSourceCreate/appSourceCreate_platform.mp4" data-poster="">
+              <article class="proj-panel has-player" id="projIntro0" data-proj-index="0" data-ip-src="assets/images/project01.png" data-video="assets/projects/appSourceCreate/appSourceCreate_platform.mp4" data-poster="">
                 <header class="proj-hero">
                   <span class="proj-num" aria-hidden="true">01</span>
                   <div class="proj-hero-text">
@@ -4998,7 +4992,7 @@
                 </div>
               </article>
 
-              <article class="proj-panel has-feats" id="projIntro1" data-proj-index="1" data-ip-src="assets/images/character-01-front.png" data-video="" data-poster="">
+              <article class="proj-panel has-feats" id="projIntro1" data-proj-index="1" data-ip-src="assets/images/project02.png" data-video="" data-poster="">
                 <header class="proj-hero">
                   <span class="proj-num" aria-hidden="true">02</span>
                   <div class="proj-hero-text">
@@ -5153,7 +5147,7 @@
                 </div>
               </article>
 
-              <article class="proj-panel" id="projIntro2" data-proj-index="2" data-ip-src="assets/images/character-01-front.png" data-video="" data-poster="">
+              <article class="proj-panel" id="projIntro2" data-proj-index="2" data-ip-src="assets/images/project03.png" data-video="" data-poster="">
                 <header class="proj-hero">
                   <span class="proj-num" aria-hidden="true">03</span>
                   <div class="proj-hero-text">
