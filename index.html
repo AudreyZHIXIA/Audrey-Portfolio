@@ -419,6 +419,12 @@
       pointer-events: none;
     }
     .avatar-stack img.is-show { opacity: 1; }
+    .avatar-stack.is-head {
+      width: 100%;
+      height: 100%;
+      margin-bottom: -9%;
+      transform-origin: 50% 70%;
+    }
     .avatar-caption {
       display: flex;
       align-items: center;
@@ -2360,7 +2366,7 @@
     }
     .proj-hero {
       display: grid;
-      grid-template-columns: auto minmax(0, 1fr) auto;
+      grid-template-columns: auto minmax(0, 1fr);
       align-items: end;
       gap: 12px clamp(18px, 2.4vw, 32px);
     }
@@ -2381,25 +2387,29 @@
       letter-spacing: 0.04em;
       line-height: 1.2;
     }
-    .proj-hero-sub {
-      margin-top: 8px;
-      font-size: 13.5px;
-      letter-spacing: 0.03em;
-      color: var(--muted);
-    }
     .proj-panel-role {
-      align-self: start;
-      font-size: 11px;
-      padding: 5px 12px;
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      margin-top: 12px;
+      padding: 4px 16px 4px 4px;
       border-radius: 999px;
-      border: 1px solid rgba(255, 255, 255, 0.14);
-      color: rgba(255, 255, 255, 0.7);
-      font-weight: 600;
+      border: 1px solid rgba(204, 255, 0, 0.45);
+      background: rgba(204, 255, 0, 0.08);
+      color: #fff;
+      font-size: 14px;
+      font-weight: 700;
+      letter-spacing: 0.06em;
       white-space: nowrap;
     }
-    @media (max-width: 640px) {
-      .proj-hero { grid-template-columns: auto minmax(0, 1fr); }
-      .proj-panel-role { grid-column: 1 / -1; justify-self: start; }
+    .proj-panel-role span {
+      padding: 4px 10px;
+      border-radius: 999px;
+      background: var(--lime);
+      color: #0a0a0b;
+      font-size: 11px;
+      font-weight: 800;
+      letter-spacing: 0.08em;
     }
     .proj-panel-body {
       display: flex;
@@ -2935,6 +2945,64 @@
       outline: 2px solid rgba(204, 255, 0, 0.55);
       outline-offset: 2px;
       border-radius: 8px;
+    }
+
+    /* 悬停预览：圆点变成系列色空心圈，已选中项保留实心标记 */
+    .cs-nav-item.is-preview { color: rgba(255, 255, 255, 0.92); }
+    .cs-nav-item.is-preview .cs-nav-no { color: var(--cs-accent); }
+    .cs-nav-item.is-preview .cs-nav-label { transform: translateX(5px); }
+    .cs-nav-item.is-preview .cs-nav-dot {
+      transform: scale(1.1);
+      border-color: var(--cs-accent);
+      box-shadow: 0 0 0 4px color-mix(in srgb, var(--cs-accent) 14%, transparent);
+    }
+    .cs-nav-item.is-active.is-dim { color: rgba(255, 255, 255, 0.62); }
+    .cs-nav-item.is-active.is-dim .cs-nav-dot { box-shadow: none; }
+    .cs-preview-tag {
+      position: absolute;
+      top: 16px;
+      right: 16px;
+      z-index: 5;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 6px 12px;
+      border-radius: 999px;
+      border: 1px solid rgba(255, 255, 255, 0.14);
+      background: rgba(10, 10, 12, 0.6);
+      backdrop-filter: blur(8px);
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.06em;
+      color: rgba(255, 255, 255, 0.78);
+      opacity: 0;
+      translate: 0 -6px;
+      transition: opacity 0.3s var(--ease), translate 0.35s var(--ease);
+      pointer-events: none;
+    }
+    .cs-preview-tag i {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--lime);
+      animation: csTagPulse 1.4s ease-in-out infinite;
+    }
+    @keyframes csTagPulse {
+      50% { opacity: 0.35; }
+    }
+    .cs-stage.is-previewing .cs-preview-tag {
+      opacity: 1;
+      translate: 0 0;
+    }
+    .cs-stage.is-committed {
+      animation: csCommit 0.6s var(--ease);
+    }
+    @keyframes csCommit {
+      35% { box-shadow: 0 30px 80px rgba(0, 0, 0, 0.45), 0 0 0 1px color-mix(in srgb, var(--cs-accent-cur) 60%, transparent), 0 0 40px color-mix(in srgb, var(--cs-accent-cur) 25%, transparent); }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .cs-preview-tag i,
+      .cs-stage.is-committed { animation: none; }
     }
 
     .cs-stage {
@@ -3616,86 +3684,146 @@
       width: min(1120px, 100%);
       margin: 0 auto;
     }
+    /* 学习笔记：开放式横向书架 */
+    .ai-shelf-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      flex-wrap: wrap;
+      margin-bottom: clamp(18px, 2.6vh, 26px);
+    }
+    .ai-tabs {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+    .ai-tab {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 14px;
+      border-radius: 999px;
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      background: rgba(255, 255, 255, 0.03);
+      color: rgba(255, 255, 255, 0.72);
+      font-family: var(--font-ui);
+      font-size: 13px;
+      font-weight: 600;
+      letter-spacing: 0.03em;
+      cursor: pointer;
+      transition: color 0.3s var(--ease), border-color 0.3s var(--ease), background 0.3s var(--ease);
+    }
+    .ai-tab span {
+      min-width: 22px;
+      padding: 1px 7px;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.08);
+      font-size: 11px;
+      font-variant-numeric: tabular-nums;
+      text-align: center;
+    }
+    .ai-tab:hover { color: #fff; border-color: rgba(255, 255, 255, 0.28); }
+    .ai-tab.is-active {
+      color: #0a0a0b;
+      background: var(--lime);
+      border-color: var(--lime);
+    }
+    .ai-tab.is-active span { background: rgba(10, 10, 11, 0.14); }
+    .ai-tab:focus-visible,
+    .ai-shelf-btn:focus-visible {
+      outline: 2px solid rgba(204, 255, 0, 0.6);
+      outline-offset: 3px;
+    }
+    .ai-shelf-ctrl {
+      display: flex;
+      gap: 8px;
+    }
+    .ai-shelf-btn {
+      display: grid;
+      place-items: center;
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      border: 1px solid rgba(255, 255, 255, 0.16);
+      background: rgba(255, 255, 255, 0.03);
+      color: #fff;
+      cursor: pointer;
+      transition: border-color 0.3s var(--ease), background 0.3s var(--ease), color 0.3s var(--ease), opacity 0.3s var(--ease);
+    }
+    .ai-shelf-btn svg {
+      width: 16px;
+      height: 16px;
+      fill: none;
+      stroke: currentColor;
+      stroke-width: 2.2;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+    .ai-shelf-btn:hover:not(:disabled) {
+      border-color: var(--lime);
+      background: var(--lime);
+      color: #0a0a0b;
+    }
+    .ai-shelf-btn:disabled { opacity: 0.3; cursor: default; }
+    .ai-count {
+      align-self: center;
+      margin-right: 6px;
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      color: var(--muted);
+      font-variant-numeric: tabular-nums;
+    }
+    .ai-count b { color: #fff; }
     .ai-flow {
+      --cw: clamp(260px, 38vw, 440px);
+      --bleed: max(0px, calc(50vw - 50%));
       position: relative;
-      overflow: visible;
-    }
-    .ai-flow-viewport {
-      position: relative;
+      height: calc(var(--cw) * 0.7067 + 120px);
+      margin: 0 calc(-1 * var(--bleed));
       overflow: hidden;
-      isolation: isolate;
-      -webkit-mask-image: linear-gradient(to right, transparent 0%, #000 12%, #000 88%, transparent 100%),
-        linear-gradient(to bottom, transparent 0%, #000 10%, #000 90%, transparent 100%);
-      -webkit-mask-composite: source-in;
-      mask-image: linear-gradient(to right, transparent 0%, #000 12%, #000 88%, transparent 100%),
-        linear-gradient(to bottom, transparent 0%, #000 10%, #000 90%, transparent 100%);
-      mask-composite: intersect;
-    }
-    .ai-flow-fade {
-      position: absolute;
-      z-index: 120;
-      pointer-events: none;
-    }
-    .ai-flow-fade--left,
-    .ai-flow-fade--right {
-      top: 0;
-      bottom: 0;
-      width: clamp(72px, 20%, 200px);
-    }
-    .ai-flow-fade--left {
-      left: 0;
-      background: linear-gradient(90deg, var(--bg) 0%, var(--bg) 22%, rgba(10, 10, 11, 0.7) 58%, transparent 100%);
-    }
-    .ai-flow-fade--right {
-      right: 0;
-      background: linear-gradient(270deg, var(--bg) 0%, var(--bg) 22%, rgba(10, 10, 11, 0.7) 58%, transparent 100%);
-    }
-    .ai-flow-fade--top,
-    .ai-flow-fade--bottom {
-      left: 0;
-      right: 0;
-      height: clamp(28px, 10%, 64px);
-    }
-    .ai-flow-fade--top {
-      top: 0;
-      background: linear-gradient(180deg, var(--bg) 0%, var(--bg) 18%, transparent 100%);
-    }
-    .ai-flow-fade--bottom {
-      bottom: 0;
-      background: linear-gradient(0deg, var(--bg) 0%, var(--bg) 18%, transparent 100%);
-    }
-    .ai-flow-stage {
-      position: relative;
-      height: min(68vh, 640px);
-      margin: 0 auto;
-      max-width: 100%;
-      perspective: 1400px;
-      perspective-origin: 50% 48%;
-      transform-style: preserve-3d;
+      perspective: 1600px;
+      perspective-origin: 50% 36%;
       touch-action: pan-y;
       cursor: grab;
       user-select: none;
-      overflow: visible;
+      -webkit-mask-image: linear-gradient(90deg, transparent 0, #000 10%, #000 90%, transparent 100%);
+      mask-image: linear-gradient(90deg, transparent 0, #000 10%, #000 90%, transparent 100%);
     }
-    .ai-flow-stage.is-drag { cursor: grabbing; }
+    .ai-flow::before {
+      content: "";
+      position: absolute;
+      left: 50%;
+      top: calc(var(--cw) * 0.36 + 36px);
+      width: calc(var(--cw) * 1.9);
+      height: calc(var(--cw) * 1.1);
+      translate: -50% -50%;
+      background: radial-gradient(closest-side, rgba(204, 255, 0, 0.085), rgba(204, 255, 0, 0.025) 55%, transparent);
+      pointer-events: none;
+    }
+    .ai-flow.is-drag { cursor: grabbing; }
+    .ai-flow.is-drag .ai-flow-card { pointer-events: none; }
     .ai-flow-card {
       position: absolute;
       left: 50%;
-      top: 50%;
-      width: min(54vw, 560px);
-      aspect-ratio: 16 / 10;
+      top: 36px;
+      width: var(--cw);
+      aspect-ratio: 2339 / 1653;
       margin: 0;
       padding: 0;
       border: none;
-      background: #f4f1ea;
-      border-radius: 18px;
-      overflow: hidden;
-      backface-visibility: hidden;
-      transform-origin: center center;
-      transform-style: preserve-3d;
-      transform: translate(-50%, -50%);
-      box-shadow: 0 18px 40px rgba(0, 0, 0, 0.45);
-      transition: transform 0.55s var(--ease), box-shadow 0.45s var(--ease);
+      border-radius: 14px;
+      background: #f4f3ef;
+      transform: translateX(-50%);
+      transition:
+        transform 0.75s var(--ease),
+        filter 0.75s var(--ease),
+        opacity 0.6s var(--ease),
+        translate 0.45s var(--ease),
+        box-shadow 0.45s var(--ease);
+      box-shadow: 0 24px 50px rgba(0, 0, 0, 0.42);
+      -webkit-box-reflect: below 12px linear-gradient(transparent 74%, rgba(255, 255, 255, 0.13));
       cursor: pointer;
     }
     .ai-flow-card img {
@@ -3704,16 +3832,112 @@
       height: 100%;
       object-fit: cover;
       object-position: top center;
+      border-radius: inherit;
       pointer-events: none;
     }
     .ai-flow-card.is-center {
-      box-shadow: 0 28px 64px rgba(0, 0, 0, 0.55);
+      box-shadow: 0 0 0 1px rgba(204, 255, 0, 0.3), 0 30px 70px rgba(0, 0, 0, 0.55);
+    }
+    .ai-flow-card.is-center .ai-card-open { opacity: 1; translate: 0 0; }
+    @media (hover: hover) {
+      .ai-flow-card.is-center:hover {
+        translate: 0 -6px;
+        box-shadow: 0 0 0 1px rgba(204, 255, 0, 0.8), 0 36px 80px rgba(0, 0, 0, 0.6);
+      }
+      .ai-flow-card.is-center:hover .ai-card-open { background: var(--lime); color: #0a0a0b; }
+    }
+    .ai-flow-card:focus-visible {
+      outline: 2px solid rgba(204, 255, 0, 0.6);
+      outline-offset: 4px;
     }
     .ai-flow-caption {
+      min-height: 72px;
+      margin-top: -18px;
       text-align: center;
-      margin-top: 18px;
-      font-size: 13px;
+    }
+    .ai-flow-meta {
+      display: inline-flex;
+      gap: 12px;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.1em;
       color: var(--muted);
+      font-variant-numeric: tabular-nums;
+    }
+    .ai-flow-meta b { color: var(--lime); font-weight: 700; }
+    .ai-flow-title {
+      margin-top: 8px;
+      font-size: clamp(17px, 1.7vw, 20px);
+      font-weight: 700;
+      letter-spacing: 0.02em;
+      line-height: 1.45;
+      color: #fff;
+    }
+    .ai-flow-caption.is-swap > * { animation: aiCapIn 0.55s var(--ease) both; }
+    .ai-flow-caption.is-swap > .ai-flow-title { animation-delay: 0.05s; }
+    @keyframes aiCapIn {
+      from { opacity: 0; translate: 0 8px; }
+      to { opacity: 1; translate: 0 0; }
+    }
+    @media (max-width: 640px) {
+      .ai-flow { --cw: 72vw; }
+    }
+    .ai-card-open {
+      position: absolute;
+      left: 12px;
+      bottom: 12px;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 7px 12px;
+      border-radius: 999px;
+      background: #0a0a0b;
+      color: var(--lime);
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 0.04em;
+      opacity: 0;
+      translate: 0 8px;
+      transition: opacity 0.35s var(--ease), translate 0.45s var(--ease);
+    }
+    .ai-card-open svg {
+      width: 12px;
+      height: 12px;
+      fill: none;
+      stroke: currentColor;
+      stroke-width: 2.4;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+    .ai-shelf-progress {
+      position: relative;
+      width: min(280px, 60%);
+      height: 2px;
+      margin: 18px auto 0;
+      border-radius: 2px;
+      background: rgba(255, 255, 255, 0.08);
+      overflow: hidden;
+    }
+    .ai-shelf-progress i {
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      left: calc(var(--ai-pos, 0) * 100%);
+      width: calc(var(--ai-ratio, 1) * 100%);
+      border-radius: inherit;
+      background: var(--lime);
+      transition: left 0.6s var(--ease), width 0.3s var(--ease);
+    }
+    .ai-shelf.js-reveal .ai-flow-caption,
+    .ai-shelf.js-reveal .ai-shelf-progress {
+      opacity: 0;
+      translate: 0 14px;
+      transition: opacity 0.7s var(--ease) 0.35s, translate 0.8s var(--ease) 0.35s;
+    }
+    .ai-shelf.js-reveal.is-in .ai-flow-caption,
+    .ai-shelf.js-reveal.is-in .ai-shelf-progress {
+      opacity: 1;
+      translate: 0 0;
     }
     .ai-links {
       display: flex;
@@ -3770,27 +3994,21 @@
       outline: 2px solid rgba(204, 255, 0, 0.55);
       outline-offset: 3px;
     }
-    .ai-flow-caption strong {
-      display: block;
-      color: var(--text);
-      font-size: 15px;
-      font-weight: 700;
-      margin-bottom: 4px;
-    }
+    /* 完整长图阅读器 */
     .ai-long-overlay {
       position: fixed;
       inset: 0;
-      z-index: 180;
+      z-index: 300;
       display: flex;
       align-items: center;
       justify-content: center;
-      padding: clamp(16px, 3vw, 32px);
+      padding: clamp(12px, 2.4vw, 28px);
       opacity: 0;
       visibility: hidden;
       pointer-events: none;
       transition: opacity 0.35s var(--ease), visibility 0.35s;
     }
-    .ai-page.is-long-open .ai-long-overlay {
+    .ai-long-overlay.is-open {
       opacity: 1;
       visibility: visible;
       pointer-events: auto;
@@ -3798,53 +4016,208 @@
     .ai-long-backdrop {
       position: absolute;
       inset: 0;
-      background: rgba(0, 0, 0, 0.72);
-      backdrop-filter: blur(8px);
+      background: rgba(0, 0, 0, 0.78);
+      backdrop-filter: blur(10px);
     }
     .ai-long-panel {
       position: relative;
       z-index: 1;
-      width: min(920px, 100%);
-      max-height: min(88vh, calc(100dvh - var(--header-h) - 32px));
-      overflow-y: auto;
-      border-radius: 16px;
-      background: #111;
-      box-shadow: 0 28px 80px rgba(0, 0, 0, 0.65);
-      scrollbar-width: thin;
-    }
-    .ai-long-panel img {
-      display: block;
-      width: 100%;
-      height: auto;
-    }
-    .ai-long-bar {
-      position: sticky;
-      top: 0;
-      z-index: 2;
       display: flex;
-      justify-content: space-between;
-      gap: 12px;
-      padding: 12px 14px;
-      background: linear-gradient(180deg, rgba(10, 10, 12, 0.94), rgba(10, 10, 12, 0.7) 70%, transparent);
+      flex-direction: column;
+      width: min(960px, 100%);
+      height: 100%;
+      border-radius: 18px;
+      overflow: hidden;
+      background: #111113;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      box-shadow: 0 28px 80px rgba(0, 0, 0, 0.65);
+      translate: 0 24px;
+      scale: 0.98;
+      transition: translate 0.5s var(--ease), scale 0.5s var(--ease);
     }
-    .ai-long-bar a,
-    .ai-long-bar button {
-      font-family: var(--font-ui);
+    .ai-long-overlay.is-open .ai-long-panel { translate: 0 0; scale: 1; }
+    .ai-long-head {
+      position: relative;
+      flex: none;
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      padding: 14px 16px 14px 22px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    }
+    .ai-long-info { flex: 1; min-width: 0; }
+    .ai-long-kicker {
+      display: flex;
+      gap: 12px;
       font-size: 11px;
       font-weight: 700;
       letter-spacing: 0.08em;
       color: var(--lime);
-      background: none;
-      border: none;
-      cursor: pointer;
-      text-decoration: none;
     }
-    @media (max-width: 720px) {
-      .ai-flow-stage { height: min(50vh, 400px); }
-      .ai-flow-card { width: min(82vw, 360px); }
+    .ai-long-kicker span:last-child {
+      color: var(--muted);
+      font-variant-numeric: tabular-nums;
+    }
+    .ai-long-title {
+      margin-top: 4px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      font-size: 16px;
+      font-weight: 700;
+      letter-spacing: 0.02em;
+      color: #fff;
+    }
+    .ai-long-actions {
+      flex: none;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .ai-long-pdf {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      height: 36px;
+      padding: 0 14px;
+      border-radius: 999px;
+      border: 1px solid rgba(204, 255, 0, 0.45);
+      color: var(--lime);
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 0.04em;
+      text-decoration: none;
+      transition: background 0.3s var(--ease), color 0.3s var(--ease);
+    }
+    .ai-long-pdf:hover { background: var(--lime); color: #0a0a0b; }
+    .ai-long-btn {
+      display: grid;
+      place-items: center;
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      border: 1px solid rgba(255, 255, 255, 0.14);
+      background: rgba(255, 255, 255, 0.04);
+      color: #fff;
+      cursor: pointer;
+      transition: border-color 0.3s var(--ease), background 0.3s var(--ease), opacity 0.3s var(--ease);
+    }
+    .ai-long-btn:hover:not(:disabled) { border-color: rgba(255, 255, 255, 0.4); background: rgba(255, 255, 255, 0.1); }
+    .ai-long-btn:disabled { opacity: 0.3; cursor: default; }
+    .ai-long-btn svg,
+    .ai-long-pdf svg,
+    .ai-long-next svg {
+      width: 15px;
+      height: 15px;
+      fill: none;
+      stroke: currentColor;
+      stroke-width: 2.2;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+    .ai-long-pdf:focus-visible,
+    .ai-long-btn:focus-visible,
+    .ai-long-next:focus-visible {
+      outline: 2px solid rgba(204, 255, 0, 0.6);
+      outline-offset: 2px;
+    }
+    .ai-long-progress {
+      position: absolute;
+      left: 0;
+      right: 0;
+      bottom: -1px;
+      height: 2px;
+    }
+    .ai-long-progress i {
+      display: block;
+      height: 100%;
+      width: 100%;
+      background: var(--lime);
+      transform-origin: left;
+      transform: scaleX(var(--ai-read, 0));
+    }
+    .ai-long-scroll {
+      flex: 1;
+      min-height: 0;
+      overflow-y: auto;
+      overscroll-behavior: contain;
+      scrollbar-width: thin;
+      scrollbar-color: rgba(255, 255, 255, 0.2) transparent;
+    }
+    .ai-long-doc {
+      --first: 100%;
+      position: relative;
+      background: #fff no-repeat top center / 100% auto;
+    }
+    .ai-long-doc img {
+      display: block;
+      width: 100%;
+      height: 100%;
+      opacity: 0;
+      transition: opacity 0.4s var(--ease);
+    }
+    .ai-long-doc.is-ready img { opacity: 1; }
+    .ai-long-doc.is-loading::after {
+      content: "完整长图加载中…";
+      position: absolute;
+      left: 0;
+      right: 0;
+      top: var(--first);
+      bottom: 0;
+      display: flex;
+      justify-content: center;
+      padding-top: 48px;
+      font-size: 13px;
+      color: #9ca3af;
+      background: linear-gradient(100deg, #f4f4f2 30%, #fbfbfa 50%, #f4f4f2 70%) 0 0 / 200% 100%;
+      animation: aiLongShimmer 1.4s linear infinite;
+    }
+    @keyframes aiLongShimmer { to { background-position: -200% 0; } }
+    .ai-long-foot {
+      display: flex;
+      justify-content: center;
+      padding: 28px 16px 36px;
+      background: #111113;
+    }
+    .ai-long-next {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      max-width: 100%;
+      padding: 12px 20px;
+      border-radius: 999px;
+      border: 1px solid rgba(255, 255, 255, 0.14);
+      background: rgba(255, 255, 255, 0.04);
+      color: #fff;
+      font-family: var(--font-ui);
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: border-color 0.3s var(--ease), background 0.3s var(--ease);
+    }
+    .ai-long-next b {
+      flex: none;
+      color: var(--lime);
+      font-size: 11px;
+      letter-spacing: 0.08em;
+    }
+    .ai-long-next span {
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+    .ai-long-next:hover { border-color: rgba(204, 255, 0, 0.5); background: rgba(204, 255, 0, 0.06); }
+    .ai-long-next[hidden] { display: none; }
+    @media (max-width: 640px) {
+      .ai-long-pdf span { display: none; }
+      .ai-long-head { padding-left: 16px; }
     }
     @media (prefers-reduced-motion: reduce) {
-      .ai-flow-card { transition: none; }
+      .ai-flow-card,
+      .ai-shelf-progress i,
+      .ai-long-panel { transition: none; }
+      .ai-flow-caption.is-swap > *,
+      .ai-long-doc.is-loading::after { animation: none; }
     }
 
     .contact-links {
@@ -4027,10 +4400,8 @@
           <div class="home-visual" id="homeVisual">
             <div class="avatar-wrap">
               <div class="avatar-ring">
-                <div class="avatar-stack" id="avatarStack">
-                  <img class="is-show" src="assets/images/character-01-front.png" width="800" height="1200" alt="刘敏 IP 形象" data-view="front" decoding="async" />
-                  <img src="assets/images/character-01-front.png" width="800" height="1200" alt="" aria-hidden="true" data-view="side" decoding="async" />
-                  <img src="assets/images/character-01-front.png" width="800" height="1200" alt="" aria-hidden="true" data-view="back" decoding="async" />
+                <div class="avatar-stack is-head" id="avatarStack">
+                  <img class="is-show" src="assets/images/head.png" width="1298" height="1212" alt="刘敏 IP 形象" decoding="async" />
                 </div>
               </div>
               <p class="avatar-caption"><span><strong>3 年</strong>产品经验</span><i aria-hidden="true"></i><span>Vibe Coding</span><i aria-hidden="true"></i><span>数据分析</span></p>
@@ -4589,9 +4960,8 @@
                   <span class="proj-num" aria-hidden="true">01</span>
                   <div class="proj-hero-text">
                     <h3>APP 素材平台</h3>
-                    <p class="proj-hero-sub">统一素材生成与管理，单套素材 3h → 30min</p>
+                    <p class="proj-panel-role"><span>我的角色</span>产品支持</p>
                   </div>
-                  <span class="proj-panel-role">产品支持</span>
                 </header>
                 <div class="proj-panel-body">
                   <div class="proj-head">
@@ -4633,9 +5003,8 @@
                   <span class="proj-num" aria-hidden="true">02</span>
                   <div class="proj-hero-text">
                     <h3>闹钟 App 系列</h3>
-                    <p class="proj-hero-sub">在强提醒场景里做出差异，跑通付费 0→1</p>
+                    <p class="proj-panel-role"><span>我的角色</span>产品负责人</p>
                   </div>
-                  <span class="proj-panel-role">产品负责人</span>
                 </header>
                 <div class="proj-panel-body">
                   <div class="proj-head">
@@ -4789,9 +5158,8 @@
                   <span class="proj-num" aria-hidden="true">03</span>
                   <div class="proj-hero-text">
                     <h3>钓鱼 App 系列</h3>
-                    <p class="proj-hero-sub">围绕「找钓点 — 记录鱼获 — 生成战报」重构核心使用闭环</p>
+                    <p class="proj-panel-role"><span>我的角色</span>产品负责人</p>
                   </div>
-                  <span class="proj-panel-role">产品负责人</span>
                 </header>
                 <div class="proj-panel-body">
                   <div class="proj-head">
@@ -4836,9 +5204,8 @@
                   <span class="proj-num" aria-hidden="true">04</span>
                   <div class="proj-hero-text">
                     <h3>健康 App 系列</h3>
-                    <p class="proj-hero-sub">找到 AI 真正有价值的健康场景，并验证可行性</p>
+                    <p class="proj-panel-role"><span>我的角色</span>产品规划</p>
                   </div>
-                  <span class="proj-panel-role">产品规划</span>
                 </header>
                 <div class="proj-panel-body">
                   <div class="proj-head">
@@ -4887,15 +5254,25 @@
             <h2 class="section-heading sec-head-title">我的<em>AI 学习</em></h2>
             <p class="sec-head-sub">用 AI 做快速验证，而不是替代产品判断</p>
           </header>
-          <div class="ai-flow" id="aiFlow">
-            <div class="ai-flow-viewport">
-              <div class="ai-flow-stage" id="aiFlowStage" aria-roledescription="carousel"></div>
-              <span class="ai-flow-fade ai-flow-fade--left" aria-hidden="true"></span>
-              <span class="ai-flow-fade ai-flow-fade--right" aria-hidden="true"></span>
-              <span class="ai-flow-fade ai-flow-fade--top" aria-hidden="true"></span>
-              <span class="ai-flow-fade ai-flow-fade--bottom" aria-hidden="true"></span>
+          <div class="ai-shelf" id="aiShelf">
+            <div class="ai-shelf-bar">
+              <div class="ai-tabs" id="aiTabs" aria-label="按专栏筛选">
+                <button type="button" class="ai-tab is-active" data-col="all" aria-pressed="true">全部<span></span></button>
+                <button type="button" class="ai-tab" data-col="base" aria-pressed="false">专栏一 · AI 基础<span></span></button>
+                <button type="button" class="ai-tab" data-col="dl" aria-pressed="false">专栏二 · 深度学习<span></span></button>
+              </div>
+              <div class="ai-shelf-ctrl">
+                <span class="ai-count" id="aiCount" aria-live="polite"></span>
+                <button type="button" class="ai-shelf-btn" id="aiPrev" aria-label="上一篇"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 18l-6-6 6-6"/></svg></button>
+                <button type="button" class="ai-shelf-btn" id="aiNext" aria-label="下一篇"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg></button>
+              </div>
             </div>
-            <p class="ai-flow-caption" id="aiFlowCaption"></p>
+            <div class="ai-flow" id="aiTrack" aria-roledescription="carousel"></div>
+            <div class="ai-flow-caption" id="aiCaption">
+              <p class="ai-flow-meta"><b id="aiCapTag"></b><span id="aiCapPages"></span></p>
+              <h3 class="ai-flow-title" id="aiCapTitle"></h3>
+            </div>
+            <div class="ai-shelf-progress" aria-hidden="true"><i id="aiProgress"></i></div>
           </div>
           <nav class="ai-links" aria-label="AI 学习外部链接">
             <a class="ai-link is-primary" href="https://www.figma.com/board/FSJofBdE85T9WmjWPPYkVk/2026-AI%E6%8A%80%E6%9C%AF%E5%AD%A6%E4%B9%A0?node-id=0-1&amp;t=o7mSH72glxFEIE3S-1" target="_blank" rel="noopener noreferrer">
@@ -4909,14 +5286,28 @@
               <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg>
             </a>
           </nav>
-          <div class="ai-long-overlay" id="aiLongOverlay" aria-hidden="true">
+          <div class="ai-long-overlay" id="aiLongOverlay" role="dialog" aria-modal="true" aria-labelledby="aiLongTitle" aria-hidden="true">
             <div class="ai-long-backdrop" id="aiLongBackdrop"></div>
             <article class="ai-long-panel" id="aiLongPanel">
-              <div class="ai-long-bar">
-                <a id="aiLongPdf" href="#" target="_blank" rel="noopener noreferrer">打开 CSDN PDF</a>
-                <button type="button" id="aiLongClose">关闭</button>
+              <header class="ai-long-head">
+                <div class="ai-long-info">
+                  <p class="ai-long-kicker"><span id="aiLongKicker"></span><span id="aiLongPage"></span></p>
+                  <h3 class="ai-long-title" id="aiLongTitle"></h3>
+                </div>
+                <div class="ai-long-actions">
+                  <a class="ai-long-pdf" id="aiLongPdf" href="#" target="_blank" rel="noopener noreferrer"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg><span>PDF 原文</span></a>
+                  <button type="button" class="ai-long-btn" id="aiLongPrev" aria-label="上一篇"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 18l-6-6 6-6"/></svg></button>
+                  <button type="button" class="ai-long-btn" id="aiLongNext" aria-label="下一篇"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg></button>
+                  <button type="button" class="ai-long-btn" id="aiLongClose" aria-label="关闭"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18"/></svg></button>
+                </div>
+                <span class="ai-long-progress" aria-hidden="true"><i></i></span>
+              </header>
+              <div class="ai-long-scroll" id="aiLongScroll">
+                <div class="ai-long-doc" id="aiLongDoc"><img id="aiLongImg" src="" alt="" decoding="async" /></div>
+                <div class="ai-long-foot">
+                  <button type="button" class="ai-long-next" id="aiLongNextCard"><b>下一篇</b><span></span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></button>
+                </div>
               </div>
-              <img id="aiLongImg" src="" alt="" />
             </article>
           </div>
         </div>
@@ -6151,8 +6542,17 @@
         var csScenes = csRoot.querySelectorAll(".cs-scene");
         var csStage = document.getElementById("csStage");
         var csCur = 0;
+        var csSel = 0;
         var csLeaveTimer = 0;
-        var csGo = function (i, focus) {
+        var csHoverTimer = 0;
+        var csPreviewTag = document.createElement("span");
+        csPreviewTag.className = "cs-preview-tag";
+        csPreviewTag.setAttribute("aria-hidden", "true");
+        csPreviewTag.innerHTML = "<i></i>预览中 · 点击标题选中";
+        if (csStage) csStage.appendChild(csPreviewTag);
+
+        /* 只切换右侧画面；选中状态由 csGo 决定 */
+        var csShow = function (i) {
           if (i === csCur || i < 0 || i >= csScenes.length) return;
           csStage.style.setProperty("--dy", i > csCur ? "22px" : "-22px");
           var prev = csScenes[csCur];
@@ -6163,16 +6563,54 @@
           csLeaveTimer = setTimeout(function () { prev.classList.remove("is-leaving"); }, reduced ? 0 : 1100);
           csCur = i;
           csScenes[i].classList.add("is-active");
+          csSyncPreview();
+        };
+        var csSyncPreview = function () {
+          var previewing = csCur !== csSel;
+          csNav.forEach(function (n, k) {
+            n.classList.toggle("is-preview", previewing && k === csCur);
+            n.classList.toggle("is-dim", previewing && k === csSel);
+          });
+          csStage.classList.toggle("is-previewing", previewing);
+        };
+        var csGo = function (i, focus) {
+          if (i < 0 || i >= csScenes.length) return;
+          clearTimeout(csHoverTimer);
+          var changed = i !== csSel;
+          csSel = i;
+          csShow(i);
           csNav.forEach(function (n, k) {
             var on = k === i;
             n.classList.toggle("is-active", on);
             n.setAttribute("aria-selected", on ? "true" : "false");
             n.tabIndex = on ? 0 : -1;
           });
+          csSyncPreview();
           csRoot.style.setProperty("--p", String(i / (csScenes.length - 1)));
           csRoot.style.setProperty("--cs-accent-cur", csNav[i].style.getPropertyValue("--cs-accent"));
+          if (changed && !reduced) {
+            csStage.classList.remove("is-committed");
+            void csStage.offsetWidth;
+            csStage.classList.add("is-committed");
+          }
           if (focus) csNav[i].focus({ preventScroll: true });
         };
+
+        var csCanHover = window.matchMedia("(hover: hover)").matches;
+        var csNavList = csRoot.querySelector(".cs-nav-list");
+        if (csCanHover && csNavList) {
+          csNav.forEach(function (n, k) {
+            n.addEventListener("mouseenter", function () {
+              clearTimeout(csHoverTimer);
+              csHoverTimer = setTimeout(function () { csShow(k); }, reduced ? 0 : 90);
+            });
+          });
+          csNavList.addEventListener("mouseleave", function () {
+            clearTimeout(csHoverTimer);
+            csHoverTimer = setTimeout(function () { csShow(csSel); }, reduced ? 0 : 220);
+          });
+        }
+
         csNav.forEach(function (n, k) {
           n.addEventListener("click", function () { csGo(k); });
           n.addEventListener("keydown", function (e) {
@@ -6180,7 +6618,7 @@
             if (!step) return;
             e.preventDefault();
             e.stopPropagation();
-            csGo(Math.max(0, Math.min(csScenes.length - 1, csCur + step)), true);
+            csGo(Math.max(0, Math.min(csScenes.length - 1, csSel + step)), true);
           });
         });
         if (csStage && !reduced && window.matchMedia("(hover: hover)").matches) {
@@ -6219,151 +6657,300 @@
         { n: "18", title: "数据归一化与 Train / Val / Test", cover: "深度学习10_归一化_Train_Val_Test_首页.png", long: "深度学习10_归一化_Train_Val_Test_完整长图.png", pdf: "【专栏二：深度学习10】-【一张图讲清楚：为什么既要做数据归一化_又要划分 Train _ Val _ Test？】-CSDN博客.pdf" }
       ];
 
-      var aiPage = document.getElementById("aiPage");
-      var aiStage = document.getElementById("aiFlowStage");
-      var aiCaption = document.getElementById("aiFlowCaption");
+      var AI_PAGES = [2, 5, 15, 9, 12, 9, 10, 11, 7, 22, 20, 10, 14, 9, 10, 7, 15, 9];
+      AI_ITEMS.forEach(function (item, i) {
+        var base = i < 8;
+        item.p = AI_PAGES[i];
+        item.col = base ? "base" : "dl";
+        item.tag = (base ? "AI 基础 · " : "深度学习 · ") + ("0" + (base ? i + 1 : i - 7)).slice(-2);
+      });
+
+      var aiShelf = document.getElementById("aiShelf");
+      var aiTrack = document.getElementById("aiTrack");
+      var aiTabs = document.getElementById("aiTabs");
+      var aiPrev = document.getElementById("aiPrev");
+      var aiNext = document.getElementById("aiNext");
+      var aiProgress = document.getElementById("aiProgress");
       var aiLongOverlay = document.getElementById("aiLongOverlay");
+      var aiLongPanel = document.getElementById("aiLongPanel");
+      var aiLongScroll = document.getElementById("aiLongScroll");
+      var aiLongDoc = document.getElementById("aiLongDoc");
       var aiLongImg = document.getElementById("aiLongImg");
       var aiLongPdf = document.getElementById("aiLongPdf");
-      var aiIndex = 0;
+      var aiLongKicker = document.getElementById("aiLongKicker");
+      var aiLongPage = document.getElementById("aiLongPage");
+      var aiLongTitle = document.getElementById("aiLongTitle");
+      var aiLongPrev = document.getElementById("aiLongPrev");
+      var aiLongNextBtn = document.getElementById("aiLongNext");
+      var aiLongNextCard = document.getElementById("aiLongNextCard");
+      var aiCount = document.getElementById("aiCount");
+      var aiCaption = document.getElementById("aiCaption");
+      var aiCapTag = document.getElementById("aiCapTag");
+      var aiCapPages = document.getElementById("aiCapPages");
+      var aiCapTitle = document.getElementById("aiCapTitle");
+      var aiFilter = "all";
+      var aiList = AI_ITEMS.slice();
       var aiCards = [];
-      var aiLockHover = 0;
+      var aiIndex = 0;
+      var aiSpread = true;
+      var aiWheelAt = 0;
+      var aiOpenIndex = -1;
       var aiDrag = null;
+      var aiSuppressClick = false;
+      var AI_X = [0, 0.96, 1.72, 2.3];
+      var AI_S = [1, 0.84, 0.72, 0.62];
 
-      function aiList() {
-        return AI_ITEMS;
+      if (aiLongOverlay) document.body.appendChild(aiLongOverlay);
+
+      function aiIsOpen() {
+        return !!(aiLongOverlay && aiLongOverlay.classList.contains("is-open"));
+      }
+
+      function aiLayout() {
+        var w = aiCards[0] ? aiCards[0].offsetWidth : 400;
+        aiCards.forEach(function (card, i) {
+          var d = i - aiIndex;
+          var abs = Math.abs(d);
+          var sign = d < 0 ? -1 : 1;
+          var x = sign * w * (abs > 3 ? 2.8 : AI_X[abs]);
+          var ry = d === 0 || reduced ? 0 : -sign * 30;
+          var s = AI_S[Math.min(abs, 3)];
+          var op = abs > 2 ? 0 : abs === 2 ? 0.5 : 1;
+          if (!aiSpread) {
+            x = 0;
+            ry = 0;
+            s = d === 0 ? 1 : 0.9;
+            op = d === 0 ? 1 : 0;
+          }
+          card.classList.toggle("is-center", d === 0);
+          card.style.zIndex = String(50 - abs);
+          card.style.opacity = String(op);
+          card.style.filter = d === 0 ? "none" : "brightness(" + (abs === 1 ? 0.7 : 0.48) + ")";
+          card.style.visibility = abs > 3 ? "hidden" : "visible";
+          card.tabIndex = d === 0 ? 0 : -1;
+          card.setAttribute("aria-hidden", abs > 2 ? "true" : "false");
+          card.style.transform = "translateX(-50%) translateX(" + x.toFixed(1) + "px) rotateY(" + ry + "deg) scale(" + s + ")";
+        });
+      }
+
+      function aiCaptionUpdate() {
+        var item = aiList[aiIndex];
+        var total = aiList.length;
+        if (!item) return;
+        if (aiCapTag) aiCapTag.textContent = item.tag;
+        if (aiCapPages) aiCapPages.textContent = item.p + " 页 · 点击查看完整长图";
+        if (aiCapTitle) aiCapTitle.textContent = item.title;
+        if (aiCaption && !reduced) {
+          aiCaption.classList.remove("is-swap");
+          void aiCaption.offsetWidth;
+          aiCaption.classList.add("is-swap");
+        }
+        if (aiCount) aiCount.innerHTML = "<b>" + ("0" + (aiIndex + 1)).slice(-2) + "</b> / " + ("0" + total).slice(-2);
+        if (aiProgress) {
+          aiProgress.style.setProperty("--ai-ratio", (1 / total).toFixed(4));
+          aiProgress.style.setProperty("--ai-pos", (aiIndex / total).toFixed(4));
+        }
+        if (aiPrev) aiPrev.disabled = aiIndex <= 0;
+        if (aiNext) aiNext.disabled = aiIndex >= total - 1;
+      }
+
+      function aiGo(n) {
+        n = Math.max(0, Math.min(aiList.length - 1, n));
+        if (n === aiIndex) return;
+        aiIndex = n;
+        aiLayout();
+        aiCaptionUpdate();
+      }
+
+      function aiRender() {
+        if (!aiTrack) return;
+        aiList = AI_ITEMS.filter(function (item) { return aiFilter === "all" || item.col === aiFilter; });
+        aiTrack.replaceChildren();
+        aiCards = aiList.map(function (item, i) {
+          var btn = document.createElement("button");
+          btn.type = "button";
+          btn.className = "ai-flow-card";
+          btn.setAttribute("aria-label", item.title + "，查看完整长图");
+          btn.innerHTML =
+            '<img alt="" decoding="async" draggable="false" />' +
+            '<span class="ai-card-open">查看完整长图<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg></span>';
+          btn.querySelector("img").src = AI_BASE + item.cover;
+          btn.addEventListener("click", function () {
+            if (aiSuppressClick) return;
+            if (i === aiIndex) aiOpenLong(i);
+            else aiGo(i);
+          });
+          aiTrack.appendChild(btn);
+          return btn;
+        });
+        aiIndex = 0;
+        aiLayout();
+        aiCaptionUpdate();
+      }
+
+      function aiLongSync() {
+        var item = aiList[aiOpenIndex];
+        if (!aiLongScroll || !item) return;
+        var max = aiLongScroll.scrollHeight - aiLongScroll.clientHeight;
+        if (aiLongPanel) aiLongPanel.style.setProperty("--ai-read", (max > 0 ? aiLongScroll.scrollTop / max : 0).toFixed(4));
+        if (aiLongPage && aiLongDoc) {
+          var pageH = aiLongDoc.offsetHeight / item.p;
+          var page = pageH ? Math.floor((aiLongScroll.scrollTop + aiLongScroll.clientHeight * 0.35) / pageH) + 1 : 1;
+          aiLongPage.textContent = Math.min(item.p, page) + " / " + item.p + " 页";
+        }
+      }
+
+      function aiShowLong(i) {
+        var item = aiList[i];
+        if (!item || !aiLongDoc || !aiLongImg) return;
+        aiOpenIndex = i;
+        if (aiLongKicker) aiLongKicker.textContent = item.tag;
+        if (aiLongTitle) aiLongTitle.textContent = item.title;
+        if (aiLongPdf) aiLongPdf.href = encodeURI(AI_BASE + item.pdf);
+        aiLongDoc.style.aspectRatio = "2339 / " + item.p * 1653;
+        aiLongDoc.style.setProperty("--first", (100 / item.p).toFixed(3) + "%");
+        aiLongDoc.style.backgroundImage = 'url("' + encodeURI(AI_BASE + item.cover) + '")';
+        aiLongDoc.classList.remove("is-ready");
+        aiLongDoc.classList.toggle("is-loading", item.p > 1);
+        aiLongImg.onload = function () {
+          if (aiList[aiOpenIndex] !== item) return;
+          aiLongDoc.classList.remove("is-loading");
+          aiLongDoc.classList.add("is-ready");
+        };
+        aiLongImg.alt = item.title + " 完整长图";
+        aiLongImg.src = AI_BASE + item.long;
+        if (aiLongImg.complete && aiLongImg.naturalWidth) aiLongImg.onload();
+        if (aiLongPrev) aiLongPrev.disabled = i <= 0;
+        if (aiLongNextBtn) aiLongNextBtn.disabled = i >= aiList.length - 1;
+        var next = aiList[i + 1];
+        if (aiLongNextCard) {
+          aiLongNextCard.hidden = !next;
+          if (next) aiLongNextCard.querySelector("span").textContent = next.title;
+        }
+        if (aiLongScroll) aiLongScroll.scrollTop = 0;
+        aiLongSync();
+      }
+
+      function aiOpenLong(i) {
+        if (!aiLongOverlay) return;
+        aiShowLong(i);
+        aiLongOverlay.classList.add("is-open");
+        aiLongOverlay.setAttribute("aria-hidden", "false");
+        if (track) track.style.overflowY = "hidden";
+        var closeBtn = document.getElementById("aiLongClose");
+        if (closeBtn) closeBtn.focus({ preventScroll: true });
       }
 
       function aiCloseLong() {
-        if (!aiPage || !aiPage.classList.contains("is-long-open")) return false;
-        aiPage.classList.remove("is-long-open");
-        if (aiLongOverlay) aiLongOverlay.setAttribute("aria-hidden", "true");
+        if (!aiIsOpen()) return false;
+        aiLongOverlay.classList.remove("is-open");
+        aiLongOverlay.setAttribute("aria-hidden", "true");
         if (track) track.style.overflowY = "";
+        var last = aiOpenIndex;
+        aiOpenIndex = -1;
+        if (last >= 0) {
+          aiGo(last);
+          if (aiCards[last]) aiCards[last].focus({ preventScroll: true });
+        }
         return true;
       }
       window.__aiCloseLong = aiCloseLong;
 
-      function aiOpenLong(item) {
-        if (!item || !aiPage) return;
-        if (aiLongImg) {
-          aiLongImg.src = AI_BASE + item.long;
-          aiLongImg.alt = item.title;
-        }
-        if (aiLongPdf) aiLongPdf.href = encodeURI(AI_BASE + item.pdf);
-        aiPage.classList.add("is-long-open");
-        if (aiLongOverlay) aiLongOverlay.setAttribute("aria-hidden", "false");
-        if (track) track.style.overflowY = "hidden";
-      }
-
-      function aiLayout() {
-        var list = aiList();
-        var w = aiCards[0] ? aiCards[0].offsetWidth : 360;
-        var gap = Math.max(w * 0.36, 100);
-        aiCards.forEach(function (card, i) {
-          var d = i - aiIndex;
-          var abs = Math.abs(d);
-          card.classList.toggle("is-center", d === 0);
-          card.style.zIndex = String(80 - abs);
-          card.style.opacity = "1";
-          card.style.visibility = abs > 2 ? "hidden" : "visible";
-          card.style.pointerEvents = abs > 2 ? "none" : "auto";
-          var x = d * gap;
-          var ry = d === 0 || reduced ? 0 : (d < 0 ? 36 : -36);
-          var s = d === 0 ? 1 : Math.max(0.78, 1 - abs * 0.07);
-          card.style.transform = "translate(-50%, -50%) translateX(" + x + "px) rotateY(" + ry + "deg) scale(" + s + ")";
-        });
-        var item = list[aiIndex];
-        if (aiCaption && item) {
-          aiCaption.innerHTML = "<strong>" + item.title + "</strong>点击居中卡片查看完整长图";
-        }
-      }
-
-      function aiGo(next) {
-        var total = aiList().length;
-        next = Math.max(0, Math.min(total - 1, next));
-        if (next === aiIndex) {
-          aiLayout();
-          return;
-        }
-        aiIndex = next;
-        aiLockHover = Date.now() + 520;
-        aiLayout();
-      }
-
-      function aiRender() {
-        if (!aiStage) return;
-        var list = aiList();
-        aiStage.replaceChildren();
-        aiCards = list.map(function (item, i) {
-          var btn = document.createElement("button");
-          btn.type = "button";
-          btn.className = "ai-flow-card";
-          btn.setAttribute("data-i", String(i));
-          btn.setAttribute("aria-label", item.title);
-          var img = document.createElement("img");
-          img.src = AI_BASE + item.cover;
-          img.alt = "";
-          img.decoding = "async";
-          img.draggable = false;
-          btn.appendChild(img);
-          btn.addEventListener("click", function () {
-            if (i === aiIndex) aiOpenLong(item);
-            else aiGo(i);
-          });
-          btn.addEventListener("pointerenter", function () {
-            if (Date.now() < aiLockHover) return;
-            if (aiDrag) return;
-            if (i !== aiIndex) aiGo(i);
-          });
-          aiStage.appendChild(btn);
-          return btn;
-        });
-        aiIndex = Math.min(aiIndex, Math.max(0, list.length - 1));
-        aiLayout();
+      function aiLongGo(dir) {
+        var n = aiOpenIndex + dir;
+        if (n >= 0 && n < aiList.length) aiShowLong(n);
       }
 
       window.__aiKey = function (dir) {
-        aiGo(aiIndex + dir);
+        if (aiIsOpen()) aiLongGo(dir);
+        else aiGo(aiIndex + dir);
       };
       window.__aiWheel = function (e) {
-        if (aiPage && aiPage.classList.contains("is-long-open")) return true;
-        var dx = e.deltaX;
-        var dy = e.deltaY;
-        if (Math.abs(dx) >= Math.abs(dy) && Math.abs(dx) > 8) {
-          if (dx > 0) aiGo(aiIndex + 1);
-          else aiGo(aiIndex - 1);
-          return true;
+        if (Math.abs(e.deltaX) <= Math.abs(e.deltaY) || Math.abs(e.deltaX) < 4) return false;
+        var now = Date.now();
+        if (now - aiWheelAt > 380) {
+          aiWheelAt = now;
+          aiGo(aiIndex + (e.deltaX > 0 ? 1 : -1));
         }
-        return false;
+        return true;
       };
 
-      if (aiStage) {
+      if (aiTabs) {
+        aiTabs.querySelectorAll(".ai-tab").forEach(function (tab) {
+          var col = tab.getAttribute("data-col");
+          var badge = tab.querySelector("span");
+          if (badge) {
+            badge.textContent = String(AI_ITEMS.filter(function (item) { return col === "all" || item.col === col; }).length);
+          }
+          tab.addEventListener("click", function () {
+            if (col === aiFilter) return;
+            aiFilter = col;
+            aiTabs.querySelectorAll(".ai-tab").forEach(function (t) {
+              t.classList.toggle("is-active", t === tab);
+              t.setAttribute("aria-pressed", t === tab ? "true" : "false");
+            });
+            aiRender();
+          });
+        });
+      }
+
+      if (aiShelf && !reduced && "IntersectionObserver" in window) {
+        aiShelf.classList.add("js-reveal");
+        aiSpread = false;
+      }
+      if (aiTrack) {
         aiRender();
-        window.addEventListener("resize", function () { aiLayout(); });
-        aiStage.addEventListener("pointermove", function (e) {
+        window.addEventListener("resize", aiLayout);
+        aiTrack.addEventListener("pointerdown", function (e) {
+          if (e.button !== 0) return;
+          aiDrag = { x: e.clientX, moved: false, id: e.pointerId };
+        });
+        aiTrack.addEventListener("pointermove", function (e) {
           if (!aiDrag) return;
           var dx = e.clientX - aiDrag.x;
-          if (Math.abs(dx) > 48) {
-            aiGo(aiDrag.from + (dx < 0 ? 1 : -1));
-            aiDrag.from = aiIndex;
+          if (!aiDrag.moved && Math.abs(dx) > 8) {
+            aiDrag.moved = true;
+            aiTrack.classList.add("is-drag");
+            try { aiTrack.setPointerCapture(aiDrag.id); } catch (err) {}
+          }
+          if (aiDrag.moved && Math.abs(dx) > 70) {
+            aiGo(aiIndex + (dx < 0 ? 1 : -1));
             aiDrag.x = e.clientX;
           }
         });
-        aiStage.addEventListener("pointerdown", function (e) {
-          if (e.button !== 0) return;
-          aiDrag = { x: e.clientX, from: aiIndex, pid: e.pointerId };
-          aiStage.classList.add("is-drag");
-          try { aiStage.setPointerCapture(e.pointerId); } catch (err) {}
-        });
-        aiStage.addEventListener("pointerup", function () {
-          aiStage.classList.remove("is-drag");
+        var aiDragEnd = function () {
+          if (!aiDrag) return;
+          if (aiDrag.moved) {
+            aiSuppressClick = true;
+            setTimeout(function () { aiSuppressClick = false; }, 0);
+          }
           aiDrag = null;
-        });
-        aiStage.addEventListener("pointercancel", function () {
-          aiStage.classList.remove("is-drag");
-          aiDrag = null;
-        });
+          aiTrack.classList.remove("is-drag");
+        };
+        aiTrack.addEventListener("pointerup", aiDragEnd);
+        aiTrack.addEventListener("pointercancel", aiDragEnd);
+        aiTrack.addEventListener("dragstart", function (e) { e.preventDefault(); });
       }
+      if (aiPrev) aiPrev.addEventListener("click", function () { aiGo(aiIndex - 1); });
+      if (aiNext) aiNext.addEventListener("click", function () { aiGo(aiIndex + 1); });
+      if (aiShelf && !aiSpread) {
+        var aiIO = new IntersectionObserver(function (entries) {
+          entries.forEach(function (en) {
+            if (!en.isIntersecting) return;
+            aiIO.disconnect();
+            aiShelf.classList.add("is-in");
+            setTimeout(function () {
+              aiSpread = true;
+              aiLayout();
+            }, 120);
+          });
+        }, { root: track, threshold: 0.25 });
+        aiIO.observe(aiShelf);
+      }
+      if (aiLongScroll) aiLongScroll.addEventListener("scroll", aiLongSync, { passive: true });
+      if (aiLongPrev) aiLongPrev.addEventListener("click", function () { aiLongGo(-1); });
+      if (aiLongNextBtn) aiLongNextBtn.addEventListener("click", function () { aiLongGo(1); });
+      if (aiLongNextCard) aiLongNextCard.addEventListener("click", function () { aiLongGo(1); });
       var aiLongClose = document.getElementById("aiLongClose");
       var aiLongBackdrop = document.getElementById("aiLongBackdrop");
       if (aiLongClose) aiLongClose.addEventListener("click", function () { aiCloseLong(); });
