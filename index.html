@@ -535,6 +535,7 @@
       line-height: 1;
       font-variant-numeric: tabular-nums;
       letter-spacing: -0.03em;
+      white-space: nowrap;
     }
     .home-stats span {
       display: block;
@@ -2196,6 +2197,10 @@
     .exp-visual img {
       transition: transform 1.2s var(--ease), filter 0.6s var(--ease);
     }
+    .exp-visual-stats dt,
+    .asc-ver-kpis dt,
+    .proj-kpi dt,
+    .ai-intro-stats strong { white-space: nowrap; }
     .exp-visual-stats dt { font-variant-numeric: tabular-nums; }
     @media (hover: hover) {
       .exp-row:hover .exp-visual,
@@ -3698,6 +3703,46 @@
       margin-top: 6px;
       font-size: 12px;
       color: var(--muted);
+    }
+    .health-slots {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 14px;
+    }
+    .health-slot {
+      min-height: 128px;
+      padding: 16px 18px 18px;
+      border-radius: 16px;
+      border: 1px dashed rgba(204, 255, 0, 0.32);
+      background:
+        linear-gradient(180deg, rgba(204, 255, 0, 0.05), transparent 42%),
+        rgba(255, 255, 255, 0.02);
+    }
+    .health-slot-kicker {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-family: var(--font-display);
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.16em;
+      color: var(--lime);
+    }
+    .health-slot h5 {
+      margin: 12px 0 8px;
+      font-size: 16px;
+      font-weight: 700;
+      line-height: 1.4;
+      color: #fff;
+    }
+    .health-slot p {
+      margin: 0;
+      font-size: 12px;
+      line-height: 1.65;
+      color: var(--muted);
+    }
+    @media (max-width: 720px) {
+      .health-slots { grid-template-columns: 1fr; }
     }
     .proj-doc-actions {
       display: flex;
@@ -6958,6 +7003,18 @@
                         <div class="proj-kpi is-text"><dt>全流程</dt><dd>需求定义 → 验证</dd></div>
                       </dl>
                     </section>
+                    <div class="health-slots" aria-label="健康项目待补充">
+                      <article class="health-slot">
+                        <span class="health-slot-kicker">01 · 待补充</span>
+                        <h5>体重健康管理 · 运营情况</h5>
+                        <p>公司正在运营的体重健康管理产品，运营数据与结果之后补在这里。</p>
+                      </article>
+                      <article class="health-slot">
+                        <span class="health-slot-kicker">02 · 待补充</span>
+                        <h5>《薄荷健康》海外研究与 UI</h5>
+                        <p>海外市场研究，以及界面优化的过程与结论，之后补在这里。</p>
+                      </article>
+                    </div>
                   </div>
                 </div>
               </article>
@@ -7447,23 +7504,93 @@
         });
       }
 
-      if (!reduced) {
-        document.querySelectorAll(".home-stats strong").forEach(function (el) {
-          var m = el.textContent.trim().match(/^(\d+)(.*)$/);
-          if (!m) return;
-          var target = Number(m[1]);
-          var suffix = m[2];
-          var start = 0;
-          el.textContent = "0" + suffix;
-          setTimeout(function () {
-            (function step(ts) {
-              if (!start) start = ts;
-              var p = Math.max(0, Math.min((ts - start) / 1400, 1));
-              var eased = 1 - Math.pow(1 - p, 3);
-              el.textContent = Math.round(target * eased) + suffix;
-              if (p < 1) requestAnimationFrame(step);
-            })(performance.now());
-          }, 550);
+      /* 量化数字：进入视口从 0 滚到终值，离开后再进入会再滚一次 */
+      if (!reduced && track && "IntersectionObserver" in window) {
+        function rollSpec(text) {
+          var re = /(\d+(?:\.\d+)?)/g;
+          var parts = [];
+          var nums = [];
+          var last = 0;
+          var m;
+          while ((m = re.exec(text))) {
+            parts.push(text.slice(last, m.index));
+            nums.push({
+              target: Number(m[1]),
+              decimals: m[1].indexOf(".") === -1 ? 0 : m[1].split(".")[1].length
+            });
+            last = m.index + m[1].length;
+          }
+          if (!nums.length) return null;
+          parts.push(text.slice(last));
+          return { parts: parts, nums: nums };
+        }
+        function rollText(spec, p) {
+          var out = "";
+          for (var i = 0; i < spec.nums.length; i++) {
+            var n = spec.nums[i];
+            var v = n.target * p;
+            out += spec.parts[i] + (n.decimals ? v.toFixed(n.decimals) : String(Math.round(v)));
+          }
+          return out + spec.parts[spec.nums.length];
+        }
+        function rollShown(el) {
+          var node = el;
+          while (node && node !== document.documentElement) {
+            if (parseFloat(window.getComputedStyle(node).opacity) < 0.45) return false;
+            node = node.parentElement;
+          }
+          return true;
+        }
+        var rollItems = [];
+        document.querySelectorAll(".home-stats strong, .exp-visual-stats > div:not(.is-text) dt, .asc-ver-kpis dt, .proj-kpi:not(.is-text) dt, .ai-intro-stats strong").forEach(function (el) {
+          var spec = rollSpec(el.textContent.trim());
+          if (!spec) return;
+          var item = { el: el, spec: spec, on: false, inview: false, raf: 0, wait: 0 };
+          el.textContent = rollText(spec, 0);
+          rollItems.push(item);
+        });
+        function rollPlay(item) {
+          if (item.on) return;
+          if (!item.inview) return;
+          if (!rollShown(item.el)) {
+            clearTimeout(item.wait);
+            item.wait = setTimeout(function () { rollPlay(item); }, 120);
+            return;
+          }
+          item.on = true;
+          var t0 = 0;
+          cancelAnimationFrame(item.raf);
+          item.raf = requestAnimationFrame(function step(ts) {
+            if (!item.on) return;
+            if (!t0) t0 = ts;
+            var p = Math.max(0, Math.min((ts - t0) / 1000, 1));
+            var eased = 1 - Math.pow(1 - p, 3);
+            item.el.textContent = rollText(item.spec, eased);
+            if (p < 1) item.raf = requestAnimationFrame(step);
+          });
+        }
+        function rollReset(item) {
+          item.on = false;
+          item.inview = false;
+          clearTimeout(item.wait);
+          cancelAnimationFrame(item.raf);
+          item.el.textContent = rollText(item.spec, 0);
+        }
+        var rollIO = new IntersectionObserver(function (entries) {
+          entries.forEach(function (entry) {
+            var item = entry.target._rollItem;
+            if (!item) return;
+            if (entry.isIntersecting && entry.intersectionRatio >= 0.6) {
+              item.inview = true;
+              rollPlay(item);
+            } else if (!entry.isIntersecting) {
+              rollReset(item);
+            }
+          });
+        }, { root: track, threshold: [0, 0.6] });
+        rollItems.forEach(function (item) {
+          item.el._rollItem = item;
+          rollIO.observe(item.el);
         });
       }
 
@@ -7693,26 +7820,6 @@
       var expCross = document.querySelector(".exp-cross");
       var expRows = expCross ? expCross.querySelectorAll(".exp-row") : [];
 
-      function expCountUp(row) {
-        row.querySelectorAll(".exp-visual-stats dt").forEach(function (dt) {
-          var m = dt.textContent.trim().match(/^(\+?)(\d+)(?:\.(\d+))?(.*)$/);
-          if (!m) return;
-          var decimals = m[3] ? m[3].length : 0;
-          var target = Number(m[2] + (m[3] ? "." + m[3] : ""));
-          var start = 0;
-          dt.textContent = m[1] + (0).toFixed(decimals) + m[4];
-          setTimeout(function () {
-            (function step(ts) {
-              if (!start) start = ts;
-              var p = Math.max(0, Math.min((ts - start) / 1200, 1));
-              var eased = 1 - Math.pow(1 - p, 3);
-              dt.textContent = m[1] + (target * eased).toFixed(decimals) + m[4];
-              if (p < 1) requestAnimationFrame(step);
-            })(performance.now());
-          }, 250);
-        });
-      }
-
       if (expCross && track && !reduced && "IntersectionObserver" in window) {
         expCross.classList.add("js-reveal", "has-fill");
 
@@ -7720,7 +7827,6 @@
           entries.forEach(function (entry) {
             if (!entry.isIntersecting) return;
             entry.target.classList.add("is-in");
-            expCountUp(entry.target);
             expRevealObserver.unobserve(entry.target);
           });
         }, { root: track, threshold: 0.18 });
