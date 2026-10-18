@@ -7688,10 +7688,9 @@
           }, 30);
         }
         function startAudio() {
-          audio.volume = 0;
+          if (!audio) return;
           var pr = audio.play();
           if (pr && pr.catch) pr.catch(function () { setPlaying(false); });
-          fadeTo(TT_VOLUME, 900);
         }
         function load(i) {
           idx = (i + TT_TRACKS.length) % TT_TRACKS.length;
@@ -7713,9 +7712,11 @@
           syncControls();
           clearTimeout(landTimer);
           if (on) {
+            if (audio) audio.volume = 0;
+            startAudio();
             landTimer = setTimeout(function () {
               landed = true;
-              if (audio) startAudio();
+              if (audio && playing) fadeTo(TT_VOLUME, 900);
             }, ARM_DROP_MS);
           } else {
             landed = false;
