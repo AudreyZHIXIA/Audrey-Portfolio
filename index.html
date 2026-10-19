@@ -71,7 +71,6 @@
 
     /* —— Header：左侧竖向导航 —— */
     .site-header {
-      --nav-p: 0;
       position: fixed;
       top: 0;
       left: 0;
@@ -89,6 +88,7 @@
     .site-header > * { pointer-events: auto; }
 
     .site-nav {
+      --nav-p: 0;
       position: relative;
       display: flex;
       flex-direction: column;
@@ -276,27 +276,84 @@
       pointer-events: none;
     }
     .site-nav a {
-      display: block;
+      position: relative;
+      z-index: 1;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      min-height: 42px;
+      padding: 6px 8px 6px 0;
+      border-radius: 12px;
+      text-decoration: none;
+      color: rgba(255, 255, 255, 0.42);
+      transition: color 0.35s var(--ease), background 0.35s var(--ease), transform 0.35s var(--ease);
+    }
+    .site-nav .nav-dot {
+      position: relative;
+      z-index: 1;
+      flex: 0 0 auto;
+      width: 11px;
+      height: 11px;
+      margin-left: 5px;
+      border-radius: 50%;
+      border: 1px solid rgba(255, 255, 255, 0.28);
+      background: #0a0a0c;
+      box-shadow: 0 0 0 3px rgba(10, 10, 11, 0.9);
+      transition: background 0.4s var(--ease), border-color 0.4s var(--ease), box-shadow 0.4s var(--ease), transform 0.4s var(--ease);
+    }
+    .site-nav .nav-meta {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 1px;
+      min-width: 0;
+    }
+    .site-nav .nav-no {
+      font-family: var(--font-display);
+      font-size: 9px;
+      font-weight: 700;
+      letter-spacing: 0.14em;
+      color: rgba(255, 255, 255, 0.22);
+      transition: color 0.35s var(--ease);
+    }
+    .site-nav .nav-label {
       font-size: 13px;
       font-weight: 600;
       letter-spacing: 0.04em;
-      text-decoration: none;
-      text-align: center;
-      color: var(--muted);
-      padding: 10px 8px;
-      border-radius: 999px;
-      transition: color 0.25s var(--ease), background 0.25s var(--ease), transform 0.25s var(--ease);
       white-space: nowrap;
+      transition: transform 0.45s cubic-bezier(0.16, 1, 0.3, 1), color 0.35s var(--ease);
     }
     .site-nav a:hover {
-      color: var(--text);
-      background: rgba(255, 255, 255, 0.05);
+      color: rgba(255, 255, 255, 0.86);
+      background: rgba(255, 255, 255, 0.03);
+    }
+    .site-nav a:hover .nav-label { transform: translateX(3px); }
+    .site-nav a:hover .nav-dot {
+      border-color: rgba(204, 255, 0, 0.55);
+      box-shadow: 0 0 0 3px rgba(10, 10, 11, 0.9), 0 0 10px rgba(204, 255, 0, 0.25);
     }
     .site-nav a.is-active {
-      background: var(--lime);
-      color: #0a0a0b;
+      color: #fff;
+      background: linear-gradient(90deg, rgba(204, 255, 0, 0.12), transparent 86%);
+    }
+    .site-nav a.is-active .nav-label {
       font-weight: 700;
-      box-shadow: 0 8px 22px rgba(204, 255, 0, 0.18);
+      transform: translateX(4px);
+      color: var(--lime);
+    }
+    .site-nav a.is-active .nav-no { color: var(--lime); }
+    .site-nav a.is-active .nav-dot {
+      transform: scale(1.15);
+      border-color: var(--lime);
+      background: var(--lime);
+      box-shadow:
+        0 0 0 3px rgba(10, 10, 11, 0.95),
+        0 0 0 5px rgba(204, 255, 0, 0.16),
+        0 0 18px rgba(204, 255, 0, 0.55);
+    }
+    .site-nav a:focus-visible {
+      outline: 2px solid rgba(204, 255, 0, 0.55);
+      outline-offset: 2px;
     }
 
     .progress-line {
@@ -6288,9 +6345,18 @@
     }
 
     @media (max-width: 720px) {
-      .site-nav { max-width: 68px; gap: 4px; }
-      .site-nav a { font-size: 12px; padding: 8px 4px; }
-      .site-nav a[data-index="4"] { font-size: 11px; letter-spacing: 0; }
+      .site-nav {
+        max-width: 76px;
+        padding: 12px 8px;
+        gap: 2px;
+        border-radius: 18px;
+      }
+      .site-nav::before,
+      .site-nav-progress { left: 16px; }
+      .site-nav a { min-height: 36px; gap: 7px; }
+      .site-nav .nav-dot { width: 9px; height: 9px; margin-left: 3px; }
+      .site-nav .nav-no { display: none; }
+      .site-nav .nav-label { font-size: 12px; }
       .tt-mini { width: 80px; height: 80px; }
       .tt-mini-state svg { width: 24px; height: 24px; }
       .scroll-hint { display: none; }
@@ -6336,12 +6402,13 @@
 
   <header class="site-header">
     <nav class="site-nav" id="siteNav" aria-label="主菜单">
-      <a href="#home" class="nav-link is-active" data-index="0">首页</a>
-      <a href="#experience" class="nav-link" data-index="1">经历</a>
-      <a href="#works" class="nav-link" data-index="2">作品</a>
-      <a href="#cases" class="nav-link" data-index="3">项目</a>
-      <a href="#ai-lab" class="nav-link" data-index="4">AI实验室</a>
-      <a href="#life" class="nav-link" data-index="5">生活</a>
+      <span class="site-nav-progress" aria-hidden="true"></span>
+      <a href="#home" class="nav-link is-active" data-index="0"><span class="nav-dot" aria-hidden="true"></span><span class="nav-meta"><span class="nav-no">01</span><span class="nav-label">首页</span></span></a>
+      <a href="#experience" class="nav-link" data-index="1"><span class="nav-dot" aria-hidden="true"></span><span class="nav-meta"><span class="nav-no">02</span><span class="nav-label">履历</span></span></a>
+      <a href="#works" class="nav-link" data-index="2"><span class="nav-dot" aria-hidden="true"></span><span class="nav-meta"><span class="nav-no">03</span><span class="nav-label">作品集</span></span></a>
+      <a href="#cases" class="nav-link" data-index="3"><span class="nav-dot" aria-hidden="true"></span><span class="nav-meta"><span class="nav-no">04</span><span class="nav-label">项目集</span></span></a>
+      <a href="#ai-lab" class="nav-link" data-index="4"><span class="nav-dot" aria-hidden="true"></span><span class="nav-meta"><span class="nav-no">05</span><span class="nav-label">AI技术</span></span></a>
+      <a href="#life" class="nav-link" data-index="5"><span class="nav-dot" aria-hidden="true"></span><span class="nav-meta"><span class="nav-no">06</span><span class="nav-label">生活</span></span></a>
     </nav>
   </header>
 
@@ -7744,8 +7811,9 @@
       var navLinks = document.querySelectorAll(".nav-link");
       var progress = document.getElementById("progressLine");
       var indicator = document.getElementById("pageIndicator");
-      var labels = ["首页", "经历", "作品", "项目", "AI实验室", "生活"];
+      var labels = ["首页", "履历", "作品集", "项目集", "AI技术", "生活"];
       var total = slides.length;
+      var siteNav = document.getElementById("siteNav");
       var reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
       function scrollToIndex(index) {
@@ -7771,6 +7839,9 @@
         navLinks.forEach(function (link) {
           link.classList.toggle("is-active", Number(link.getAttribute("data-index")) === index);
         });
+        if (siteNav) {
+          siteNav.style.setProperty("--nav-p", String(total > 1 ? index / (total - 1) : 0));
+        }
         if (progress) {
           progress.style.width = ((index + 1) / total * 100) + "%";
         }
