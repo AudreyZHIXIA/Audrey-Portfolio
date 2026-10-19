@@ -22,14 +22,19 @@
       --font-serif: "Noto Serif SC", "Songti SC", serif;
       --font-display: "Space Grotesk", "DM Sans", sans-serif;
       --space: clamp(16px, 3vw, 40px);
-      --page-gutter: clamp(48px, 18vw, 320px);
+      --page-gutter: clamp(48px, 14vw, 280px);
       --page-max: 1060px;
-      --header-h: 64px;
+      --nav-rail: 132px;
+      --header-h: 28px;
       --ease: cubic-bezier(0.22, 1, 0.36, 1);
       --rhythm: clamp(32px, 5.5vh, 64px);
     }
     @media (max-width: 760px) {
-      :root { --page-gutter: max(28px, 11vw); }
+      :root {
+        --page-gutter: max(20px, 6vw);
+        --nav-rail: 88px;
+        --header-h: 20px;
+      }
     }
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
@@ -64,35 +69,69 @@
       outline-offset: 3px;
     }
 
-    /* —— Header —— */
+    /* —— Header：左侧竖向导航 —— */
     .site-header {
+      --nav-p: 0;
       position: fixed;
       top: 0;
       left: 0;
-      right: 0;
+      bottom: 0;
       z-index: 200;
-      height: var(--header-h);
+      width: var(--nav-rail);
       display: flex;
       align-items: center;
-      justify-content: space-between;
-      padding: 0 var(--space);
+      justify-content: center;
+      padding: 28px 14px;
       pointer-events: none;
+      background:
+        linear-gradient(90deg, rgba(10, 10, 11, 0.88) 0%, rgba(10, 10, 11, 0.42) 68%, transparent 100%);
     }
     .site-header > * { pointer-events: auto; }
 
     .site-nav {
+      position: relative;
       display: flex;
-      flex-wrap: wrap;
-      justify-content: flex-end;
+      flex-direction: column;
+      align-items: stretch;
+      justify-content: center;
       gap: 4px;
-      margin-left: auto;
-      max-width: min(620px, 58vw);
+      width: 100%;
+      max-width: 112px;
+      padding: 18px 12px;
+      border-radius: 22px;
+      background:
+        linear-gradient(165deg, rgba(255, 255, 255, 0.055) 0%, rgba(255, 255, 255, 0.015) 100%);
+      box-shadow:
+        inset 0 0 0 1px rgba(255, 255, 255, 0.08),
+        inset 0 1px 0 rgba(255, 255, 255, 0.06),
+        0 18px 40px rgba(0, 0, 0, 0.35);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+    }
+    .site-nav::before,
+    .site-nav-progress {
+      content: "";
+      position: absolute;
+      left: 21px;
+      top: 34px;
+      width: 1px;
+      pointer-events: none;
+    }
+    .site-nav::before {
+      bottom: 34px;
+      background: linear-gradient(180deg, transparent, rgba(255, 255, 255, 0.14) 12%, rgba(255, 255, 255, 0.14) 88%, transparent);
+    }
+    .site-nav-progress {
+      height: calc((100% - 68px) * var(--nav-p));
+      background: linear-gradient(180deg, rgba(204, 255, 0, 0.15), var(--lime));
+      box-shadow: 0 0 12px rgba(204, 255, 0, 0.35);
+      transition: height 0.7s cubic-bezier(0.16, 1, 0.3, 1);
     }
 
-    /* 悬浮小唱片：主唱机滚出视野后出现，可拖动，旋转与主盘同步 */
+    /* 悬浮小唱片：默认右上角，可拖动，旋转与主盘同步 */
     .tt-mini {
-      --tt-mini-x: 72px;
-      --tt-mini-y: 132px;
+      --tt-mini-x: 0px;
+      --tt-mini-y: 28px;
       appearance: none;
       position: fixed;
       left: var(--tt-mini-x);
@@ -237,20 +276,27 @@
       pointer-events: none;
     }
     .site-nav a {
-      font-size: 10px;
+      display: block;
+      font-size: 13px;
       font-weight: 600;
-      letter-spacing: 0.12em;
-      text-transform: uppercase;
+      letter-spacing: 0.04em;
       text-decoration: none;
+      text-align: center;
       color: var(--muted);
-      padding: 8px 12px;
+      padding: 10px 8px;
       border-radius: 999px;
-      transition: color 0.25s var(--ease), background 0.25s var(--ease);
+      transition: color 0.25s var(--ease), background 0.25s var(--ease), transform 0.25s var(--ease);
+      white-space: nowrap;
     }
-    .site-nav a:hover { color: var(--text); }
+    .site-nav a:hover {
+      color: var(--text);
+      background: rgba(255, 255, 255, 0.05);
+    }
     .site-nav a.is-active {
       background: var(--lime);
       color: #0a0a0b;
+      font-weight: 700;
+      box-shadow: 0 8px 22px rgba(204, 255, 0, 0.18);
     }
 
     .progress-line {
@@ -269,15 +315,14 @@
       right: var(--space);
       bottom: 16px;
       z-index: 200;
-      font-size: 10px;
-      letter-spacing: 0.12em;
-      text-transform: uppercase;
+      font-size: 11px;
+      letter-spacing: 0.08em;
       color: var(--muted);
     }
 
     .scroll-hint {
       position: fixed;
-      left: var(--space);
+      left: calc(var(--nav-rail) + 8px);
       bottom: 16px;
       z-index: 200;
       font-size: 10px;
@@ -308,7 +353,7 @@
       min-height: 100dvh;
       height: auto;
       overflow: visible;
-      padding: calc(var(--header-h) + 12px) var(--page-gutter) var(--space);
+      padding: calc(var(--header-h) + 16px) var(--page-gutter) var(--space) max(var(--page-gutter), calc(var(--nav-rail) + 20px));
       background: var(--bg);
       position: relative;
     }
@@ -6243,8 +6288,10 @@
     }
 
     @media (max-width: 720px) {
-      .site-nav a:nth-child(n+5) { display: none; }
-      .tt-mini { width: 80px; height: 80px; --tt-mini-x: 28px; --tt-mini-y: 96px; }
+      .site-nav { max-width: 68px; gap: 4px; }
+      .site-nav a { font-size: 12px; padding: 8px 4px; }
+      .site-nav a[data-index="4"] { font-size: 11px; letter-spacing: 0; }
+      .tt-mini { width: 80px; height: 80px; }
       .tt-mini-state svg { width: 24px; height: 24px; }
       .scroll-hint { display: none; }
       .home-title { font-size: clamp(32px, 9vw, 42px); }
@@ -6289,17 +6336,17 @@
 
   <header class="site-header">
     <nav class="site-nav" id="siteNav" aria-label="主菜单">
-      <a href="#home" class="nav-link is-active" data-index="0">Home</a>
-      <a href="#experience" class="nav-link" data-index="1">Experience</a>
-      <a href="#works" class="nav-link" data-index="2">Works</a>
-      <a href="#cases" class="nav-link" data-index="3">Projects</a>
-      <a href="#ai-lab" class="nav-link" data-index="4">AI Lab</a>
-      <a href="#life" class="nav-link" data-index="5">Life</a>
+      <a href="#home" class="nav-link is-active" data-index="0">首页</a>
+      <a href="#experience" class="nav-link" data-index="1">经历</a>
+      <a href="#works" class="nav-link" data-index="2">作品</a>
+      <a href="#cases" class="nav-link" data-index="3">项目</a>
+      <a href="#ai-lab" class="nav-link" data-index="4">AI实验室</a>
+      <a href="#life" class="nav-link" data-index="5">生活</a>
     </nav>
   </header>
 
-  <p class="page-indicator" id="pageIndicator" aria-live="polite">01 — Home</p>
-  <p class="scroll-hint" aria-hidden="true">↓ Scroll ↓</p>
+  <p class="page-indicator" id="pageIndicator" aria-live="polite">01 — 首页</p>
+  <p class="scroll-hint" aria-hidden="true">↓ 滚动 ↓</p>
 
   <div class="track" id="track">
     <!-- HOME -->
@@ -7697,7 +7744,7 @@
       var navLinks = document.querySelectorAll(".nav-link");
       var progress = document.getElementById("progressLine");
       var indicator = document.getElementById("pageIndicator");
-      var labels = ["Home", "Experience", "Works", "Projects", "AI Lab", "Life"];
+      var labels = ["首页", "经历", "作品", "项目", "AI实验室", "生活"];
       var total = slides.length;
       var reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
@@ -7997,8 +8044,8 @@
           miniBtn.classList.toggle("is-visible", on);
           miniBtn.setAttribute("aria-hidden", on ? "false" : "true");
           if (on && !miniPlaced) {
-            var cs = getComputedStyle(miniBtn);
-            placeMini(parseFloat(cs.getPropertyValue("--tt-mini-x")) || 72, parseFloat(cs.getPropertyValue("--tt-mini-y")) || 132);
+            var w = miniBtn.offsetWidth || 96;
+            placeMini(window.innerWidth - w - 28, 28);
           }
         }
 
