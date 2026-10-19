@@ -1100,6 +1100,7 @@
     .home-stats,
     .home-badge,
     .home-actions,
+    .home-features-label,
     .skill-card {
       animation: homeRise 0.9s cubic-bezier(0.22, 1, 0.36, 1) both;
       animation-delay: var(--d, 0s);
@@ -1109,10 +1110,11 @@
     .home-stats { --d: 0.26s; }
     .home-badge { --d: 0.36s; }
     .home-actions { --d: 0.46s; }
-    .skill-card:nth-child(1) { --d: 0.72s; }
-    .skill-card:nth-child(2) { --d: 0.8s; }
-    .skill-card:nth-child(3) { --d: 0.88s; }
-    .skill-card:nth-child(4) { --d: 0.96s; }
+    .home-features-label { --d: 0.58s; }
+    .home-features .skill-card:nth-child(2) { --d: 0.72s; }
+    .home-features .skill-card:nth-child(3) { --d: 0.8s; }
+    .home-features .skill-card:nth-child(4) { --d: 0.88s; }
+    .home-features .skill-card:nth-child(5) { --d: 0.96s; }
     .tt-deck { animation: homePop 1.1s cubic-bezier(0.22, 1, 0.36, 1) 0.2s both; }
     .tt-controls { animation: homeRise 0.9s cubic-bezier(0.22, 1, 0.36, 1) 0.5s both; }
     @media (prefers-reduced-motion: reduce) {
@@ -1138,6 +1140,37 @@
       margin: clamp(28px, 4.5vh, 44px) auto 0;
       width: 100%;
       max-width: min(960px, 100%);
+    }
+    .home-features-label {
+      grid-column: 1 / -1;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin: 0 0 2px;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: rgba(255, 255, 255, 0.42);
+    }
+    .home-features-label span {
+      color: var(--lime);
+      letter-spacing: 0.14em;
+    }
+    .home-features-label::before,
+    .home-features-label::after {
+      content: "";
+      height: 1px;
+      flex: 1 1 auto;
+      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.14), transparent);
+    }
+    .home-features-label::before {
+      max-width: 48px;
+      flex: 0 0 48px;
+      background: linear-gradient(90deg, transparent, rgba(204, 255, 0, 0.45));
+    }
+    .home-features-label::after {
+      background: linear-gradient(90deg, rgba(255, 255, 255, 0.14), transparent);
     }
     @media (min-width: 860px) {
       .home-features { grid-template-columns: repeat(4, 1fr); gap: 18px; }
@@ -3618,9 +3651,9 @@
     }
     .proj-ip-cards {
       display: grid;
-      grid-template-columns: repeat(4, minmax(0, 1fr));
+      grid-template-columns: repeat(3, minmax(0, 1fr));
       gap: clamp(12px, 2vw, 22px);
-      width: min(100%, 1000px);
+      width: min(100%, 900px);
       margin: 0 auto;
       align-items: stretch;
     }
@@ -4301,6 +4334,7 @@
     .health-showcase {
       width: min(100%, 1080px);
       margin: 0 auto;
+      overflow: visible;
     }
     .health-pane-title {
       margin: 0 0 8px;
@@ -4316,51 +4350,303 @@
       line-height: 1.7;
       color: var(--muted);
     }
-    .health-app-list {
-      list-style: none;
+    /* 健康系列：应用市场预览 · 参考 AI 技术区 3D 封面流 */
+    .health-shelf {
+      margin-top: 8px;
+    }
+    .health-shelf-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-bottom: 14px;
+    }
+    .health-shelf-note {
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      color: rgba(255, 255, 255, 0.42);
+    }
+    .health-shelf-ctrl {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .health-count {
+      margin-right: 4px;
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      color: var(--muted);
+      font-variant-numeric: tabular-nums;
+    }
+    .health-count b { color: #fff; }
+    .health-shelf-btn {
       display: grid;
-      grid-template-columns: repeat(4, minmax(0, 1fr));
-      gap: 14px 18px;
+      place-items: center;
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      border: 1px solid rgba(255, 255, 255, 0.16);
+      background: rgba(255, 255, 255, 0.03);
+      color: #fff;
+      cursor: pointer;
+      transition: border-color 0.3s var(--ease), background 0.3s var(--ease), color 0.3s var(--ease), opacity 0.3s var(--ease);
+    }
+    .health-shelf-btn svg {
+      width: 16px;
+      height: 16px;
+      fill: none;
+      stroke: currentColor;
+      stroke-width: 2.2;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+    .health-shelf-btn:hover:not(:disabled) {
+      border-color: var(--lime);
+      background: var(--lime);
+      color: #0a0a0b;
+    }
+    .health-shelf-btn:disabled { opacity: 0.3; cursor: default; }
+    .health-shelf-btn:focus-visible {
+      outline: 2px solid rgba(204, 255, 0, 0.6);
+      outline-offset: 3px;
+    }
+    .health-flow {
+      --cw: clamp(280px, 48vw, 560px);
+      --bleed: max(0px, calc(50vw - 50%));
+      position: relative;
+      height: calc(var(--cw) * 900 / 1620 + 118px);
+      margin: 0 calc(-1 * min(var(--bleed), 48px));
+      overflow: hidden;
+      perspective: 1600px;
+      perspective-origin: 50% 38%;
+      touch-action: pan-y;
+      cursor: grab;
+      user-select: none;
+      -webkit-mask-image: linear-gradient(90deg, transparent 0, #000 8%, #000 92%, transparent 100%);
+      mask-image: linear-gradient(90deg, transparent 0, #000 8%, #000 92%, transparent 100%);
+    }
+    .health-flow::before {
+      content: "";
+      position: absolute;
+      left: 50%;
+      top: calc(var(--cw) * 0.3 + 28px);
+      width: calc(var(--cw) * 1.85);
+      height: calc(var(--cw) * 0.95);
+      translate: -50% -50%;
+      background: radial-gradient(closest-side, rgba(204, 255, 0, 0.08), rgba(204, 255, 0, 0.02) 55%, transparent);
+      pointer-events: none;
+    }
+    .health-flow.is-drag { cursor: grabbing; }
+    .health-flow.is-drag .health-flow-card { pointer-events: none; }
+    .health-flow-card {
+      position: absolute;
+      left: 50%;
+      top: 28px;
+      width: var(--cw);
+      aspect-ratio: 1620 / 900;
       margin: 0;
       padding: 0;
-    }
-    .health-app-list li {
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
-      min-width: 0;
-    }
-    .health-app-list img {
-      width: 56px;
-      height: 56px;
+      border: none;
       border-radius: 14px;
-      object-fit: cover;
-      background: rgba(255, 255, 255, 0.04);
+      background: #f4f3ef;
+      transform: translateX(-50%);
+      transition:
+        transform 0.75s var(--ease),
+        filter 0.75s var(--ease),
+        opacity 0.6s var(--ease),
+        translate 0.45s var(--ease),
+        box-shadow 0.45s var(--ease);
+      box-shadow: 0 24px 50px rgba(0, 0, 0, 0.42);
+      -webkit-box-reflect: below 12px linear-gradient(transparent 72%, rgba(255, 255, 255, 0.14));
+      cursor: pointer;
+      overflow: hidden;
     }
-    .health-app-list strong {
+    .health-flow-card img {
       display: block;
-      font-size: 13px;
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      object-position: center;
+      border-radius: inherit;
+      background: #fff;
+      pointer-events: none;
+    }
+    .health-flow-card.is-center {
+      box-shadow: 0 0 0 1px rgba(204, 255, 0, 0.32), 0 30px 70px rgba(0, 0, 0, 0.55);
+    }
+    .health-flow-card.is-center .health-card-open { opacity: 1; translate: 0 0; }
+    @media (hover: hover) {
+      .health-flow-card.is-center:hover {
+        translate: 0 -6px;
+        box-shadow: 0 0 0 1px rgba(204, 255, 0, 0.8), 0 36px 80px rgba(0, 0, 0, 0.6);
+      }
+      .health-flow-card.is-center:hover .health-card-open {
+        background: var(--lime);
+        color: #0a0a0b;
+      }
+    }
+    .health-flow-card:focus-visible {
+      outline: 2px solid rgba(204, 255, 0, 0.6);
+      outline-offset: 4px;
+    }
+    .health-card-open {
+      position: absolute;
+      left: 12px;
+      bottom: 12px;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 7px 12px;
+      border-radius: 999px;
+      background: #0a0a0b;
+      color: var(--lime);
+      font-size: 12px;
       font-weight: 700;
-      color: #fff;
-      line-height: 1.35;
+      letter-spacing: 0.04em;
+      opacity: 0;
+      translate: 0 8px;
+      transition: opacity 0.35s var(--ease), translate 0.45s var(--ease), background 0.3s var(--ease), color 0.3s var(--ease);
     }
-    .health-app-list small {
-      display: block;
-      margin-top: 4px;
+    .health-card-open svg {
+      width: 12px;
+      height: 12px;
+      fill: none;
+      stroke: currentColor;
+      stroke-width: 2.4;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+    .health-flow-caption {
+      min-height: 78px;
+      margin-top: -10px;
+      text-align: center;
+    }
+    .health-flow-meta {
+      display: inline-flex;
+      gap: 12px;
       font-size: 11px;
-      color: rgba(255, 255, 255, 0.42);
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      color: var(--muted);
+      font-variant-numeric: tabular-nums;
+    }
+    .health-flow-meta b { color: var(--lime); font-weight: 700; }
+    .health-flow-title {
+      margin-top: 8px;
+      font-size: clamp(17px, 1.7vw, 20px);
+      font-weight: 700;
+      letter-spacing: 0.02em;
       line-height: 1.45;
+      color: #fff;
+    }
+    .health-flow-sub {
+      margin: 6px 0 0;
+      font-size: 13px;
+      color: rgba(255, 255, 255, 0.48);
+      line-height: 1.5;
+    }
+    .health-flow-caption.is-swap > * { animation: healthCapIn 0.55s var(--ease) both; }
+    .health-flow-caption.is-swap > .health-flow-title { animation-delay: 0.05s; }
+    .health-flow-caption.is-swap > .health-flow-sub { animation-delay: 0.08s; }
+    @keyframes healthCapIn {
+      from { opacity: 0; translate: 0 8px; }
+      to { opacity: 1; translate: 0 0; }
+    }
+    .health-shelf-progress {
+      position: relative;
+      width: min(280px, 60%);
+      height: 2px;
+      margin: 16px auto 0;
+      border-radius: 2px;
+      background: rgba(255, 255, 255, 0.08);
+      overflow: hidden;
+    }
+    .health-shelf-progress i {
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      left: calc(var(--hf-pos, 0) * 100%);
+      width: calc(var(--hf-ratio, 0.25) * 100%);
+      border-radius: inherit;
+      background: var(--lime);
+      transition: left 0.6s var(--ease), width 0.3s var(--ease);
+    }
+    .health-preview {
+      position: fixed;
+      inset: 0;
+      z-index: 90;
+      display: grid;
+      place-items: center;
+      padding: clamp(16px, 4vw, 40px);
+      background: rgba(0, 0, 0, 0.82);
+      opacity: 0;
+      visibility: hidden;
+      transition: opacity 0.35s var(--ease), visibility 0.35s var(--ease);
+    }
+    .health-preview.is-open {
+      opacity: 1;
+      visibility: visible;
+    }
+    .health-preview-panel {
+      position: relative;
+      width: min(1100px, 96vw);
+      max-height: min(90vh, 820px);
+      border-radius: 16px;
+      overflow: auto;
+      background: #0c0c0e;
+      box-shadow: 0 0 0 1px rgba(204, 255, 0, 0.28), 0 40px 80px rgba(0, 0, 0, 0.55);
+    }
+    .health-preview-panel img {
+      display: block;
+      width: 100%;
+      height: auto;
+    }
+    .health-preview-close {
+      position: absolute;
+      top: 12px;
+      right: 12px;
+      z-index: 2;
+      display: grid;
+      place-items: center;
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      border: 1px solid rgba(255, 255, 255, 0.18);
+      background: rgba(10, 10, 11, 0.72);
+      color: #fff;
+      cursor: pointer;
+    }
+    .health-preview-close svg {
+      width: 16px;
+      height: 16px;
+      fill: none;
+      stroke: currentColor;
+      stroke-width: 2;
+      stroke-linecap: round;
+    }
+    .health-preview-close:hover {
+      border-color: var(--lime);
+      background: var(--lime);
+      color: #0a0a0b;
     }
     @media (max-width: 900px) {
       .health-intro { grid-template-columns: 1fr; }
-      .health-app-list { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    }
+    @media (max-width: 640px) {
+      .health-flow { --cw: 86vw; }
     }
     @media (max-width: 560px) {
-      .health-app-list { grid-template-columns: 1fr; }
       .health-metrics div {
         min-width: 0;
         flex: 1 1 40%;
       }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .health-flow-card { transition: none; }
+      .health-flow-caption.is-swap > * { animation: none; }
     }
     .proj-doc-actions {
       display: flex;
@@ -5289,28 +5575,41 @@
       border: 1px solid rgba(255, 255, 255, 0.08);
       background: #0b0b0d;
       box-shadow: 0 30px 80px rgba(0, 0, 0, 0.45);
-      overflow: hidden;
+      overflow-x: auto;
+      overflow-y: hidden;
       isolation: isolate;
+      display: flex;
+      flex-direction: row;
+      scroll-snap-type: x mandatory;
+      scroll-behavior: smooth;
+      scrollbar-width: none;
+      -ms-overflow-style: none;
+      touch-action: pan-x;
+      cursor: grab;
     }
+    .cs-stage::-webkit-scrollbar { display: none; }
+    .cs-stage.is-drag { cursor: grabbing; }
     .cs-stage img { -webkit-user-drag: none; user-drag: none; }
     .cs-scene {
-      position: absolute;
-      inset: 0;
+      position: relative;
+      flex: 0 0 100%;
+      width: 100%;
+      height: 100%;
+      box-sizing: border-box;
+      scroll-snap-align: start;
+      scroll-snap-stop: always;
       display: grid;
       grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
       gap: 12px;
       padding: clamp(26px, 3.6vw, 46px);
-      visibility: hidden;
-      pointer-events: none;
-    }
-    .cs-scene.is-active {
-      z-index: 2;
       visibility: visible;
       pointer-events: auto;
     }
+    .cs-scene.is-active {
+      z-index: 2;
+    }
     .cs-scene.is-leaving {
       z-index: 1;
-      visibility: visible;
     }
     .cs-scene-bg {
       position: absolute;
@@ -5588,12 +5887,12 @@
       .cs-nav-list::before { display: none; }
       .cs-nav-item { gap: 6px; font-size: 12px; padding: 0 2px; }
       .cs-nav-no { display: none; }
-      .cs-stage { height: auto; }
+      .cs-stage { height: min(78vh, 640px); }
       .cs-scene {
         grid-template-columns: minmax(0, 1fr);
-        grid-template-rows: auto 340px;
+        grid-template-rows: auto minmax(280px, 1fr);
+        align-content: start;
       }
-      .cs-scene.is-active { position: relative; }
       .cs-copy { max-width: none; }
     }
 
@@ -6730,7 +7029,6 @@
     <button type="button" class="proj-rail-item" data-proj-index="0" style="--ip-accent: #c4a1ff"><span class="proj-rail-label"><b>01</b>APP 素材平台</span><span class="proj-rail-dot" aria-hidden="true"></span></button>
     <button type="button" class="proj-rail-item" data-proj-index="1" style="--ip-accent: #ff8fa3"><span class="proj-rail-label"><b>02</b>健康管理产品系列</span><span class="proj-rail-dot" aria-hidden="true"></span></button>
     <button type="button" class="proj-rail-item" data-proj-index="2" style="--ip-accent: #ffb450"><span class="proj-rail-label"><b>03</b>闹钟 App 系列</span><span class="proj-rail-dot" aria-hidden="true"></span></button>
-    <button type="button" class="proj-rail-item" data-proj-index="3" style="--ip-accent: #50c8dc"><span class="proj-rail-label"><b>04</b>钓鱼 App 系列</span><span class="proj-rail-dot" aria-hidden="true"></span></button>
   </nav>
 
   <button type="button" class="tt-mini" id="ttMini" aria-label="播放" aria-pressed="false" aria-hidden="true">
@@ -6750,10 +7048,10 @@
       <span class="site-nav-progress" aria-hidden="true"></span>
       <a href="#home" class="nav-link is-active" data-index="0"><span class="nav-dot" aria-hidden="true"></span><span class="nav-meta"><span class="nav-no">01</span><span class="nav-label">首页</span></span></a>
       <a href="#experience" class="nav-link" data-index="1"><span class="nav-dot" aria-hidden="true"></span><span class="nav-meta"><span class="nav-no">02</span><span class="nav-label">履历</span></span></a>
-      <a href="#works" class="nav-link" data-index="2"><span class="nav-dot" aria-hidden="true"></span><span class="nav-meta"><span class="nav-no">03</span><span class="nav-label">作品集</span></span></a>
-      <a href="#cases" class="nav-link" data-index="3"><span class="nav-dot" aria-hidden="true"></span><span class="nav-meta"><span class="nav-no">04</span><span class="nav-label">项目集</span></span></a>
+      <a href="#cases" class="nav-link" data-index="2"><span class="nav-dot" aria-hidden="true"></span><span class="nav-meta"><span class="nav-no">03</span><span class="nav-label">项目</span></span></a>
+      <a href="#works" class="nav-link" data-index="3"><span class="nav-dot" aria-hidden="true"></span><span class="nav-meta"><span class="nav-no">04</span><span class="nav-label">作品集</span></span></a>
       <a href="#ai-lab" class="nav-link" data-index="4"><span class="nav-dot" aria-hidden="true"></span><span class="nav-meta"><span class="nav-no">05</span><span class="nav-label">AI技术</span></span></a>
-      <a href="#life" class="nav-link" data-index="5"><span class="nav-dot" aria-hidden="true"></span><span class="nav-meta"><span class="nav-no">06</span><span class="nav-label">生活</span></span></a>
+      <a href="#life" class="nav-link" data-index="5"><span class="nav-dot" aria-hidden="true"></span><span class="nav-meta"><span class="nav-no">06</span><span class="nav-label">联系</span></span></a>
     </nav>
   </header>
 
@@ -6790,8 +7088,8 @@
               <span><span class="home-badge-ico" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 9l10-5 10 5-10 5z" /><path d="M6 11v5c3 2 9 2 12 0v-5" /></svg></span>软件工程</span>
             </p>
             <div class="home-actions">
-              <button type="button" class="home-cta" data-goto="2">查看我的作品<span class="home-cta-arrow" aria-hidden="true">→</span></button>
-              <button type="button" class="home-cta is-ghost" data-goto="3">查看我的项目</button>
+              <button type="button" class="home-cta" data-goto="3">查看我的作品<span class="home-cta-arrow" aria-hidden="true">→</span></button>
+              <button type="button" class="home-cta is-ghost" data-goto="2">查看我的项目</button>
             </div>
           </div>
           <div class="home-visual" id="homeVisual">
@@ -6825,6 +7123,7 @@
           </div>
         </div>
         <div class="home-features" aria-label="能力角色卡">
+          <p class="home-features-label"><span>技能角色卡</span></p>
           <article class="skill-card skill-card--product" tabindex="0" aria-label="产品人角色卡，悬停或点击查看详情">
             <div class="skill-card-inner">
               <div class="skill-card-face skill-card-front">
@@ -6950,13 +7249,13 @@
                     </a>
                   </li>
                   <li>
-                    <a class="exp-doc" data-doc="aso" href="https://my.feishu.cn/wiki/RTvawqQfBiv5lukednEclLgnnZy" target="_blank" rel="noopener noreferrer">
+                    <a class="exp-doc" data-doc="ai-launch" href="https://my.feishu.cn/wiki/MGI6wfnQfiYnimkeZpnckp8enid?from=from_copylink" target="_blank" rel="noopener noreferrer">
                       <span class="exp-doc-cover">
-                        <img src="assets/doc/thumb-aso.png" width="280" height="200" alt="" loading="lazy" decoding="async" />
+                        <img src="assets/doc/thumb-ai-launch.png" width="280" height="200" alt="" loading="lazy" decoding="async" />
                         <span class="exp-doc-no">02</span>
                         <span class="exp-doc-go" aria-hidden="true"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4.5 11.5l7-7M6 4.5h5.5V10" /></svg></span>
                       </span>
-                      <span class="exp-doc-text"><strong>ASO 全链路文档</strong><small>飞书 · ASO 增长运营</small></span>
+                      <span class="exp-doc-text"><strong>AI 产品上架经验分享</strong><small>飞书 · AI 功能落地</small></span>
                     </a>
                   </li>
                   <li>
@@ -6980,13 +7279,13 @@
                     </a>
                   </li>
                   <li>
-                    <a class="exp-doc" data-doc="ai-launch" href="https://my.feishu.cn/wiki/MGI6wfnQfiYnimkeZpnckp8enid?from=from_copylink" target="_blank" rel="noopener noreferrer">
+                    <a class="exp-doc" data-doc="aso" href="https://my.feishu.cn/wiki/RTvawqQfBiv5lukednEclLgnnZy" target="_blank" rel="noopener noreferrer">
                       <span class="exp-doc-cover">
-                        <img src="assets/doc/thumb-ai-launch.png" width="280" height="200" alt="" loading="lazy" decoding="async" />
+                        <img src="assets/doc/thumb-aso.png" width="280" height="200" alt="" loading="lazy" decoding="async" />
                         <span class="exp-doc-no">05</span>
                         <span class="exp-doc-go" aria-hidden="true"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4.5 11.5l7-7M6 4.5h5.5V10" /></svg></span>
                       </span>
-                      <span class="exp-doc-text"><strong>AI 产品上架经验分享</strong><small>飞书 · AI 功能落地</small></span>
+                      <span class="exp-doc-text"><strong>ASO 全链路文档</strong><small>飞书 · ASO 增长运营</small></span>
                     </a>
                   </li>
                 </ul>
@@ -7023,7 +7322,7 @@
                   <li>
                     <strong>AI 功能落地</strong>
                     <p>参与闹钟、健康、钓鱼等垂直场景的 AI 功能需求定义、验证与落地。</p>
-                    <p>推动公司产品首次完成 <b>AI 功能嵌入</b>，并完成鸿蒙 <b>小艺智能体接入</b>。</p>
+                    <p>推动公司产品首次完成 <b>AI 功能嵌入</b>。</p>
                     <p><span class="exp-doc-hit" data-doc="ai-launch">沉淀 <b>AI 产品上架规范</b>，覆盖备案、审核及上架流程。</span></p>
                   </li>
                 </ul>
@@ -7226,8 +7525,411 @@
       </div>
     </section>
 
-    <!-- WORKS -->
-    <section class="slide slide--page slide--works" id="works" data-index="2" aria-label="Works">
+    <!-- PROJECTS 项目介绍 -->
+    <section class="slide slide--page slide--projects" id="cases" data-index="2" aria-label="Projects">
+      <div class="slide-inner">
+        <div class="proj-page" id="projPage">
+          <header class="sec-head proj-page-title">
+            <p class="sec-head-eyebrow"><span>Projects</span><i aria-hidden="true"></i><span>4 Cases · 0 → 1</span></p>
+            <h2 class="section-heading sec-head-title">我的<em>个人项目</em></h2>
+            <p class="sec-head-sub">一个提效平台 + 三条 App 产品线，记录每一次从 0 到 1</p>
+          </header>
+          <div class="proj-hub" id="projHub">
+            <div class="proj-ip-cards" role="list">
+              <button type="button" class="proj-ip-card" role="listitem" data-proj-index="0" data-series="material" data-ip-src="assets/images/project01.png" aria-label="APP 素材平台">
+                <span class="proj-ip-avatar"><img src="assets/images/project01.png" width="1086" height="1448" alt="" decoding="async" /></span>
+                <span class="proj-ip-copy">
+                  <span class="proj-ip-num">01</span>
+                  <span class="proj-ip-title">APP 素材平台</span>
+                  <span class="proj-ip-role">产品支持 · 独立规划</span>
+                  <span class="proj-ip-kpi">2h → 30min</span>
+                </span>
+              </button>
+              <button type="button" class="proj-ip-card" role="listitem" data-proj-index="1" data-series="health" data-ip-src="assets/images/project04.png" aria-label="健康管理产品系列">
+                <span class="proj-ip-avatar"><img src="assets/images/project04.png" width="1122" height="1402" alt="" decoding="async" /></span>
+                <span class="proj-ip-copy">
+                  <span class="proj-ip-num">02</span>
+                  <span class="proj-ip-title">健康管理产品系列</span>
+                  <span class="proj-ip-role">产品规划</span>
+                  <span class="proj-ip-kpi">留存 +89%</span>
+                </span>
+              </button>
+              <button type="button" class="proj-ip-card" role="listitem" data-proj-index="2" data-series="alarm" data-ip-src="assets/images/project02.png" aria-label="闹钟 App 系列">
+                <span class="proj-ip-avatar"><img src="assets/images/project02.png" width="1086" height="1448" alt="" decoding="async" /></span>
+                <span class="proj-ip-copy">
+                  <span class="proj-ip-num">03</span>
+                  <span class="proj-ip-title">闹钟 App 系列</span>
+                  <span class="proj-ip-role">产品负责人</span>
+                  <span class="proj-ip-kpi">收益同比 ≈21 倍</span>
+                </span>
+              </button>
+            </div>
+            <p class="proj-hub-hint">点击卡片 · 跳转到对应介绍</p>
+          </div>
+
+          <div class="proj-detail-view" id="projDetailView">
+            <div class="proj-detail-main">
+              <div class="proj-stage" id="projStage">
+              <article class="proj-panel" id="projIntro0" data-proj-index="0" data-ip-src="assets/images/project01.png" data-video="" data-poster="">
+                <header class="proj-hero">
+                  <span class="proj-num" aria-hidden="true">01</span>
+                  <div class="proj-hero-text">
+                    <h3>APP 素材平台</h3>
+                    <p class="proj-panel-role"><span>我的角色</span>V1 产品支持 · V2 独立规划</p>
+                  </div>
+                  <span class="proj-figure" aria-hidden="true"><img src="assets/images/project01.png" width="1086" height="1448" alt="" loading="lazy" decoding="async" /></span>
+                </header>
+                <div class="proj-panel-body">
+                  <div class="proj-head">
+                    <section class="proj-bar-block">
+                      <h4>背景</h4>
+                      <p>App 矩阵需要大量重复的<b>上架与商业化素材</b>，产品与开发都要参与制作，却缺少统一平台，效率低、交付不稳定。</p>
+                    </section>
+                    <section class="proj-bar-block">
+                      <h4>行动</h4>
+                      <p><b>V1</b>：2026 年 3 月以产品支持梳理需求，约 <b>1 个月</b>推动上线并投入内用。</p>
+                      <p><b>V2</b>：上线后跟踪真实使用，围绕实际素材需求独立复盘；9 月业余时间用半个多月重构流程，完成完整 PRD 与原型，重点规划 <b>AI 图文智能生成</b>，以及 <b>批量编辑、复用、共享</b>。</p>
+                    </section>
+                    <section class="proj-bar-block proj-head-result">
+                      <h4>结果</h4>
+                      <div class="asc-versions">
+                        <article class="asc-ver is-v2" aria-label="V2.0 原型阶段方案">
+                          <header class="asc-ver-head">
+                            <span class="asc-ver-no">V2.0</span>
+                            <span class="asc-ver-state">原型阶段</span>
+                            <span class="asc-ver-role">独立规划</span>
+                          </header>
+                          <p class="asc-ver-desc">按实际素材需求重构流程，嵌入 <b>AI 图文智能生成</b>，支持 <b>批量编辑、复用、共享</b>；完成完整 PRD 与原型。</p>
+                          <dl class="asc-ver-kpis">
+                            <div><dt>57 页</dt><dd>PRD 文档</dd></div>
+                            <div><dt>15 条</dt><dd>业务规则</dd></div>
+                            <div><dt>6 类</dt><dd>制作任务</dd></div>
+                          </dl>
+                          <div class="asc-ver-actions">
+                            <a class="asc-ver-btn is-primary" href="https://my.feishu.cn/wiki/QXvrwbZ58iVAWxkKvxKcxJvMncg?from=from_copylink" target="_blank" rel="noopener noreferrer">PRD 文档<i aria-hidden="true">↗</i></a>
+                            <a class="asc-ver-btn is-primary" href="https://www.figma.com/make/gnVIndcL7BiiTkhZWvoCao/APP%E7%B4%A0%E6%9D%90%E7%94%9F%E4%BA%A7%E5%B9%B3%E5%8F%B0%E5%8E%9F%E5%9E%8B%E8%A7%84%E5%88%92?t=mVGjN1HcnTnT7elE-1" target="_blank" rel="noopener noreferrer">Figma 原型<i aria-hidden="true">↗</i></a>
+                          </div>
+                        </article>
+                        <span class="asc-ver-arrow" aria-hidden="true"><em>复盘重构</em><em>从能用到好用</em><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12h15M14 7l5 5-5 5" /></svg></span>
+                        <article class="asc-ver is-v1" aria-label="V1.0 已上线版本">
+                          <header class="asc-ver-head">
+                            <span class="asc-ver-no">V1.0</span>
+                            <span class="asc-ver-state">已上线</span>
+                            <span class="asc-ver-role">产品支持</span>
+                          </header>
+                          <p class="asc-ver-desc">打通素材生成、管理与导出，接入基础 AI 能力；先解决「没有统一工具」的问题。</p>
+                          <dl class="asc-ver-kpis">
+                            <div><dt>≈1 个月</dt><dd>上线投入使用</dd></div>
+                            <div><dt>2h → 30min</dt><dd>单套素材耗时</dd></div>
+                          </dl>
+                          <div class="asc-ver-actions">
+                            <button type="button" class="asc-ver-btn" data-lb-video="assets/projects/appSourceCreate/V1_show.mp4" data-lb-cap="V1.0 线上版本演示">
+                              <svg viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><path d="M5 3.5v9l7.5-4.5z" /></svg>观看 V1 演示
+                            </button>
+                            <a class="asc-ver-btn" href="https://www.figma.com/make/gnVIndcL7BiiTkhZWvoCao/APP%E7%B4%A0%E6%9D%90%E7%94%9F%E4%BA%A7%E5%B9%B3%E5%8F%B0%E5%8E%9F%E5%9E%8B%E8%A7%84%E5%88%92?t=biK7cHHRDIuVNSAl-1" target="_blank" rel="noopener noreferrer">Figma 原型<i aria-hidden="true">↗</i></a>
+                          </div>
+                        </article>
+                      </div>
+                    </section>
+                  </div>
+
+                  <section class="asc-zone" aria-label="V2.0 方案详情">
+                    <p class="asc-zone-tag"><span>V2.0</span>方案详情</p>
+
+                    <h4 class="proj-show-label">原型演示<span class="asc-chip is-muted">低保真 · Figma Make</span></h4>
+                    <div class="proj-content asc-block">
+                      <div class="asc-player">
+                        <div class="asc-player-bar" aria-hidden="true"><i></i><i></i><i></i><span>APP 矩阵素材生产平台 · 原型操作演示</span></div>
+                        <div class="asc-player-screen">
+                          <video src="assets/projects/appSourceCreate/V2_show.mp4" poster="assets/projects/appSourceCreate/v2-poster.jpg" width="1558" height="808" playsinline preload="none" controlslist="nodownload"></video>
+                          <button type="button" class="asc-player-play" aria-label="播放 V2 原型演示"><span><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M8 5.5v13l10.5-6.5z" /></svg></span></button>
+                        </div>
+                      </div>
+                    </div>
+                  </section>
+                </div>
+              </article>
+
+              <article class="proj-panel" id="projIntro1" data-proj-index="1" data-ip-src="assets/images/project04.png" data-video="" data-poster="">
+                <header class="proj-hero">
+                  <span class="proj-num" aria-hidden="true">02</span>
+                  <div class="proj-hero-text">
+                    <h3>健康管理产品系列</h3>
+                    <p class="proj-panel-role"><span>我的角色</span>产品规划</p>
+                  </div>
+                  <span class="proj-figure" aria-hidden="true"><img src="assets/images/project04.png" width="1122" height="1402" alt="" loading="lazy" decoding="async" /></span>
+                </header>
+                <div class="proj-panel-body">
+                  <div class="health-overview">
+                    <div class="health-intro">
+                      <div class="health-main">
+                        <p class="health-lead">面向 Android / 鸿蒙的健康产品重构。</p>
+                        <div class="proj-head">
+                          <section class="proj-bar-block">
+                            <h4>背景</h4>
+                            <p>公司健康管理产品收益偏低、功能单一、体验偏旧，需要功能与视觉重构。工作中以《薄荷健康》等成熟产品为参考。</p>
+                          </section>
+                          <section class="proj-bar-block">
+                            <h4>行动</h4>
+                            <p>面向 Android / HarmonyOS，独立完成 <b>4 款</b>健康管理 APP 的功能与页面重构。</p>
+                          </section>
+                          <section class="proj-bar-block proj-head-result">
+                            <h4>结果</h4>
+                            <p>相关产品用户留存提升 <b>89%</b>，完成 <b>4 款 APP</b> 重构落地。</p>
+                            <dl class="health-metrics">
+                              <div><dt>4 款</dt><dd>APP 重构</dd></div>
+                              <div><dt>+89%</dt><dd>用户留存提升</dd></div>
+                            </dl>
+                          </section>
+                        </div>
+                      </div>
+                      <a class="health-study-card" href="bohee-study.html" aria-label="查看《薄荷健康》自主研究详情">
+                        <span class="health-study-card-kicker"><span>自主研究</span><em>Independent Study</em></span>
+                        <h4>《薄荷健康》海外产品策略与增长实战</h4>
+                        <p>从 2023 年起的长期用户，也是工作中的重点竞品。结合海外调研经验，完成从市场到用户的完整分析。</p>
+                        <ul class="health-study-card-steps" aria-label="研究路径">
+                          <li>市场调研</li>
+                          <li>竞品池筛选</li>
+                          <li>竞品拆解</li>
+                          <li>用户评论分析</li>
+                        </ul>
+                        <span class="health-study-card-go">查看自主研究详情 <i aria-hidden="true">↗</i></span>
+                      </a>
+                    </div>
+                  </div>
+
+                  <div class="health-showcase" id="healthShowcase">
+                    <h4 class="proj-show-label">公司项目实践</h4>
+                    <p class="health-pane-desc">独立完成 4 款健康管理 APP 的功能与页面重构。左右滑动切换；点击中间卡片跳转作品集主功能演示。</p>
+                    <div class="health-shelf" id="healthShelf">
+                      <div class="health-shelf-bar">
+                        <span class="health-shelf-note">App Gallery · 4 款预览</span>
+                        <div class="health-shelf-ctrl">
+                          <span class="health-count" id="healthCount" aria-live="polite"><b>01</b> / 04</span>
+                          <button type="button" class="health-shelf-btn" id="healthPrev" aria-label="上一款"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 18l-6-6 6-6"/></svg></button>
+                          <button type="button" class="health-shelf-btn" id="healthNext" aria-label="下一款"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg></button>
+                        </div>
+                      </div>
+                      <div class="health-flow" id="healthFlow" aria-roledescription="carousel" aria-label="健康 App 应用市场预览">
+                        <button type="button" class="health-flow-card" data-works-id="health-a" data-title="懒人减肥" data-sub="轻松记录，快乐变瘦" data-src="assets/projects/fitnessSeries/《懒人减肥》.png" aria-label="懒人减肥，跳转作品集演示">
+                          <img src="assets/projects/fitnessSeries/《懒人减肥》.png" width="1620" height="897" alt="" loading="lazy" decoding="async" draggable="false" />
+                          <span class="health-card-open">查看作品演示<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg></span>
+                        </button>
+                        <button type="button" class="health-flow-card" data-works-id="health-b" data-title="体重日记 BMI 减肥打卡" data-sub="每天称一称，BMI 变化一目了然" data-src="assets/projects/fitnessSeries/《体重日记BMI减肥打卡》show.png" aria-label="体重日记 BMI 减肥打卡，跳转作品集演示">
+                          <img src="assets/projects/fitnessSeries/《体重日记BMI减肥打卡》show.png" width="1500" height="914" alt="" loading="lazy" decoding="async" draggable="false" />
+                          <span class="health-card-open">查看作品演示<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg></span>
+                        </button>
+                        <button type="button" class="health-flow-card" data-works-id="health-c" data-title="体重管理营" data-sub="21 天健康习惯养成" data-src="assets/projects/fitnessSeries/《体重管理营》.png" aria-label="体重管理营，跳转作品集演示">
+                          <img src="assets/projects/fitnessSeries/《体重管理营》.png" width="1788" height="930" alt="" loading="lazy" decoding="async" draggable="false" />
+                          <span class="health-card-open">查看作品演示<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg></span>
+                        </button>
+                        <button type="button" class="health-flow-card" data-works-id="health-d" data-title="Online 体重管理营 21 天" data-sub="线上 21 天体重管理计划" data-src="assets/projects/fitnessSeries/《Online体重管理营21天》.png" aria-label="Online 体重管理营 21 天，跳转作品集演示">
+                          <img src="assets/projects/fitnessSeries/《Online体重管理营21天》.png" width="1545" height="903" alt="" loading="lazy" decoding="async" draggable="false" />
+                          <span class="health-card-open">查看作品演示<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg></span>
+                        </button>
+                      </div>
+                      <div class="health-flow-caption" id="healthCaption">
+                        <p class="health-flow-meta"><b id="healthCapTag">App Gallery</b><span id="healthCapHint">应用市场预览</span></p>
+                        <h3 class="health-flow-title" id="healthCapTitle">懒人减肥</h3>
+                        <p class="health-flow-sub" id="healthCapSub">轻松记录，快乐变瘦</p>
+                      </div>
+                      <div class="health-shelf-progress" aria-hidden="true"><i id="healthProgress"></i></div>
+                    </div>
+                  </div>
+                  <div class="health-preview" id="healthPreview" aria-hidden="true" role="dialog" aria-modal="true" aria-label="应用市场完整预览">
+                    <div class="health-preview-panel">
+                      <button type="button" class="health-preview-close" id="healthPreviewClose" aria-label="关闭预览"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M4 4l8 8M12 4l-8 8"/></svg></button>
+                      <img id="healthPreviewImg" src="" alt="" />
+                    </div>
+                  </div>
+                </div>
+              </article>
+
+              <article class="proj-panel has-feats" id="projIntro2" data-proj-index="2" data-ip-src="assets/images/project02.png" data-video="" data-poster="">
+                <header class="proj-hero">
+                  <span class="proj-num" aria-hidden="true">03</span>
+                  <div class="proj-hero-text">
+                    <h3>闹钟 App 系列</h3>
+                    <p class="proj-panel-role"><span>我的角色</span>产品负责人</p>
+                  </div>
+                  <span class="proj-figure" aria-hidden="true"><img src="assets/images/project02.png" width="1086" height="1448" alt="" loading="lazy" decoding="async" /></span>
+                </header>
+                <div class="proj-panel-body">
+                  <div class="proj-head">
+                    <section class="proj-bar-block">
+                      <h4>背景</h4>
+                      <p>产品同质化严重、付费转化偏弱，需要提升核心差异化和商业化表现。</p>
+                    </section>
+                    <section class="proj-bar-block">
+                      <h4>行动</h4>
+                      <p>重点打造<b>起床强提醒、天气闹钟、情绪皮肤、勋章墙</b>等功能，推进鸿蒙<b>实况窗、小组件</b>等能力落地。</p>
+                      <p>分析用户反馈和数据，持续优化并验证广告、付费策略。</p>
+                    </section>
+                    <section class="proj-bar-block proj-head-result">
+                      <h4>结果</h4>
+                      <dl class="proj-kpis">
+                        <div class="proj-kpi"><dt>TOP 5</dt><dd>「早安闹钟」2026 年收益稳居</dd></div>
+                        <div class="proj-kpi"><dt>≈21 倍</dt><dd>综合收益同比增长</dd></div>
+                        <div class="proj-kpi"><dt>10+</dt><dd>日均付费用户</dd></div>
+                      </dl>
+                    </section>
+                  </div>
+                  <h4 class="proj-show-label">展示</h4>
+                  <div class="proj-content">
+                    <div class="cs" id="clockStory">
+                      <div class="cs-body">
+                        <div class="cs-stage" id="csStage">
+                          <article class="cs-scene is-active" id="csScene0" data-key="wake" role="tabpanel" style="--cs-accent: #7aa2ff; --cs-bg: url('assets/projects/clockSeries/arithmeticProblemClock_01.jpg')">
+                            <div class="cs-scene-bg" aria-hidden="true"></div>
+                            <div class="cs-copy">
+                              <span class="cs-kicker">01 — Wake-up</span>
+                              <h5 class="cs-title">强提醒</h5>
+                              <p class="cs-lead">用算术题和场景校验代替一键关闭，让闹钟真正把人叫醒，降低贪睡关闭。</p>
+                              <ul class="cs-points">
+                                <li><span class="cs-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="3" width="14" height="18" rx="2"/><path d="M8 7h8M8 12h.01M12 12h.01M16 12h.01M8 16h.01M12 16h.01M16 16h.01"/></svg></span>算术强叫醒：连对 3 题才能关闭，含加减乘除</li>
+                                <li><span class="cs-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M4 8h3l2-3h6l2 3h3v11H4z"/><circle cx="12" cy="13" r="3.5"/></svg></span>场景校验：起床后复拍预设的固定场景</li>
+                                <li><span class="cs-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M10 9l5 3-5 3z"/></svg></span>预演模式：提前熟悉关闭流程</li>
+                              </ul>
+                              <button type="button" class="cs-cta" data-feat="wake" data-title="强提醒" data-lead="用算术题和固定场景校验提高真实起床率，降低贪睡关闭。">查看功能详情<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></button>
+                            </div>
+                            <div class="cs-visual" aria-hidden="true">
+                              <div class="cs-shot cs-phone"><img src="assets/projects/clockSeries/arithmeticProblemClock_01.jpg" alt="" loading="lazy" decoding="async" /></div>
+                              <div class="cs-shot cs-phone"><img src="assets/projects/clockSeries/sceneVertificationClock_01.jpg" alt="" loading="lazy" decoding="async" /></div>
+                            </div>
+                          </article>
+
+                          <article class="cs-scene" id="csScene1" role="tabpanel" data-key="weather" style="--cs-accent: #e8c39a; --cs-bg: url('assets/projects/clockSeries/weatherClock_01.jpg')">
+                            <div class="cs-scene-bg" aria-hidden="true"></div>
+                            <div class="cs-copy">
+                              <span class="cs-kicker">02 — Weather</span>
+                              <h5 class="cs-title">天气闹钟</h5>
+                              <p class="cs-lead">把起床与当日天气、穿搭建议绑在同一唤醒时刻，一睁眼就知道今天怎么出门。</p>
+                              <ul class="cs-points">
+                                <li><span class="cs-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M7 18h10a4 4 0 0 0 0-8 5 5 0 0 0-9.6 1.5A3.3 3.3 0 0 0 7 18z"/></svg></span>闹钟卡片直接展示当日温度与天气</li>
+                                <li><span class="cs-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M17 2l3 3-3 3"/><path d="M4 11V9a4 4 0 0 1 4-4h16"/><path d="M7 22l-3-3 3-3"/><path d="M20 13v2a4 4 0 0 1-4 4H4"/></svg></span>起床、工作等多组闹钟独立设置重复</li>
+                                <li><span class="cs-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10 21a2 2 0 0 0 4 0"/></svg></span>铃声 + 震动组合提醒</li>
+                              </ul>
+                              <button type="button" class="cs-cta" data-feat="weather" data-title="天气闹钟" data-lead="把起床与当日天气、穿搭建议绑在同一唤醒时刻。">查看功能详情<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></button>
+                            </div>
+                            <div class="cs-visual" aria-hidden="true">
+                              <div class="cs-shot cs-card"><img src="assets/projects/clockSeries/weatherClock_01.jpg" alt="" loading="lazy" decoding="async" /></div>
+                              <div class="cs-shot cs-card"><img src="assets/projects/clockSeries/weatherClock_02.jpg" alt="" loading="lazy" decoding="async" /></div>
+                              <div class="cs-shot cs-card"><img src="assets/projects/clockSeries/weatherClock_03.jpg" alt="" loading="lazy" decoding="async" /></div>
+                            </div>
+                          </article>
+
+                          <article class="cs-scene cs-scene--photo" id="csScene2" role="tabpanel" data-key="skin" style="--cs-accent: #ffb86b; --cs-bg: url('assets/projects/clockSeries/emotionalSkin_01.jpg')">
+                            <div class="cs-scene-bg" aria-hidden="true"></div>
+                            <div class="cs-copy">
+                              <span class="cs-kicker">03 — Mood Skin</span>
+                              <h5 class="cs-title">情绪皮肤</h5>
+                              <p class="cs-lead">从清晨阳光到深夜星空，黑猫陪你度过一天的每个时刻；用情感化皮肤提升打开意愿与付费转化。</p>
+                              <ul class="cs-points">
+                                <li><span class="cs-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg></span>6 款时段主题，从清晨到深夜</li>
+                                <li><span class="cs-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20s-7-4.5-7-10a4 4 0 0 1 7-2.6A4 4 0 0 1 19 10c0 5.5-7 10-7 10z"/></svg></span>统一的黑猫形象，强化情感陪伴</li>
+                                <li><span class="cs-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M14.5 9.5c-.5-1-1.5-1.5-2.5-1.5-1.4 0-2.5.8-2.5 2s1.1 1.6 2.5 2 2.5.8 2.5 2-1.1 2-2.5 2c-1 0-2-.5-2.5-1.5M12 6.5V8M12 16v1.5"/></svg></span>作为付费内容，承接商业化转化</li>
+                              </ul>
+                              <button type="button" class="cs-cta" data-feat="skin" data-title="情绪皮肤" data-lead="用情感化皮肤提升打开意愿与付费转化。">查看功能详情<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></button>
+                            </div>
+                            <div class="cs-visual" aria-hidden="true">
+                              <div class="cs-shot cs-phone cs-phone--pano"><img src="assets/projects/clockSeries/emotionalSkin_01.jpg" alt="" loading="lazy" decoding="async" /></div>
+                              <div class="cs-shot cs-phone cs-phone--pano"><img src="assets/projects/clockSeries/emotionalSkin_03.jpg" alt="" decoding="async" /></div>
+                              <span class="cs-chip">清晨 → 深夜 · 6 个时段</span>
+                            </div>
+                          </article>
+
+                          <article class="cs-scene" id="csScene3" role="tabpanel" data-key="medal" style="--cs-accent: #3fd0e8; --cs-bg: url('assets/projects/clockSeries/medalWall.jpg')">
+                            <div class="cs-scene-bg" aria-hidden="true"></div>
+                            <div class="cs-copy">
+                              <span class="cs-kicker">04 — Streak</span>
+                              <h5 class="cs-title">自律勋章墙</h5>
+                              <p class="cs-lead">把连续起床做成看得见的成就，每一天的坚持都被点亮，强化习惯与留存。</p>
+                              <ul class="cs-points">
+                                <li><span class="cs-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22c4 0 7-3 7-7 0-4-3-6-4-9-1 2-2 3-3 3 0-2-1-4-3-6 0 4-4 6-4 12 0 4 3 7 7 7z"/></svg></span>连续打卡天数实时累计</li>
+                                <li><span class="cs-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4"/></svg></span>日历视图点亮每天的起床勋章</li>
+                                <li><span class="cs-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l9 5-9 5-9-5z"/><path d="M3 13l9 5 9-5"/></svg></span>滑动 / 日历两种查看方式</li>
+                              </ul>
+                              <button type="button" class="cs-cta" data-feat="medal" data-title="自律勋章墙" data-lead="把连续起床做成可见成就，强化习惯与留存。">查看功能详情<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></button>
+                            </div>
+                            <div class="cs-visual" aria-hidden="true">
+                              <div class="cs-shot cs-card"><img src="assets/projects/clockSeries/medalWall.jpg" alt="" loading="lazy" decoding="async" /></div>
+                            </div>
+                          </article>
+
+                          <article class="cs-scene" id="csScene4" role="tabpanel" data-key="widget" style="--cs-accent: #a9c99a; --cs-bg: url('assets/projects/clockSeries/widget_01.jpg')">
+                            <div class="cs-scene-bg" aria-hidden="true"></div>
+                            <div class="cs-copy">
+                              <span class="cs-kicker">05 — Widget</span>
+                              <h5 class="cs-title">桌面 Widget</h5>
+                              <p class="cs-lead">桌面组件与系统能力结合，让闹钟在未打开 App 时，也一直被看见。</p>
+                              <ul class="cs-points">
+                                <li><span class="cs-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg></span>小猫、INS、色彩、窗景等多套主题</li>
+                                <li><span class="cs-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="4"/><path d="M12 8v8M8 12h8"/></svg></span>多尺寸规格，一键添加到桌面</li>
+                                <li><span class="cs-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg></span>时间与日历直接放在桌面</li>
+                              </ul>
+                              <button type="button" class="cs-cta" data-feat="widget" data-title="桌面 Widget" data-lead="桌面组件与系统能力，让闹钟在未打开 App 时仍被看见。">查看功能详情<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></button>
+                            </div>
+                            <div class="cs-visual cs-visual--wall" aria-hidden="true">
+                              <div class="cs-col">
+                                <div class="cs-card" style="aspect-ratio: 1216 / 1731"><img src="assets/projects/clockSeries/widget_01.jpg" alt="" decoding="async" /></div>
+                                <div class="cs-card" style="aspect-ratio: 1216 / 941"><img src="assets/projects/clockSeries/widget_05.jpg" alt="" decoding="async" /></div>
+                              </div>
+                              <div class="cs-col">
+                                <div class="cs-card" style="aspect-ratio: 1216 / 1100"><img src="assets/projects/clockSeries/widget_10.jpg" alt="" decoding="async" /></div>
+                                <div class="cs-card" style="aspect-ratio: 1216 / 1735"><img src="assets/projects/clockSeries/widget_02.jpg" alt="" decoding="async" /></div>
+                              </div>
+                              <div class="cs-col">
+                                <div class="cs-card" style="aspect-ratio: 1216 / 1734"><img src="assets/projects/clockSeries/widget_03.jpg" alt="" decoding="async" /></div>
+                                <div class="cs-card" style="aspect-ratio: 1216 / 797"><img src="assets/projects/clockSeries/widget_12.jpg" alt="" decoding="async" /></div>
+                              </div>
+                            </div>
+                          </article>
+                        </div>
+                        <div class="cs-rail">
+                          <div class="cs-rail-row">
+                            <button type="button" class="cs-btn" id="csPrev" aria-label="上一项" disabled><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 18l-6-6 6-6"/></svg></button>
+                            <nav class="cs-nav" aria-label="闹钟核心功能">
+                              <div class="cs-nav-list" role="tablist" aria-orientation="horizontal">
+                                <button type="button" class="cs-nav-item is-active" role="tab" aria-selected="true" aria-controls="csScene0" style="--cs-accent: #7aa2ff"><span class="cs-nav-dot"></span><span class="cs-nav-text"><span class="cs-nav-no">01</span><span class="cs-nav-label">强提醒</span></span></button>
+                                <button type="button" class="cs-nav-item" role="tab" aria-selected="false" aria-controls="csScene1" tabindex="-1" style="--cs-accent: #e8c39a"><span class="cs-nav-dot"></span><span class="cs-nav-text"><span class="cs-nav-no">02</span><span class="cs-nav-label">天气闹钟</span></span></button>
+                                <button type="button" class="cs-nav-item" role="tab" aria-selected="false" aria-controls="csScene2" tabindex="-1" style="--cs-accent: #ffb86b"><span class="cs-nav-dot"></span><span class="cs-nav-text"><span class="cs-nav-no">03</span><span class="cs-nav-label">情绪皮肤</span></span></button>
+                                <button type="button" class="cs-nav-item" role="tab" aria-selected="false" aria-controls="csScene3" tabindex="-1" style="--cs-accent: #3fd0e8"><span class="cs-nav-dot"></span><span class="cs-nav-text"><span class="cs-nav-no">04</span><span class="cs-nav-label">自律勋章墙</span></span></button>
+                                <button type="button" class="cs-nav-item" role="tab" aria-selected="false" aria-controls="csScene4" tabindex="-1" style="--cs-accent: #a9c99a"><span class="cs-nav-dot"></span><span class="cs-nav-text"><span class="cs-nav-no">05</span><span class="cs-nav-label">桌面 Widget</span></span></button>
+                              </div>
+                            </nav>
+                            <button type="button" class="cs-btn" id="csNext" aria-label="下一项"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg></button>
+                          </div>
+                          <div class="cs-progress" aria-hidden="true"><i id="csProgress"></i></div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </article>
+
+                </div>
+              <div class="proj-feat-overlay" id="projFeatOverlay" aria-hidden="true">
+                <div class="proj-feat-backdrop" id="projFeatBackdrop"></div>
+                <article class="proj-feat-panel" id="projFeatPanel" role="dialog" aria-modal="true" aria-labelledby="projFeatTitle">
+                  <button type="button" class="works-detail-close" id="projFeatClose" aria-label="关闭功能详情">×</button>
+                  <h3 id="projFeatTitle" class="visually-hidden"></h3>
+                  <div id="projFeatBody"></div>
+                  <div class="proj-feat-nav" id="projFeatNav">
+                    <p class="proj-feat-nav-title" id="projFeatNavTitle" aria-hidden="true"></p>
+                    <button type="button" class="works-detail-nav-btn" id="projFeatPrev" aria-label="向左浏览"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 12H5M11 6l-6 6 6 6"/></svg></button>
+                    <span class="proj-feat-progress" aria-hidden="true"><i></i></span>
+                    <button type="button" class="works-detail-nav-btn" id="projFeatNext" aria-label="向右浏览"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></button>
+                  </div>
+                </article>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+<!-- WORKS -->
+    <section class="slide slide--page slide--works" id="works" data-index="3" aria-label="Works">
       <div class="slide-inner">
         <div class="works-theater" id="worksTheater">
           <header class="sec-head works-page-title">
@@ -7482,443 +8184,6 @@
       </div>
     </section>
 
-    <!-- PROJECTS 项目介绍 -->
-    <section class="slide slide--page slide--projects" id="cases" data-index="3" aria-label="Projects">
-      <div class="slide-inner">
-        <div class="proj-page" id="projPage">
-          <header class="sec-head proj-page-title">
-            <p class="sec-head-eyebrow"><span>Projects</span><i aria-hidden="true"></i><span>4 Cases · 0 → 1</span></p>
-            <h2 class="section-heading sec-head-title">我的<em>个人项目</em></h2>
-            <p class="sec-head-sub">一个提效平台 + 三条 App 产品线，记录每一次从 0 到 1</p>
-          </header>
-          <div class="proj-hub" id="projHub">
-            <div class="proj-ip-cards" role="list">
-              <button type="button" class="proj-ip-card" role="listitem" data-proj-index="0" data-series="material" data-ip-src="assets/images/project01.png" aria-label="APP 素材平台">
-                <span class="proj-ip-avatar"><img src="assets/images/project01.png" width="1086" height="1448" alt="" decoding="async" /></span>
-                <span class="proj-ip-copy">
-                  <span class="proj-ip-num">01</span>
-                  <span class="proj-ip-title">APP 素材平台</span>
-                  <span class="proj-ip-role">产品支持 · 独立规划</span>
-                  <span class="proj-ip-kpi">2h → 30min</span>
-                </span>
-              </button>
-              <button type="button" class="proj-ip-card" role="listitem" data-proj-index="1" data-series="health" data-ip-src="assets/images/project04.png" aria-label="健康管理产品系列">
-                <span class="proj-ip-avatar"><img src="assets/images/project04.png" width="1122" height="1402" alt="" decoding="async" /></span>
-                <span class="proj-ip-copy">
-                  <span class="proj-ip-num">02</span>
-                  <span class="proj-ip-title">健康管理产品系列</span>
-                  <span class="proj-ip-role">产品规划</span>
-                  <span class="proj-ip-kpi">留存 +89%</span>
-                </span>
-              </button>
-              <button type="button" class="proj-ip-card" role="listitem" data-proj-index="2" data-series="alarm" data-ip-src="assets/images/project02.png" aria-label="闹钟 App 系列">
-                <span class="proj-ip-avatar"><img src="assets/images/project02.png" width="1086" height="1448" alt="" decoding="async" /></span>
-                <span class="proj-ip-copy">
-                  <span class="proj-ip-num">03</span>
-                  <span class="proj-ip-title">闹钟 App 系列</span>
-                  <span class="proj-ip-role">产品负责人</span>
-                  <span class="proj-ip-kpi">收益同比 ≈21 倍</span>
-                </span>
-              </button>
-              <button type="button" class="proj-ip-card" role="listitem" data-proj-index="3" data-series="fish" data-ip-src="assets/images/project03.png" aria-label="钓鱼 App 系列">
-                <span class="proj-ip-avatar"><img src="assets/images/project03.png" width="1086" height="1448" alt="" decoding="async" /></span>
-                <span class="proj-ip-copy">
-                  <span class="proj-ip-num">04</span>
-                  <span class="proj-ip-title">钓鱼 App 系列</span>
-                  <span class="proj-ip-role">产品负责人</span>
-                  <span class="proj-ip-kpi">日活 +233.74%</span>
-                </span>
-              </button>
-            </div>
-            <p class="proj-hub-hint">点击卡片 · 跳转到对应介绍</p>
-          </div>
-
-          <div class="proj-detail-view" id="projDetailView">
-            <div class="proj-detail-main">
-              <div class="proj-stage" id="projStage">
-              <article class="proj-panel" id="projIntro0" data-proj-index="0" data-ip-src="assets/images/project01.png" data-video="" data-poster="">
-                <header class="proj-hero">
-                  <span class="proj-num" aria-hidden="true">01</span>
-                  <div class="proj-hero-text">
-                    <h3>APP 素材平台</h3>
-                    <p class="proj-panel-role"><span>我的角色</span>V1 产品支持 · V2 独立规划</p>
-                  </div>
-                  <span class="proj-figure" aria-hidden="true"><img src="assets/images/project01.png" width="1086" height="1448" alt="" loading="lazy" decoding="async" /></span>
-                </header>
-                <div class="proj-panel-body">
-                  <div class="proj-head">
-                    <section class="proj-bar-block">
-                      <h4>背景</h4>
-                      <p>App 矩阵需要大量重复的<b>上架与商业化素材</b>，产品与开发都要参与制作，却缺少统一平台，效率低、交付不稳定。</p>
-                    </section>
-                    <section class="proj-bar-block">
-                      <h4>行动</h4>
-                      <p><b>V1</b>：2026 年 3 月以产品支持梳理需求，约 <b>1 个月</b>推动上线并投入内用。</p>
-                      <p><b>V2</b>：上线后跟踪真实使用，围绕实际素材需求独立复盘；9 月业余时间用半个多月重构流程，完成完整 PRD 与原型，重点规划 <b>AI 图文智能生成</b>，以及 <b>批量编辑、复用、共享</b>。</p>
-                    </section>
-                    <section class="proj-bar-block proj-head-result">
-                      <h4>结果</h4>
-                      <p><b>V1</b> 验证统一平台可行，单套耗时约 <b>2 小时 → 30 分钟</b>。<b>V2</b> 贴合真实业务场景，嵌入 <b>AI 图文智能生成</b>，支持 <b>批量编辑、复用、共享</b>，从「能生产」推进到「可运营」。</p>
-                      <div class="asc-versions">
-                        <article class="asc-ver is-v2" aria-label="V2.0 原型阶段方案">
-                          <header class="asc-ver-head">
-                            <span class="asc-ver-no">V2.0</span>
-                            <span class="asc-ver-state">原型阶段</span>
-                            <span class="asc-ver-role">独立规划</span>
-                          </header>
-                          <p class="asc-ver-desc">按实际素材需求重构流程，嵌入 <b>AI 图文智能生成</b>，支持 <b>批量编辑、复用、共享</b>；完成完整 PRD 与原型。</p>
-                          <dl class="asc-ver-kpis">
-                            <div><dt>57 页</dt><dd>PRD 文档</dd></div>
-                            <div><dt>15 条</dt><dd>业务规则</dd></div>
-                            <div><dt>6 类</dt><dd>制作任务</dd></div>
-                          </dl>
-                          <div class="asc-ver-actions">
-                            <a class="asc-ver-btn is-primary" href="https://my.feishu.cn/wiki/QXvrwbZ58iVAWxkKvxKcxJvMncg?from=from_copylink" target="_blank" rel="noopener noreferrer">PRD 文档<i aria-hidden="true">↗</i></a>
-                            <a class="asc-ver-btn is-primary" href="https://www.figma.com/make/gnVIndcL7BiiTkhZWvoCao/APP%E7%B4%A0%E6%9D%90%E7%94%9F%E4%BA%A7%E5%B9%B3%E5%8F%B0%E5%8E%9F%E5%9E%8B%E8%A7%84%E5%88%92?t=mVGjN1HcnTnT7elE-1" target="_blank" rel="noopener noreferrer">Figma 原型<i aria-hidden="true">↗</i></a>
-                          </div>
-                        </article>
-                        <span class="asc-ver-arrow" aria-hidden="true"><em>复盘重构</em><em>从能用到好用</em><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12h15M14 7l5 5-5 5" /></svg></span>
-                        <article class="asc-ver is-v1" aria-label="V1.0 已上线版本">
-                          <header class="asc-ver-head">
-                            <span class="asc-ver-no">V1.0</span>
-                            <span class="asc-ver-state">已上线</span>
-                            <span class="asc-ver-role">产品支持</span>
-                          </header>
-                          <p class="asc-ver-desc">打通素材生成、管理与导出，接入基础 AI 能力；先解决「没有统一工具」的问题。</p>
-                          <dl class="asc-ver-kpis">
-                            <div><dt>≈1 个月</dt><dd>上线投入使用</dd></div>
-                            <div><dt>2h → 30min</dt><dd>单套素材耗时</dd></div>
-                          </dl>
-                          <div class="asc-ver-actions">
-                            <button type="button" class="asc-ver-btn" data-lb-video="assets/projects/appSourceCreate/V1_show.mp4" data-lb-cap="V1.0 线上版本演示">
-                              <svg viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><path d="M5 3.5v9l7.5-4.5z" /></svg>观看 V1 演示
-                            </button>
-                            <a class="asc-ver-btn" href="https://www.figma.com/make/gnVIndcL7BiiTkhZWvoCao/APP%E7%B4%A0%E6%9D%90%E7%94%9F%E4%BA%A7%E5%B9%B3%E5%8F%B0%E5%8E%9F%E5%9E%8B%E8%A7%84%E5%88%92?t=biK7cHHRDIuVNSAl-1" target="_blank" rel="noopener noreferrer">Figma 原型<i aria-hidden="true">↗</i></a>
-                          </div>
-                        </article>
-                      </div>
-                    </section>
-                  </div>
-
-                  <section class="asc-zone" aria-label="V2.0 方案详情">
-                    <p class="asc-zone-tag"><span>V2.0</span>方案详情</p>
-
-                    <h4 class="proj-show-label">原型演示<span class="asc-chip is-muted">低保真 · Figma Make</span></h4>
-                    <div class="proj-content asc-block">
-                      <div class="asc-player">
-                        <div class="asc-player-bar" aria-hidden="true"><i></i><i></i><i></i><span>APP 矩阵素材生产平台 · 原型操作演示</span></div>
-                        <div class="asc-player-screen">
-                          <video src="assets/projects/appSourceCreate/V2_show.mp4" poster="assets/projects/appSourceCreate/v2-poster.jpg" width="1558" height="808" playsinline preload="none" controlslist="nodownload"></video>
-                          <button type="button" class="asc-player-play" aria-label="播放 V2 原型演示"><span><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M8 5.5v13l10.5-6.5z" /></svg></span></button>
-                        </div>
-                      </div>
-                    </div>
-                  </section>
-                </div>
-              </article>
-
-              <article class="proj-panel" id="projIntro1" data-proj-index="1" data-ip-src="assets/images/project04.png" data-video="" data-poster="">
-                <header class="proj-hero">
-                  <span class="proj-num" aria-hidden="true">02</span>
-                  <div class="proj-hero-text">
-                    <h3>健康管理产品系列</h3>
-                    <p class="proj-panel-role"><span>我的角色</span>产品规划</p>
-                  </div>
-                  <span class="proj-figure" aria-hidden="true"><img src="assets/images/project04.png" width="1122" height="1402" alt="" loading="lazy" decoding="async" /></span>
-                </header>
-                <div class="proj-panel-body">
-                  <div class="health-overview">
-                    <div class="health-intro">
-                      <div class="health-main">
-                        <p class="health-lead">面向 Android / 鸿蒙的健康产品重构。</p>
-                        <div class="proj-head">
-                          <section class="proj-bar-block">
-                            <h4>背景</h4>
-                            <p>公司健康管理产品收益偏低、功能单一、体验偏旧，需要功能与视觉重构。工作中以《薄荷健康》等成熟产品为参考。</p>
-                          </section>
-                          <section class="proj-bar-block">
-                            <h4>行动</h4>
-                            <p>面向 Android / HarmonyOS，独立完成 <b>4 款</b>健康管理 APP 的功能与页面重构。</p>
-                          </section>
-                          <section class="proj-bar-block proj-head-result">
-                            <h4>结果</h4>
-                            <p>相关产品用户留存提升 <b>89%</b>，完成 <b>4 款 APP</b> 重构落地。</p>
-                            <dl class="health-metrics">
-                              <div><dt>4 款</dt><dd>APP 重构</dd></div>
-                              <div><dt>+89%</dt><dd>用户留存提升</dd></div>
-                            </dl>
-                          </section>
-                        </div>
-                      </div>
-                      <a class="health-study-card" href="bohee-study.html" aria-label="查看《薄荷健康》自主研究详情">
-                        <span class="health-study-card-kicker"><span>自主研究</span><em>Independent Study</em></span>
-                        <h4>《薄荷健康》海外产品策略与增长实战</h4>
-                        <p>从 2023 年起的长期用户，也是工作中的重点竞品。结合海外调研经验，完成从市场到用户的完整分析。</p>
-                        <ul class="health-study-card-steps" aria-label="研究路径">
-                          <li>市场调研</li>
-                          <li>竞品池筛选</li>
-                          <li>竞品拆解</li>
-                          <li>用户评论分析</li>
-                        </ul>
-                        <span class="health-study-card-go">查看自主研究详情 <i aria-hidden="true">↗</i></span>
-                      </a>
-                    </div>
-                  </div>
-
-                  <div class="health-showcase" id="healthShowcase">
-                    <h4 class="proj-show-label">公司项目实践</h4>
-                    <p class="health-pane-desc">独立完成 4 款健康管理 APP 的功能与页面重构。详细演示见作品集健康系列。</p>
-                    <ul class="health-app-list">
-                      <li>
-                        <img src="assets/works/fitness_01/icon.png" width="84" height="84" alt="" loading="lazy" decoding="async" />
-                        <span><strong>懒人减肥</strong><small>轻松记录，快乐变瘦</small></span>
-                      </li>
-                      <li>
-                        <img src="assets/works/fitness_02/icon.png" width="84" height="84" alt="" loading="lazy" decoding="async" />
-                        <span><strong>体重日记 BMI 减肥打卡</strong><small>每天称一称，BMI 变化一目了然</small></span>
-                      </li>
-                      <li>
-                        <img src="assets/works/fitness_03/icon.png" width="84" height="84" alt="" loading="lazy" decoding="async" />
-                        <span><strong>体重管理营</strong><small>21 天健康习惯养成</small></span>
-                      </li>
-                      <li>
-                        <img src="assets/works/fitness_04/icon.png" width="84" height="84" alt="" loading="lazy" decoding="async" />
-                        <span><strong>Online 体重管理营 21 天</strong><small>线上 21 天体重管理计划</small></span>
-                      </li>
-                    </ul>
-                  </div>
-                </div>
-              </article>
-
-              <article class="proj-panel has-feats" id="projIntro2" data-proj-index="2" data-ip-src="assets/images/project02.png" data-video="" data-poster="">
-                <header class="proj-hero">
-                  <span class="proj-num" aria-hidden="true">03</span>
-                  <div class="proj-hero-text">
-                    <h3>闹钟 App 系列</h3>
-                    <p class="proj-panel-role"><span>我的角色</span>产品负责人</p>
-                  </div>
-                  <span class="proj-figure" aria-hidden="true"><img src="assets/images/project02.png" width="1086" height="1448" alt="" loading="lazy" decoding="async" /></span>
-                </header>
-                <div class="proj-panel-body">
-                  <div class="proj-head">
-                    <section class="proj-bar-block">
-                      <h4>背景</h4>
-                      <p>产品同质化严重、付费转化偏弱，需要提升核心差异化和商业化表现。</p>
-                    </section>
-                    <section class="proj-bar-block">
-                      <h4>行动</h4>
-                      <p>重点打造<b>起床强提醒、天气闹钟、情绪皮肤、勋章墙</b>等功能，推进鸿蒙<b>实况窗、小组件</b>等能力落地。</p>
-                      <p>分析用户反馈和数据，持续优化并验证广告、付费策略。</p>
-                    </section>
-                    <section class="proj-bar-block proj-head-result">
-                      <h4>结果</h4>
-                      <dl class="proj-kpis">
-                        <div class="proj-kpi"><dt>TOP 5</dt><dd>「早安闹钟」2026 年收益稳居</dd></div>
-                        <div class="proj-kpi"><dt>≈21 倍</dt><dd>综合收益同比增长</dd></div>
-                        <div class="proj-kpi"><dt>10+</dt><dd>日均付费用户</dd></div>
-                      </dl>
-                    </section>
-                  </div>
-                  <h4 class="proj-show-label">展示</h4>
-                  <div class="proj-content">
-                    <div class="cs" id="clockStory">
-                      <div class="cs-body">
-                        <div class="cs-stage" id="csStage">
-                          <article class="cs-scene is-active" id="csScene0" data-key="wake" role="tabpanel" style="--cs-accent: #7aa2ff; --cs-bg: url('assets/projects/clockSeries/arithmeticProblemClock_01.jpg')">
-                            <div class="cs-scene-bg" aria-hidden="true"></div>
-                            <div class="cs-copy">
-                              <span class="cs-kicker">01 — Wake-up</span>
-                              <h5 class="cs-title">强提醒</h5>
-                              <p class="cs-lead">用算术题和场景校验代替一键关闭，让闹钟真正把人叫醒，降低贪睡关闭。</p>
-                              <ul class="cs-points">
-                                <li><span class="cs-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="3" width="14" height="18" rx="2"/><path d="M8 7h8M8 12h.01M12 12h.01M16 12h.01M8 16h.01M12 16h.01M16 16h.01"/></svg></span>算术强叫醒：连对 3 题才能关闭，含加减乘除</li>
-                                <li><span class="cs-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M4 8h3l2-3h6l2 3h3v11H4z"/><circle cx="12" cy="13" r="3.5"/></svg></span>场景校验：起床后复拍预设的固定场景</li>
-                                <li><span class="cs-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M10 9l5 3-5 3z"/></svg></span>预演模式：提前熟悉关闭流程</li>
-                              </ul>
-                              <button type="button" class="cs-cta" data-feat="wake" data-title="强提醒" data-lead="用算术题和固定场景校验提高真实起床率，降低贪睡关闭。">查看功能详情<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></button>
-                            </div>
-                            <div class="cs-visual" aria-hidden="true">
-                              <div class="cs-shot cs-phone"><img src="assets/projects/clockSeries/arithmeticProblemClock_01.jpg" alt="" loading="lazy" decoding="async" /></div>
-                              <div class="cs-shot cs-phone"><img src="assets/projects/clockSeries/sceneVertificationClock_01.jpg" alt="" loading="lazy" decoding="async" /></div>
-                            </div>
-                          </article>
-
-                          <article class="cs-scene" id="csScene1" role="tabpanel" data-key="weather" style="--cs-accent: #e8c39a; --cs-bg: url('assets/projects/clockSeries/weatherClock_01.jpg')">
-                            <div class="cs-scene-bg" aria-hidden="true"></div>
-                            <div class="cs-copy">
-                              <span class="cs-kicker">02 — Weather</span>
-                              <h5 class="cs-title">天气闹钟</h5>
-                              <p class="cs-lead">把起床与当日天气、穿搭建议绑在同一唤醒时刻，一睁眼就知道今天怎么出门。</p>
-                              <ul class="cs-points">
-                                <li><span class="cs-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M7 18h10a4 4 0 0 0 0-8 5 5 0 0 0-9.6 1.5A3.3 3.3 0 0 0 7 18z"/></svg></span>闹钟卡片直接展示当日温度与天气</li>
-                                <li><span class="cs-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M17 2l3 3-3 3"/><path d="M4 11V9a4 4 0 0 1 4-4h16"/><path d="M7 22l-3-3 3-3"/><path d="M20 13v2a4 4 0 0 1-4 4H4"/></svg></span>起床、工作等多组闹钟独立设置重复</li>
-                                <li><span class="cs-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10 21a2 2 0 0 0 4 0"/></svg></span>铃声 + 震动组合提醒</li>
-                              </ul>
-                              <button type="button" class="cs-cta" data-feat="weather" data-title="天气闹钟" data-lead="把起床与当日天气、穿搭建议绑在同一唤醒时刻。">查看功能详情<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></button>
-                            </div>
-                            <div class="cs-visual" aria-hidden="true">
-                              <div class="cs-shot cs-card"><img src="assets/projects/clockSeries/weatherClock_01.jpg" alt="" loading="lazy" decoding="async" /></div>
-                              <div class="cs-shot cs-card"><img src="assets/projects/clockSeries/weatherClock_02.jpg" alt="" loading="lazy" decoding="async" /></div>
-                              <div class="cs-shot cs-card"><img src="assets/projects/clockSeries/weatherClock_03.jpg" alt="" loading="lazy" decoding="async" /></div>
-                            </div>
-                          </article>
-
-                          <article class="cs-scene cs-scene--photo" id="csScene2" role="tabpanel" data-key="skin" style="--cs-accent: #ffb86b; --cs-bg: url('assets/projects/clockSeries/emotionalSkin_01.jpg')">
-                            <div class="cs-scene-bg" aria-hidden="true"></div>
-                            <div class="cs-copy">
-                              <span class="cs-kicker">03 — Mood Skin</span>
-                              <h5 class="cs-title">情绪皮肤</h5>
-                              <p class="cs-lead">从清晨阳光到深夜星空，黑猫陪你度过一天的每个时刻；用情感化皮肤提升打开意愿与付费转化。</p>
-                              <ul class="cs-points">
-                                <li><span class="cs-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg></span>6 款时段主题，从清晨到深夜</li>
-                                <li><span class="cs-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20s-7-4.5-7-10a4 4 0 0 1 7-2.6A4 4 0 0 1 19 10c0 5.5-7 10-7 10z"/></svg></span>统一的黑猫形象，强化情感陪伴</li>
-                                <li><span class="cs-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M14.5 9.5c-.5-1-1.5-1.5-2.5-1.5-1.4 0-2.5.8-2.5 2s1.1 1.6 2.5 2 2.5.8 2.5 2-1.1 2-2.5 2c-1 0-2-.5-2.5-1.5M12 6.5V8M12 16v1.5"/></svg></span>作为付费内容，承接商业化转化</li>
-                              </ul>
-                              <button type="button" class="cs-cta" data-feat="skin" data-title="情绪皮肤" data-lead="用情感化皮肤提升打开意愿与付费转化。">查看功能详情<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></button>
-                            </div>
-                            <div class="cs-visual" aria-hidden="true">
-                              <div class="cs-shot cs-phone cs-phone--pano"><img src="assets/projects/clockSeries/emotionalSkin_01.jpg" alt="" loading="lazy" decoding="async" /></div>
-                              <div class="cs-shot cs-phone cs-phone--pano"><img src="assets/projects/clockSeries/emotionalSkin_03.jpg" alt="" decoding="async" /></div>
-                              <span class="cs-chip">清晨 → 深夜 · 6 个时段</span>
-                            </div>
-                          </article>
-
-                          <article class="cs-scene" id="csScene3" role="tabpanel" data-key="medal" style="--cs-accent: #3fd0e8; --cs-bg: url('assets/projects/clockSeries/medalWall.jpg')">
-                            <div class="cs-scene-bg" aria-hidden="true"></div>
-                            <div class="cs-copy">
-                              <span class="cs-kicker">04 — Streak</span>
-                              <h5 class="cs-title">自律勋章墙</h5>
-                              <p class="cs-lead">把连续起床做成看得见的成就，每一天的坚持都被点亮，强化习惯与留存。</p>
-                              <ul class="cs-points">
-                                <li><span class="cs-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22c4 0 7-3 7-7 0-4-3-6-4-9-1 2-2 3-3 3 0-2-1-4-3-6 0 4-4 6-4 12 0 4 3 7 7 7z"/></svg></span>连续打卡天数实时累计</li>
-                                <li><span class="cs-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4"/></svg></span>日历视图点亮每天的起床勋章</li>
-                                <li><span class="cs-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l9 5-9 5-9-5z"/><path d="M3 13l9 5 9-5"/></svg></span>滑动 / 日历两种查看方式</li>
-                              </ul>
-                              <button type="button" class="cs-cta" data-feat="medal" data-title="自律勋章墙" data-lead="把连续起床做成可见成就，强化习惯与留存。">查看功能详情<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></button>
-                            </div>
-                            <div class="cs-visual" aria-hidden="true">
-                              <div class="cs-shot cs-card"><img src="assets/projects/clockSeries/medalWall.jpg" alt="" loading="lazy" decoding="async" /></div>
-                            </div>
-                          </article>
-
-                          <article class="cs-scene" id="csScene4" role="tabpanel" data-key="widget" style="--cs-accent: #a9c99a; --cs-bg: url('assets/projects/clockSeries/widget_01.jpg')">
-                            <div class="cs-scene-bg" aria-hidden="true"></div>
-                            <div class="cs-copy">
-                              <span class="cs-kicker">05 — Widget</span>
-                              <h5 class="cs-title">桌面 Widget</h5>
-                              <p class="cs-lead">桌面组件与系统能力结合，让闹钟在未打开 App 时，也一直被看见。</p>
-                              <ul class="cs-points">
-                                <li><span class="cs-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg></span>小猫、INS、色彩、窗景等多套主题</li>
-                                <li><span class="cs-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="4"/><path d="M12 8v8M8 12h8"/></svg></span>多尺寸规格，一键添加到桌面</li>
-                                <li><span class="cs-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg></span>时间与日历直接放在桌面</li>
-                              </ul>
-                              <button type="button" class="cs-cta" data-feat="widget" data-title="桌面 Widget" data-lead="桌面组件与系统能力，让闹钟在未打开 App 时仍被看见。">查看功能详情<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></button>
-                            </div>
-                            <div class="cs-visual cs-visual--wall" aria-hidden="true">
-                              <div class="cs-col">
-                                <div class="cs-card" style="aspect-ratio: 1216 / 1731"><img src="assets/projects/clockSeries/widget_01.jpg" alt="" decoding="async" /></div>
-                                <div class="cs-card" style="aspect-ratio: 1216 / 941"><img src="assets/projects/clockSeries/widget_05.jpg" alt="" decoding="async" /></div>
-                              </div>
-                              <div class="cs-col">
-                                <div class="cs-card" style="aspect-ratio: 1216 / 1100"><img src="assets/projects/clockSeries/widget_10.jpg" alt="" decoding="async" /></div>
-                                <div class="cs-card" style="aspect-ratio: 1216 / 1735"><img src="assets/projects/clockSeries/widget_02.jpg" alt="" decoding="async" /></div>
-                              </div>
-                              <div class="cs-col">
-                                <div class="cs-card" style="aspect-ratio: 1216 / 1734"><img src="assets/projects/clockSeries/widget_03.jpg" alt="" decoding="async" /></div>
-                                <div class="cs-card" style="aspect-ratio: 1216 / 797"><img src="assets/projects/clockSeries/widget_12.jpg" alt="" decoding="async" /></div>
-                              </div>
-                            </div>
-                          </article>
-                        </div>
-                        <div class="cs-rail">
-                          <div class="cs-rail-row">
-                            <button type="button" class="cs-btn" id="csPrev" aria-label="上一项" disabled><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 18l-6-6 6-6"/></svg></button>
-                            <nav class="cs-nav" aria-label="闹钟核心功能">
-                              <div class="cs-nav-list" role="tablist" aria-orientation="horizontal">
-                                <button type="button" class="cs-nav-item is-active" role="tab" aria-selected="true" aria-controls="csScene0" style="--cs-accent: #7aa2ff"><span class="cs-nav-dot"></span><span class="cs-nav-text"><span class="cs-nav-no">01</span><span class="cs-nav-label">强提醒</span></span></button>
-                                <button type="button" class="cs-nav-item" role="tab" aria-selected="false" aria-controls="csScene1" tabindex="-1" style="--cs-accent: #e8c39a"><span class="cs-nav-dot"></span><span class="cs-nav-text"><span class="cs-nav-no">02</span><span class="cs-nav-label">天气闹钟</span></span></button>
-                                <button type="button" class="cs-nav-item" role="tab" aria-selected="false" aria-controls="csScene2" tabindex="-1" style="--cs-accent: #ffb86b"><span class="cs-nav-dot"></span><span class="cs-nav-text"><span class="cs-nav-no">03</span><span class="cs-nav-label">情绪皮肤</span></span></button>
-                                <button type="button" class="cs-nav-item" role="tab" aria-selected="false" aria-controls="csScene3" tabindex="-1" style="--cs-accent: #3fd0e8"><span class="cs-nav-dot"></span><span class="cs-nav-text"><span class="cs-nav-no">04</span><span class="cs-nav-label">自律勋章墙</span></span></button>
-                                <button type="button" class="cs-nav-item" role="tab" aria-selected="false" aria-controls="csScene4" tabindex="-1" style="--cs-accent: #a9c99a"><span class="cs-nav-dot"></span><span class="cs-nav-text"><span class="cs-nav-no">05</span><span class="cs-nav-label">桌面 Widget</span></span></button>
-                              </div>
-                            </nav>
-                            <button type="button" class="cs-btn" id="csNext" aria-label="下一项"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg></button>
-                          </div>
-                          <div class="cs-progress" aria-hidden="true"><i id="csProgress"></i></div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </article>
-
-              <article class="proj-panel" id="projIntro3" data-proj-index="3" data-ip-src="assets/images/project03.png" data-video="" data-poster="">
-                <header class="proj-hero">
-                  <span class="proj-num" aria-hidden="true">04</span>
-                  <div class="proj-hero-text">
-                    <h3>钓鱼 App 系列</h3>
-                    <p class="proj-panel-role"><span>我的角色</span>产品负责人</p>
-                  </div>
-                  <span class="proj-figure" aria-hidden="true"><img src="assets/images/project03.png" width="1086" height="1448" alt="" loading="lazy" decoding="async" /></span>
-                </header>
-                <div class="proj-panel-body">
-                  <div class="proj-head">
-                    <section class="proj-bar-block">
-                      <h4>背景</h4>
-                      <p>用户需求分散、核心使用场景不足，需要重构核心使用场景。</p>
-                    </section>
-                    <section class="proj-bar-block">
-                      <h4>行动</h4>
-                      <p>围绕<b>「找钓点 — 记录鱼获 — 生成战报」</b>搭建核心使用闭环，探索 AI 能力应用，完成<b>小艺智能体</b>接入。</p>
-                    </section>
-                    <section class="proj-bar-block proj-head-result">
-                      <h4>结果</h4>
-                      <dl class="proj-kpis">
-                        <div class="proj-kpi"><dt>+233.74%</dt><dd>日活增长（6 月 → 9 月）</dd></div>
-                      </dl>
-                    </section>
-                  </div>
-                  <h4 class="proj-show-label">展示</h4>
-                  <div class="proj-content">
-                    <div class="proj-feat-shots" style="--n: 2" role="list">
-                      <figure class="proj-shot" role="listitem">
-                        <div class="proj-shot-screen">
-                          <img src="assets/projects/fishSeries/fish_01.jpg" width="720" height="1590" alt="" decoding="async" />
-                        </div>
-                        <figcaption>钓点档案</figcaption>
-                      </figure>
-                      <figure class="proj-shot" role="listitem">
-                        <div class="proj-shot-screen">
-                          <img src="assets/projects/fishSeries/fish_02.jpg" width="720" height="1590" alt="" decoding="async" />
-                        </div>
-                        <figcaption>鱼获档案</figcaption>
-                      </figure>
-                    </div>
-                  </div>
-                </div>
-              </article>
-
-                </div>
-              <div class="proj-feat-overlay" id="projFeatOverlay" aria-hidden="true">
-                <div class="proj-feat-backdrop" id="projFeatBackdrop"></div>
-                <article class="proj-feat-panel" id="projFeatPanel" role="dialog" aria-modal="true" aria-labelledby="projFeatTitle">
-                  <button type="button" class="works-detail-close" id="projFeatClose" aria-label="关闭功能详情">×</button>
-                  <h3 id="projFeatTitle" class="visually-hidden"></h3>
-                  <div id="projFeatBody"></div>
-                  <div class="proj-feat-nav" id="projFeatNav">
-                    <p class="proj-feat-nav-title" id="projFeatNavTitle" aria-hidden="true"></p>
-                    <button type="button" class="works-detail-nav-btn" id="projFeatPrev" aria-label="向左浏览"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 12H5M11 6l-6 6 6 6"/></svg></button>
-                    <span class="proj-feat-progress" aria-hidden="true"><i></i></span>
-                    <button type="button" class="works-detail-nav-btn" id="projFeatNext" aria-label="向右浏览"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></button>
-                  </div>
-                </article>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
-
     <!-- AI LAB -->
     <section class="slide slide--page slide--ai" id="ai-lab" data-index="4" aria-label="AI Lab">
       <div class="slide-inner">
@@ -8006,12 +8271,12 @@
     </section>
 
     <!-- LIFE -->
-    <section class="slide slide--page slide--life" id="life" data-index="5" aria-label="Life">
+    <section class="slide slide--page slide--life" id="life" data-index="5" aria-label="Contact">
       <div class="slide-inner">
         <div class="life-page">
           <header class="sec-head">
             <p class="sec-head-eyebrow"><span>Life</span><i aria-hidden="true"></i><span>Say Hello</span></p>
-            <h2 class="section-heading sec-head-title">生活与<em>联系</em></h2>
+            <h2 class="section-heading sec-head-title">与我<em>联系</em></h2>
             <p class="sec-head-sub">兴趣、人味内容与社交链接可写在这里。</p>
           </header>
           <div class="life-contact">
@@ -8056,7 +8321,7 @@
       var navLinks = document.querySelectorAll(".nav-link");
       var progress = document.getElementById("progressLine");
       var indicator = document.getElementById("pageIndicator");
-      var labels = ["首页", "履历", "作品集", "项目集", "AI技术", "生活"];
+      var labels = ["首页", "履历", "项目", "作品集", "AI技术", "联系"];
       var total = slides.length;
       var siteNav = document.getElementById("siteNav");
       var reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
@@ -8096,7 +8361,7 @@
         if (index !== 4 && typeof window.__aiCloseLong === "function") {
           window.__aiCloseLong();
         }
-        if (index !== 2 && typeof window.__worksCloseDetail === "function") {
+        if (index !== 3 && typeof window.__worksCloseDetail === "function") {
           window.__worksCloseDetail(false);
         }
         if (index !== 1 && typeof window.__expStoryStop === "function") {
@@ -8108,8 +8373,8 @@
         /* 导航跳转后补一次入场：scroll 到位再揭开，避免 IO 阈值过严导致一直透明 */
         clearTimeout(window.__revealJumpTimer);
         window.__revealJumpTimer = setTimeout(function () {
-          if (index === 2 && typeof window.__worksRevealAll === "function") window.__worksRevealAll();
-          if (index === 3 && typeof window.__projRevealVisible === "function") window.__projRevealVisible();
+          if (index === 2 && typeof window.__projRevealVisible === "function") window.__projRevealVisible();
+          if (index === 3 && typeof window.__worksRevealAll === "function") window.__worksRevealAll();
           if (index === 4 && typeof window.__aiReveal === "function") window.__aiReveal();
         }, reduced ? 0 : 280);
       }
@@ -8143,6 +8408,16 @@
           track.addEventListener("wheel", function (e) {
             var aiFlowEl = e.target.closest && e.target.closest(".ai-flow");
             if (aiFlowEl && typeof window.__aiWheel === "function" && window.__aiWheel(e)) {
+              e.preventDefault();
+              return;
+            }
+            var healthFlowEl = e.target.closest && e.target.closest(".health-flow");
+            if (healthFlowEl && typeof window.__healthWheel === "function" && window.__healthWheel(e)) {
+              e.preventDefault();
+              return;
+            }
+            var csStageEl = e.target.closest && e.target.closest(".cs-stage");
+            if (csStageEl && typeof window.__csWheel === "function" && window.__csWheel(e)) {
               e.preventDefault();
               return;
             }
@@ -8947,6 +9222,17 @@
         document.body.appendChild(worksDetailOverlay);
       }
       window.__worksCloseDetail = function (focusCard) { worksCloseDetail(focusCard, true); };
+      window.__worksOpenById = function (id) {
+        if (!id || !worksCards.length) return false;
+        var card = null;
+        worksCards.forEach(function (c) {
+          if (!card && c.getAttribute("data-works-id") === id) card = c;
+        });
+        if (!card) return false;
+        if (typeof window.__worksRevealAll === "function") window.__worksRevealAll();
+        worksOpenDetail(card);
+        return true;
+      };
 
       if (worksDetailOverlay && worksDetailShots && worksHoverCapable && !reduced) {
         worksDetailOverlay.addEventListener("mousemove", function (e) {
@@ -9582,6 +9868,189 @@
       }
       window.__projRevealVisible = projRevealVisible;
 
+      /* 健康系列：应用市场预览 · 3D 封面流（对齐 AI 技术展示） */
+      (function () {
+        var hfFlow = document.getElementById("healthFlow");
+        if (!hfFlow) return;
+        var hfCards = Array.prototype.slice.call(hfFlow.querySelectorAll(".health-flow-card"));
+        var hfPrev = document.getElementById("healthPrev");
+        var hfNext = document.getElementById("healthNext");
+        var hfCount = document.getElementById("healthCount");
+        var hfCaption = document.getElementById("healthCaption");
+        var hfCapTitle = document.getElementById("healthCapTitle");
+        var hfCapSub = document.getElementById("healthCapSub");
+        var hfCapHint = document.getElementById("healthCapHint");
+        var hfProgress = document.getElementById("healthProgress");
+        var hfPreview = document.getElementById("healthPreview");
+        var hfPreviewImg = document.getElementById("healthPreviewImg");
+        var hfPreviewClose = document.getElementById("healthPreviewClose");
+        var hfIndex = 0;
+        var hfSpread = true;
+        var hfWheelAt = 0;
+        var hfDrag = null;
+        var hfSuppressClick = false;
+        var HF_X = [0, 0.92, 1.62, 2.15];
+        var HF_S = [1.05, 0.84, 0.72, 0.62];
+
+        function hfPad(n) {
+          return ("0" + n).slice(-2);
+        }
+
+        function hfLayout() {
+          var w = hfCards[0] ? hfCards[0].offsetWidth : 400;
+          hfCards.forEach(function (card, i) {
+            var d = i - hfIndex;
+            var abs = Math.abs(d);
+            var sign = d < 0 ? -1 : 1;
+            var x = sign * w * (abs > 3 ? 2.6 : HF_X[Math.min(abs, 3)]);
+            var ry = d === 0 || reduced ? 0 : -sign * 28;
+            var s = HF_S[Math.min(abs, 3)];
+            var op = abs > 2 ? 0 : abs === 2 ? 0.55 : 1;
+            if (!hfSpread) {
+              x = 0;
+              ry = 0;
+              s = d === 0 ? 1 : 0.9;
+              op = d === 0 ? 1 : 0;
+            }
+            card.classList.toggle("is-center", d === 0);
+            card.style.zIndex = String(40 - abs);
+            card.style.opacity = String(op);
+            card.style.filter = d === 0 ? "none" : "brightness(" + (abs === 1 ? 0.72 : 0.5) + ")";
+            card.style.visibility = abs > 3 ? "hidden" : "visible";
+            card.tabIndex = d === 0 ? 0 : -1;
+            card.setAttribute("aria-hidden", abs > 2 ? "true" : "false");
+            card.style.transform = "translateX(-50%) translateX(" + x.toFixed(1) + "px) rotateY(" + ry + "deg) scale(" + s + ")";
+          });
+        }
+
+        function hfCaptionUpdate() {
+          var card = hfCards[hfIndex];
+          if (!card) return;
+          if (hfCapTitle) hfCapTitle.textContent = card.getAttribute("data-title") || "";
+          if (hfCapSub) hfCapSub.textContent = card.getAttribute("data-sub") || "";
+          if (hfCapHint) hfCapHint.textContent = "点击查看作品演示";
+          if (hfCount) hfCount.innerHTML = "<b>" + hfPad(hfIndex + 1) + "</b> / " + hfPad(hfCards.length);
+          if (hfProgress) {
+            hfProgress.style.setProperty("--hf-ratio", (1 / Math.max(hfCards.length, 1)).toFixed(4));
+            hfProgress.style.setProperty("--hf-pos", (hfIndex / Math.max(hfCards.length, 1)).toFixed(4));
+          }
+          if (hfPrev) hfPrev.disabled = hfIndex <= 0;
+          if (hfNext) hfNext.disabled = hfIndex >= hfCards.length - 1;
+          if (hfCaption && !reduced) {
+            hfCaption.classList.remove("is-swap");
+            void hfCaption.offsetWidth;
+            hfCaption.classList.add("is-swap");
+          }
+        }
+
+        function hfGo(n) {
+          n = Math.max(0, Math.min(hfCards.length - 1, n));
+          if (n === hfIndex) return;
+          hfIndex = n;
+          hfLayout();
+          hfCaptionUpdate();
+        }
+
+        function hfClosePreview() {
+          if (!hfPreview || !hfPreview.classList.contains("is-open")) return false;
+          hfPreview.classList.remove("is-open");
+          hfPreview.setAttribute("aria-hidden", "true");
+          if (track) track.style.overflowY = "";
+          return true;
+        }
+
+        function hfJumpWorks(card) {
+          var id = card.getAttribute("data-works-id");
+          if (!id) return;
+          hfClosePreview();
+          var local = document.querySelector('.works-card[data-works-id="' + id + '"]');
+          if (local && typeof scrollToIndex === "function") {
+            scrollToIndex(3);
+            window.setTimeout(function () {
+              if (typeof window.__worksOpenById === "function") window.__worksOpenById(id);
+            }, reduced ? 40 : 420);
+            return;
+          }
+          window.location.href = "works-all.html?open=" + encodeURIComponent(id);
+        }
+
+        hfCards.forEach(function (card, i) {
+          card.addEventListener("click", function () {
+            if (hfSuppressClick) return;
+            if (i === hfIndex) hfJumpWorks(card);
+            else hfGo(i);
+          });
+        });
+        if (hfPrev) hfPrev.addEventListener("click", function () { hfGo(hfIndex - 1); });
+        if (hfNext) hfNext.addEventListener("click", function () { hfGo(hfIndex + 1); });
+        if (hfPreviewClose) hfPreviewClose.addEventListener("click", hfClosePreview);
+        if (hfPreview) {
+          hfPreview.addEventListener("click", function (e) {
+            if (e.target === hfPreview) hfClosePreview();
+          });
+        }
+        document.addEventListener("keydown", function (e) {
+          if (e.key === "Escape") hfClosePreview();
+        });
+
+        window.__healthWheel = function (e) {
+          if (Math.abs(e.deltaX) <= Math.abs(e.deltaY) || Math.abs(e.deltaX) < 4) return false;
+          var now = Date.now();
+          if (now - hfWheelAt > 380) {
+            hfWheelAt = now;
+            hfGo(hfIndex + (e.deltaX > 0 ? 1 : -1));
+          }
+          return true;
+        };
+
+        hfFlow.addEventListener("pointerdown", function (e) {
+          if (e.button !== 0) return;
+          hfDrag = { x: e.clientX, moved: false, id: e.pointerId };
+        });
+        hfFlow.addEventListener("pointermove", function (e) {
+          if (!hfDrag) return;
+          var dx = e.clientX - hfDrag.x;
+          if (!hfDrag.moved && Math.abs(dx) > 8) {
+            hfDrag.moved = true;
+            hfFlow.classList.add("is-drag");
+            try { hfFlow.setPointerCapture(hfDrag.id); } catch (err) {}
+          }
+          if (hfDrag.moved && Math.abs(dx) > 70) {
+            hfSuppressClick = true;
+            hfGo(hfIndex + (dx < 0 ? 1 : -1));
+            hfDrag.x = e.clientX;
+          }
+        });
+        function hfEndDrag() {
+          if (!hfDrag) return;
+          hfFlow.classList.remove("is-drag");
+          if (hfDrag.moved) {
+            window.setTimeout(function () { hfSuppressClick = false; }, 40);
+          }
+          hfDrag = null;
+        }
+        hfFlow.addEventListener("pointerup", hfEndDrag);
+        hfFlow.addEventListener("pointercancel", hfEndDrag);
+
+        window.addEventListener("resize", hfLayout);
+
+        if (!reduced && "IntersectionObserver" in window) {
+          hfSpread = false;
+          var hfIo = new IntersectionObserver(function (entries) {
+            entries.forEach(function (entry) {
+              if (!entry.isIntersecting) return;
+              hfSpread = true;
+              hfLayout();
+              hfIo.unobserve(entry.target);
+            });
+          }, { root: track || null, threshold: 0.28 });
+          hfIo.observe(hfFlow);
+        }
+
+        hfLayout();
+        hfCaptionUpdate();
+      })();
+
       if (track && !reduced && "IntersectionObserver" in window) {
         if (projHub) projHub.classList.add("js-reveal");
         if (projStage) projStage.classList.add("js-reveal");
@@ -9788,7 +10257,7 @@
         });
       });
 
-      /* 闹钟系列：参考 AI 展示的底部横向切换 */
+      /* 闹钟系列：左右滑动切换场景（对齐健康 / AI 封面流交互） */
       var csRoot = document.getElementById("clockStory");
       if (csRoot) {
         var csNav = csRoot.querySelectorAll(".cs-nav-item");
@@ -9797,34 +10266,53 @@
         var csPrev = document.getElementById("csPrev");
         var csNext = document.getElementById("csNext");
         var csCur = 0;
-        var csLeaveTimer = 0;
         var csTotal = csScenes.length;
+        var csWheelAt = 0;
+        var csDrag = null;
         csRoot.style.setProperty("--cs-n", String(csTotal));
         var csSyncCtrl = function () {
           if (csPrev) csPrev.disabled = csCur <= 0;
           if (csNext) csNext.disabled = csCur >= csTotal - 1;
         };
-        var csGo = function (i, focus) {
-          if (i === csCur || i < 0 || i >= csTotal) return;
-          if (csStage) csStage.style.setProperty("--dx", i > csCur ? "36px" : "-36px");
-          var prev = csScenes[csCur];
-          csScenes.forEach(function (s) { s.classList.remove("is-leaving"); });
-          prev.classList.remove("is-active");
-          prev.classList.add("is-leaving");
-          clearTimeout(csLeaveTimer);
-          csLeaveTimer = setTimeout(function () { prev.classList.remove("is-leaving"); }, reduced ? 0 : 1100);
+        var csSyncUi = function (i) {
           csCur = i;
-          csScenes[i].classList.add("is-active");
+          csScenes.forEach(function (s, k) {
+            s.classList.toggle("is-active", k === i);
+            s.classList.remove("is-leaving");
+          });
           csNav.forEach(function (n, k) {
             var on = k === i;
             n.classList.toggle("is-active", on);
             n.setAttribute("aria-selected", on ? "true" : "false");
             n.tabIndex = on ? 0 : -1;
           });
-          csRoot.style.setProperty("--p", String(i / csTotal));
-          csRoot.style.setProperty("--cs-accent-cur", csNav[i].style.getPropertyValue("--cs-accent") || "#7aa2ff");
+          csRoot.style.setProperty("--p", String(csTotal ? i / csTotal : 0));
+          if (csNav[i]) {
+            csRoot.style.setProperty("--cs-accent-cur", csNav[i].style.getPropertyValue("--cs-accent") || "#7aa2ff");
+          }
           csSyncCtrl();
-          if (focus) csNav[i].focus({ preventScroll: true });
+        };
+        var csGo = function (i, focus) {
+          i = Math.max(0, Math.min(csTotal - 1, i));
+          if (!csStage || !csScenes[i]) return;
+          if (csStage) csStage.style.setProperty("--dx", i > csCur ? "36px" : "-36px");
+          csStage.scrollTo({
+            left: csScenes[i].offsetLeft,
+            behavior: reduced ? "auto" : "smooth"
+          });
+          csSyncUi(i);
+          if (focus && csNav[i]) csNav[i].focus({ preventScroll: true });
+        };
+        var csOnScroll = function () {
+          if (!csStage || !csScenes.length) return;
+          var left = csStage.scrollLeft;
+          var best = 0;
+          var bestDist = Infinity;
+          csScenes.forEach(function (scene, k) {
+            var dist = Math.abs(scene.offsetLeft - left);
+            if (dist < bestDist) { bestDist = dist; best = k; }
+          });
+          if (best !== csCur) csSyncUi(best);
         };
         csNav.forEach(function (n, k) {
           n.addEventListener("click", function () { csGo(k); });
@@ -9838,18 +10326,60 @@
         });
         if (csPrev) csPrev.addEventListener("click", function () { csGo(csCur - 1); });
         if (csNext) csNext.addEventListener("click", function () { csGo(csCur + 1); });
-        csSyncCtrl();
-        if (csStage && !reduced && window.matchMedia("(hover: hover)").matches) {
+        if (csStage) {
+          csStage.addEventListener("scroll", function () {
+            window.requestAnimationFrame(csOnScroll);
+          }, { passive: true });
+          csStage.addEventListener("pointerdown", function (e) {
+            if (e.button !== 0) return;
+            csDrag = { x: e.clientX, moved: false, id: e.pointerId, left: csStage.scrollLeft };
+          });
           csStage.addEventListener("pointermove", function (e) {
-            var r = csStage.getBoundingClientRect();
-            csStage.style.setProperty("--px", ((e.clientX - r.left) / r.width - 0.5).toFixed(3));
-            csStage.style.setProperty("--py", ((e.clientY - r.top) / r.height - 0.5).toFixed(3));
+            if (!csDrag) return;
+            var dx = e.clientX - csDrag.x;
+            if (!csDrag.moved && Math.abs(dx) > 6) {
+              csDrag.moved = true;
+              csStage.classList.add("is-drag");
+              try { csStage.setPointerCapture(csDrag.id); } catch (err) {}
+            }
+            if (csDrag.moved) csStage.scrollLeft = csDrag.left - dx;
           });
-          csStage.addEventListener("pointerleave", function () {
-            csStage.style.setProperty("--px", "0");
-            csStage.style.setProperty("--py", "0");
-          });
+          var csEndDrag = function () {
+            if (!csDrag) return;
+            csStage.classList.remove("is-drag");
+            if (csDrag.moved) {
+              var w = csStage.clientWidth || 1;
+              csGo(Math.round(csStage.scrollLeft / w));
+            }
+            csDrag = null;
+          };
+          csStage.addEventListener("pointerup", csEndDrag);
+          csStage.addEventListener("pointercancel", csEndDrag);
+          if (!reduced && window.matchMedia("(hover: hover)").matches) {
+            csStage.addEventListener("pointermove", function (e) {
+              if (csDrag && csDrag.moved) return;
+              var r = csStage.getBoundingClientRect();
+              csStage.style.setProperty("--px", ((e.clientX - r.left) / r.width - 0.5).toFixed(3));
+              csStage.style.setProperty("--py", ((e.clientY - r.top) / r.height - 0.5).toFixed(3));
+            });
+            csStage.addEventListener("pointerleave", function () {
+              csStage.style.setProperty("--px", "0");
+              csStage.style.setProperty("--py", "0");
+            });
+          }
         }
+        window.__csWheel = function (e) {
+          if (!csStage || !csTotal) return false;
+          if (Math.abs(e.deltaX) <= Math.abs(e.deltaY) || Math.abs(e.deltaX) < 4) return false;
+          var now = Date.now();
+          if (now - csWheelAt > 380) {
+            csWheelAt = now;
+            csGo(csCur + (e.deltaX > 0 ? 1 : -1));
+          }
+          return true;
+        };
+        csSyncUi(0);
+        window.addEventListener("resize", function () { csGo(csCur); });
       }
 
       /* AI Lab：横向 Coverflow */

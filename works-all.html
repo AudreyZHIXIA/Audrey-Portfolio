@@ -7442,6 +7442,21 @@
         worksLoadCovers();
       }
       window.__worksLoadCovers = worksLoadCovers;
+      window.__worksOpenById = function (id) {
+        if (!id || !worksCards.length) return false;
+        var card = null;
+        worksCards.forEach(function (c) {
+          if (!card && c.getAttribute("data-works-id") === id) card = c;
+        });
+        if (!card) return false;
+        if (card.classList.contains("is-filtered-out") && worksFilter) {
+          var healthBtn = worksFilter.querySelector('.works-filter-btn[data-filter="health"]');
+          if (healthBtn) healthBtn.click();
+        }
+        if (typeof window.__worksRevealAll === "function") window.__worksRevealAll();
+        worksOpenDetail(card);
+        return true;
+      };
 
       worksCards.forEach(function (card) {
         card.addEventListener("click", function () { worksOpenDetail(card); });
@@ -7528,6 +7543,17 @@
       if (worksDetailBackdrop) {
         worksDetailBackdrop.addEventListener("click", function () { worksCloseDetail(true); });
       }
+
+      (function worksDeepLink() {
+        try {
+          var q = new URLSearchParams(window.location.search);
+          var openId = q.get("open");
+          if (!openId) return;
+          window.setTimeout(function () {
+            if (typeof window.__worksOpenById === "function") window.__worksOpenById(openId);
+          }, 120);
+        } catch (err) {}
+      })();
 
       /* Projects：顶部卡片 + 下方竖排介绍 */
       var projPage = document.getElementById("projPage");
