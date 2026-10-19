@@ -3871,6 +3871,7 @@
     }
     .is-v1 .asc-ver-desc { color: rgba(255, 255, 255, 0.5); }
     .is-v2 .asc-ver-desc { color: rgba(255, 255, 255, 0.82); }
+    .asc-ver-desc b { color: #fff; font-weight: 700; }
     .asc-ver-kpis {
       display: flex;
       flex-wrap: wrap;
@@ -3960,7 +3961,12 @@
       color: rgba(255, 255, 255, 0.4);
       writing-mode: vertical-rl;
     }
+    .asc-ver-arrow em + em {
+      margin-top: 4px;
+      color: rgba(204, 255, 0, 0.55);
+    }
     .asc-ver-arrow svg { width: 22px; height: 22px; rotate: 180deg; }
+    .proj-head-result .asc-versions { margin-top: 18px; }
     @media (hover: hover) {
       .asc-ver:hover { translate: 0 -3px; }
     }
@@ -6856,7 +6862,7 @@
                   <span class="proj-ip-num">01</span>
                   <span class="proj-ip-title">APP 素材平台</span>
                   <span class="proj-ip-role">产品支持 · 独立规划</span>
-                  <span class="proj-ip-kpi">3h → 30min</span>
+                  <span class="proj-ip-kpi">2h → 30min</span>
                 </span>
               </button>
               <button type="button" class="proj-ip-card" role="listitem" data-proj-index="1" data-series="health" data-ip-src="assets/images/project04.png" aria-label="健康 App 系列">
@@ -6904,45 +6910,57 @@
                 </header>
                 <div class="proj-panel-body">
                   <div class="proj-head">
-                    <p class="asc-summary">让不懂设计的产品和开发，也能高效产出 APP 矩阵所需的<b>上架与商业化素材</b>。</p>
-                    <div class="asc-versions">
-                      <article class="asc-ver is-v2" aria-label="V2.0 原型阶段方案">
-                        <header class="asc-ver-head">
-                          <span class="asc-ver-no">V2.0</span>
-                          <span class="asc-ver-state">原型阶段</span>
-                          <span class="asc-ver-role">独立规划</span>
-                        </header>
-                        <p class="asc-ver-desc">重新梳理 9 个业务场景的素材任务与交付标准，完成 PRD 与原型。</p>
-                        <dl class="asc-ver-kpis">
-                          <div><dt>57 页</dt><dd>PRD 文档</dd></div>
-                          <div><dt>15 条</dt><dd>业务规则</dd></div>
-                          <div><dt>6 类</dt><dd>制作任务</dd></div>
-                        </dl>
-                        <div class="asc-ver-actions">
-                          <a class="asc-ver-btn is-primary" href="https://my.feishu.cn/wiki/QXvrwbZ58iVAWxkKvxKcxJvMncg?from=from_copylink" target="_blank" rel="noopener noreferrer">PRD 文档<i aria-hidden="true">↗</i></a>
-                          <a class="asc-ver-btn is-primary" href="https://www.figma.com/make/gnVIndcL7BiiTkhZWvoCao/APP%E7%B4%A0%E6%9D%90%E7%94%9F%E4%BA%A7%E5%B9%B3%E5%8F%B0%E5%8E%9F%E5%9E%8B%E8%A7%84%E5%88%92?t=mVGjN1HcnTnT7elE-1" target="_blank" rel="noopener noreferrer">Figma 原型<i aria-hidden="true">↗</i></a>
-                        </div>
-                      </article>
-                      <span class="asc-ver-arrow" aria-hidden="true"><em>复盘重构</em><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12h15M14 7l5 5-5 5" /></svg></span>
-                      <article class="asc-ver is-v1" aria-label="V1.0 已上线版本">
-                        <header class="asc-ver-head">
-                          <span class="asc-ver-no">V1.0</span>
-                          <span class="asc-ver-state">已上线</span>
-                          <span class="asc-ver-role">产品支持</span>
-                        </header>
-                        <p class="asc-ver-desc">统一素材生成、管理、导出流程，接入 AI 文案 / 图片生成。</p>
-                        <dl class="asc-ver-kpis">
-                          <div><dt>≈2 个月</dt><dd>上线投入使用</dd></div>
-                          <div><dt>3h → 30min</dt><dd>单套素材耗时</dd></div>
-                        </dl>
-                        <div class="asc-ver-actions">
-                          <button type="button" class="asc-ver-btn" data-lb-video="assets/projects/appSourceCreate/V1_show.mp4" data-lb-cap="V1.0 线上版本演示">
-                            <svg viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><path d="M5 3.5v9l7.5-4.5z" /></svg>观看 V1 演示
-                          </button>
-                          <a class="asc-ver-btn" href="https://www.figma.com/make/gnVIndcL7BiiTkhZWvoCao/APP%E7%B4%A0%E6%9D%90%E7%94%9F%E4%BA%A7%E5%B9%B3%E5%8F%B0%E5%8E%9F%E5%9E%8B%E8%A7%84%E5%88%92?t=biK7cHHRDIuVNSAl-1" target="_blank" rel="noopener noreferrer">Figma 原型<i aria-hidden="true">↗</i></a>
-                        </div>
-                      </article>
-                    </div>
+                    <section class="proj-bar-block">
+                      <h4>背景</h4>
+                      <p>App 矩阵需要大量重复的<b>上架与商业化素材</b>，产品与开发都要参与制作，却缺少统一平台，效率低、交付不稳定。</p>
+                    </section>
+                    <section class="proj-bar-block">
+                      <h4>行动</h4>
+                      <p><b>V1</b>：2026 年 3 月以产品支持梳理需求，约 <b>1 个月</b>推动上线并投入内用。</p>
+                      <p><b>V2</b>：上线后跟踪真实使用，围绕实际素材需求独立复盘；9 月业余时间用半个多月重构流程，完成完整 PRD 与原型，重点规划 <b>AI 图文智能生成</b>，以及 <b>批量编辑、复用、共享</b>。</p>
+                    </section>
+                    <section class="proj-bar-block proj-head-result">
+                      <h4>结果</h4>
+                      <p><b>V1</b> 验证统一平台可行，单套耗时约 <b>2 小时 → 30 分钟</b>。<b>V2</b> 贴合真实业务场景，嵌入 <b>AI 图文智能生成</b>，支持 <b>批量编辑、复用、共享</b>，从「能生产」推进到「可运营」。</p>
+                      <div class="asc-versions">
+                        <article class="asc-ver is-v2" aria-label="V2.0 原型阶段方案">
+                          <header class="asc-ver-head">
+                            <span class="asc-ver-no">V2.0</span>
+                            <span class="asc-ver-state">原型阶段</span>
+                            <span class="asc-ver-role">独立规划</span>
+                          </header>
+                          <p class="asc-ver-desc">按实际素材需求重构流程，嵌入 <b>AI 图文智能生成</b>，支持 <b>批量编辑、复用、共享</b>；完成完整 PRD 与原型。</p>
+                          <dl class="asc-ver-kpis">
+                            <div><dt>57 页</dt><dd>PRD 文档</dd></div>
+                            <div><dt>15 条</dt><dd>业务规则</dd></div>
+                            <div><dt>6 类</dt><dd>制作任务</dd></div>
+                          </dl>
+                          <div class="asc-ver-actions">
+                            <a class="asc-ver-btn is-primary" href="https://my.feishu.cn/wiki/QXvrwbZ58iVAWxkKvxKcxJvMncg?from=from_copylink" target="_blank" rel="noopener noreferrer">PRD 文档<i aria-hidden="true">↗</i></a>
+                            <a class="asc-ver-btn is-primary" href="https://www.figma.com/make/gnVIndcL7BiiTkhZWvoCao/APP%E7%B4%A0%E6%9D%90%E7%94%9F%E4%BA%A7%E5%B9%B3%E5%8F%B0%E5%8E%9F%E5%9E%8B%E8%A7%84%E5%88%92?t=mVGjN1HcnTnT7elE-1" target="_blank" rel="noopener noreferrer">Figma 原型<i aria-hidden="true">↗</i></a>
+                          </div>
+                        </article>
+                        <span class="asc-ver-arrow" aria-hidden="true"><em>复盘重构</em><em>从能用到好用</em><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12h15M14 7l5 5-5 5" /></svg></span>
+                        <article class="asc-ver is-v1" aria-label="V1.0 已上线版本">
+                          <header class="asc-ver-head">
+                            <span class="asc-ver-no">V1.0</span>
+                            <span class="asc-ver-state">已上线</span>
+                            <span class="asc-ver-role">产品支持</span>
+                          </header>
+                          <p class="asc-ver-desc">打通素材生成、管理与导出，接入基础 AI 能力；先解决「没有统一工具」的问题。</p>
+                          <dl class="asc-ver-kpis">
+                            <div><dt>≈1 个月</dt><dd>上线投入使用</dd></div>
+                            <div><dt>2h → 30min</dt><dd>单套素材耗时</dd></div>
+                          </dl>
+                          <div class="asc-ver-actions">
+                            <button type="button" class="asc-ver-btn" data-lb-video="assets/projects/appSourceCreate/V1_show.mp4" data-lb-cap="V1.0 线上版本演示">
+                              <svg viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><path d="M5 3.5v9l7.5-4.5z" /></svg>观看 V1 演示
+                            </button>
+                            <a class="asc-ver-btn" href="https://www.figma.com/make/gnVIndcL7BiiTkhZWvoCao/APP%E7%B4%A0%E6%9D%90%E7%94%9F%E4%BA%A7%E5%B9%B3%E5%8F%B0%E5%8E%9F%E5%9E%8B%E8%A7%84%E5%88%92?t=biK7cHHRDIuVNSAl-1" target="_blank" rel="noopener noreferrer">Figma 原型<i aria-hidden="true">↗</i></a>
+                          </div>
+                        </article>
+                      </div>
+                    </section>
                   </div>
 
                   <section class="asc-zone" aria-label="V2.0 方案详情">
