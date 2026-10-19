@@ -24,7 +24,7 @@
       --space: clamp(16px, 3vw, 40px);
       --page-gutter: clamp(48px, 14vw, 280px);
       --page-max: 1060px;
-      --nav-rail: 132px;
+      --nav-rail: 158px;
       --header-h: 28px;
       --ease: cubic-bezier(0.22, 1, 0.36, 1);
       --rhythm: clamp(32px, 5.5vh, 64px);
@@ -79,8 +79,8 @@
       width: var(--nav-rail);
       display: flex;
       align-items: center;
-      justify-content: center;
-      padding: 28px 14px;
+      justify-content: flex-start;
+      padding: 28px 8px 28px 10px;
       pointer-events: none;
       background:
         linear-gradient(90deg, rgba(10, 10, 11, 0.88) 0%, rgba(10, 10, 11, 0.42) 68%, transparent 100%);
@@ -96,8 +96,8 @@
       justify-content: center;
       gap: 4px;
       width: 100%;
-      max-width: 148px;
-      padding: 18px 12px;
+      max-width: 136px;
+      padding: 18px 10px 18px 10px;
       border-radius: 22px;
       background:
         linear-gradient(165deg, rgba(255, 255, 255, 0.055) 0%, rgba(255, 255, 255, 0.015) 100%);
@@ -362,41 +362,29 @@
       gap: 2px;
     }
     .site-nav .nav-sub {
-      display: grid;
-      grid-template-rows: 0fr;
-      opacity: 0;
-      margin: 0 0 0 26px;
-      padding-left: 8px;
+      display: block;
+      margin: 0 0 2px 18px;
+      padding: 2px 0 4px 8px;
       border-left: 1px solid rgba(204, 255, 0, 0.18);
-      transition: grid-template-rows 0.4s var(--ease), opacity 0.35s var(--ease), margin 0.35s var(--ease);
-      pointer-events: none;
-    }
-    .site-nav .nav-group.is-open .nav-sub {
-      grid-template-rows: 1fr;
-      opacity: 1;
-      margin-bottom: 4px;
       pointer-events: auto;
     }
     .site-nav .nav-sub-list {
-      min-height: 0;
-      overflow: hidden;
       display: flex;
       flex-direction: column;
       gap: 1px;
-      padding: 2px 0 4px;
     }
     .site-nav .nav-sub-link {
       appearance: none;
       display: block;
       width: 100%;
-      padding: 5px 4px;
+      padding: 4px 2px;
       border: 0;
       background: none;
       text-align: left;
       font-family: var(--font-ui);
-      font-size: 11px;
+      font-size: 10px;
       font-weight: 600;
-      letter-spacing: 0.02em;
+      letter-spacing: 0.01em;
       line-height: 1.35;
       color: rgba(255, 255, 255, 0.38);
       cursor: pointer;
@@ -7172,9 +7160,9 @@
         <a href="#cases" class="nav-link" data-index="2"><span class="nav-dot" aria-hidden="true"></span><span class="nav-meta"><span class="nav-no">03</span><span class="nav-label">项目</span></span></a>
         <div class="nav-sub" role="group" aria-label="项目小节">
           <div class="nav-sub-list">
-            <button type="button" class="nav-sub-link" data-proj-jump="0">APP素材平台</button>
-            <button type="button" class="nav-sub-link" data-proj-jump="1">健康产品系列</button>
-            <button type="button" class="nav-sub-link" data-proj-jump="2">闹钟产品系列</button>
+            <button type="button" class="nav-sub-link" data-proj-jump="0">APP素材</button>
+            <button type="button" class="nav-sub-link" data-proj-jump="1">健康产品</button>
+            <button type="button" class="nav-sub-link" data-proj-jump="2">闹钟产品</button>
           </div>
         </div>
       </div>
@@ -8410,16 +8398,26 @@
             <p class="sec-head-sub">感谢您抽出宝贵时间了解我，期待有机会加入贵公司，一起把产品做得更好。</p>
           </header>
           <div class="life-contact">
-            <a class="life-card" href="mailto:liumin_audrey@163.com">
+            <div class="life-card is-copyable" data-copy="邮箱：liumin_Audrey@163.com">
               <span class="life-card-kicker">Email · 邮箱</span>
-              <span class="life-card-value">liumin_audrey@163.com</span>
+              <span class="life-card-value">liumin_Audrey@163.com</span>
               <span class="life-card-go" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span>
-            </a>
-            <a class="life-card" href="tel:19114049215">
+              <button type="button" class="life-card-copy" aria-label="复制邮箱">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="9" width="11" height="11" rx="2"/><path d="M5 15V5a2 2 0 0 1 2-2h10"/></svg>
+                <span class="life-copy-idle">复制</span>
+                <span class="life-copy-done">已复制</span>
+              </button>
+            </div>
+            <div class="life-card is-copyable" data-copy="电话：19114049215（微信同号）">
               <span class="life-card-kicker">Phone · 电话</span>
-              <span class="life-card-value">19114049215</span>
+              <span class="life-card-value">19114049215（微信同号）</span>
               <span class="life-card-go" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span>
-            </a>
+              <button type="button" class="life-card-copy" aria-label="复制电话">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="9" width="11" height="11" rx="2"/><path d="M5 15V5a2 2 0 0 1 2-2h10"/></svg>
+                <span class="life-copy-idle">复制</span>
+                <span class="life-copy-done">已复制</span>
+              </button>
+            </div>
             <a class="life-card is-primary" href="assets/doc/resume.pdf">
               <span class="life-card-kicker">Resume · 简历</span>
               <span class="life-card-value">Download CV</span>
@@ -8481,10 +8479,6 @@
         });
         if (siteNav) {
           siteNav.style.setProperty("--nav-p", String(total > 1 ? index / (total - 1) : 0));
-          siteNav.querySelectorAll(".nav-group").forEach(function (group) {
-            var link = group.querySelector(".nav-link");
-            group.classList.toggle("is-open", link && Number(link.getAttribute("data-index")) === index);
-          });
         }
         if (progress) {
           progress.style.width = ((index + 1) / total * 100) + "%";
@@ -10908,6 +10902,45 @@
           e.preventDefault();
           projFeatStep(e.key === "ArrowRight" ? 1 : -1);
         }
+      });
+
+      /* 联系：悬浮复制邮箱 / 电话 */
+      document.querySelectorAll(".life-card.is-copyable").forEach(function (card) {
+        var btn = card.querySelector(".life-card-copy");
+        if (!btn) return;
+        var timer = null;
+        function copyText(text) {
+          if (navigator.clipboard && navigator.clipboard.writeText) {
+            return navigator.clipboard.writeText(text);
+          }
+          return new Promise(function (resolve, reject) {
+            var ta = document.createElement("textarea");
+            ta.value = text;
+            ta.setAttribute("readonly", "");
+            ta.style.cssText = "position:fixed;left:-9999px;top:0";
+            document.body.appendChild(ta);
+            ta.select();
+            try {
+              document.execCommand("copy");
+              resolve();
+            } catch (err) {
+              reject(err);
+            } finally {
+              document.body.removeChild(ta);
+            }
+          });
+        }
+        btn.addEventListener("click", function (e) {
+          e.preventDefault();
+          e.stopPropagation();
+          var text = card.getAttribute("data-copy") || "";
+          if (!text) return;
+          copyText(text).then(function () {
+            btn.classList.add("is-done");
+            clearTimeout(timer);
+            timer = setTimeout(function () { btn.classList.remove("is-done"); }, 1600);
+          }).catch(function () {});
+        });
       });
     })();
   </script>

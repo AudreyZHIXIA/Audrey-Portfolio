@@ -18,18 +18,20 @@
       --font-serif: "Noto Serif SC", "Songti SC", serif;
       --font-display: "Space Grotesk", "DM Sans", sans-serif;
       --ease: cubic-bezier(0.22, 1, 0.36, 1);
-      --page: min(920px, calc(100% - clamp(40px, 10vw, 120px)));
-      --figma: "https://www.figma.com/board/KRwPyy7vZ7BkLszaCXqaP5/%E3%80%8A%E8%96%84%E8%8D%B7%E5%81%A5%E5%BA%B7%E3%80%8B%E6%B5%B7%E5%A4%96%E4%BA%A7%E5%93%81%E7%AD%96%E7%95%A5%E4%B8%8E%E5%A2%9E%E9%95%BF%E5%AE%9E%E6%88%98?t=eobkbwidUytaxPKy-1";
+      --page: min(1080px, calc(100% - clamp(32px, 5vw, 72px)));
     }
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     html { scroll-behavior: smooth; }
     body {
       min-height: 100dvh;
       font-family: var(--font-ui);
-      font-size: 15px;
-      line-height: 1.65;
+      font-size: 14px;
+      line-height: 1.6;
       color: var(--text);
-      background: var(--bg);
+      background:
+        radial-gradient(ellipse 70% 50% at 78% 42%, rgba(204, 255, 0, 0.045), transparent 55%),
+        radial-gradient(ellipse 50% 40% at 12% 80%, rgba(255, 255, 255, 0.03), transparent 50%),
+        var(--bg);
       -webkit-font-smoothing: antialiased;
     }
     body.is-lb-open { overflow: hidden; }
@@ -38,32 +40,40 @@
       outline-offset: 3px;
     }
     a { color: inherit; }
+
+    /* —— 一屏布局 —— */
     .wrap {
       width: var(--page);
       margin: 0 auto;
-      padding: clamp(28px, 5vh, 48px) 0 clamp(64px, 10vh, 120px);
+      height: 100dvh;
+      display: flex;
+      flex-direction: column;
+      padding: clamp(14px, 2.2vh, 22px) 0 clamp(12px, 1.8vh, 18px);
+      overflow: hidden;
     }
+
     .top {
+      flex-shrink: 0;
       display: flex;
       flex-wrap: wrap;
       align-items: center;
       justify-content: space-between;
-      gap: 14px 20px;
-      margin-bottom: clamp(36px, 6vh, 56px);
+      gap: 10px 16px;
+      margin-bottom: clamp(10px, 1.8vh, 16px);
     }
     .top-actions {
       display: flex;
       flex-wrap: wrap;
       align-items: center;
       justify-content: flex-end;
-      gap: 12px 16px;
+      gap: 10px 14px;
     }
     .back {
       display: inline-flex;
       align-items: center;
       gap: 8px;
       text-decoration: none;
-      font-size: 13px;
+      font-size: 12px;
       font-weight: 700;
       letter-spacing: 0.04em;
       color: rgba(255, 255, 255, 0.62);
@@ -72,7 +82,7 @@
     .back:hover { color: #fff; }
     .back i { font-style: normal; color: var(--lime); }
     .note {
-      font-size: 11px;
+      font-size: 10px;
       font-weight: 700;
       letter-spacing: 0.12em;
       text-transform: uppercase;
@@ -81,11 +91,11 @@
     .top-cta {
       display: inline-flex;
       align-items: center;
-      gap: 8px;
-      padding: 10px 16px;
+      gap: 7px;
+      padding: 8px 14px;
       border-radius: 999px;
       text-decoration: none;
-      font-size: 13px;
+      font-size: 12px;
       font-weight: 700;
       letter-spacing: 0.04em;
       color: #0a0a0b;
@@ -94,12 +104,28 @@
     }
     .top-cta:hover { background: #d8ff3d; translate: 0 -1px; }
     .top-cta i { font-style: normal; }
+
+    /* —— Hero：文案 + 手机 —— */
+    .hero {
+      flex: 1;
+      min-height: 0;
+      display: grid;
+      grid-template-columns: minmax(0, 1.2fr) minmax(200px, 0.72fr);
+      gap: clamp(20px, 3.5vw, 40px);
+      align-items: center;
+    }
+    .hero-copy {
+      min-width: 0;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
     .hero-kicker {
       display: inline-flex;
       align-items: center;
       gap: 10px;
-      margin-bottom: 16px;
-      font-size: 11px;
+      margin-bottom: clamp(8px, 1.2vh, 12px);
+      font-size: 10px;
       font-weight: 700;
       letter-spacing: 0.16em;
       text-transform: uppercase;
@@ -112,60 +138,176 @@
       letter-spacing: 0.1em;
     }
     h1 {
-      max-width: 16em;
+      max-width: 12em;
       font-family: var(--font-serif);
-      font-size: clamp(28px, 4.6vw, 44px);
+      font-size: clamp(24px, 3.4vw, 36px);
       font-weight: 600;
-      line-height: 1.25;
+      line-height: 1.22;
       letter-spacing: 0.01em;
     }
     .lead {
-      max-width: 40em;
-      margin-top: 18px;
-      font-size: 15px;
-      line-height: 1.75;
+      max-width: 36em;
+      margin-top: clamp(10px, 1.5vh, 14px);
+      font-size: clamp(13px, 1.35vw, 14px);
+      line-height: 1.7;
       color: var(--muted);
     }
     .lead b { color: #fff; font-weight: 700; }
     .disclaimer {
-      max-width: 42em;
-      margin-top: 16px;
-      padding: 12px 14px;
-      border-radius: 12px;
-      font-size: 12px;
-      line-height: 1.6;
-      color: rgba(255, 255, 255, 0.55);
+      max-width: 36em;
+      margin-top: clamp(10px, 1.4vh, 12px);
+      padding: 9px 12px;
+      border-radius: 10px;
+      font-size: 11px;
+      line-height: 1.55;
+      color: rgba(255, 255, 255, 0.52);
       background: rgba(255, 255, 255, 0.03);
       box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.08);
     }
+    .apk-row {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 10px 14px;
+      margin-top: clamp(14px, 2vh, 18px);
+    }
+    .apk-row p {
+      flex: 1 1 180px;
+      font-size: 12px;
+      line-height: 1.55;
+      color: var(--muted);
+    }
+    .apk-row p b { color: #fff; font-weight: 700; }
+    .apk-dl {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 7px;
+      flex-shrink: 0;
+      padding: 9px 15px;
+      border-radius: 999px;
+      text-decoration: none;
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 0.04em;
+      color: #0a0a0b;
+      background: var(--lime);
+      transition: background 0.28s var(--ease), translate 0.28s var(--ease);
+    }
+    .apk-dl:hover { background: #d8ff3d; translate: 0 -1px; }
+    .apk-dl i { font-style: normal; }
+
+    /* —— 手机框 —— */
+    .hero-media {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      min-width: 0;
+      min-height: 0;
+      height: 100%;
+      animation: phoneIn 0.7s var(--ease) both;
+    }
+    @keyframes phoneIn {
+      from { opacity: 0; transform: translateY(16px) scale(0.97); }
+      to { opacity: 1; transform: none; }
+    }
+    .phone {
+      --phone-r: 28px;
+      position: relative;
+      height: min(100%, 58vh);
+      aspect-ratio: 9 / 19.4;
+      max-width: 100%;
+      padding: 7px;
+      border-radius: var(--phone-r);
+      background: linear-gradient(160deg, #2a2a2e 0%, #0e0e10 45%, #1a1a1d 100%);
+      box-shadow:
+        0 0 0 1px rgba(255, 255, 255, 0.12),
+        inset 0 1px 0 rgba(255, 255, 255, 0.14),
+        0 28px 56px rgba(0, 0, 0, 0.55),
+        0 0 48px rgba(204, 255, 0, 0.04);
+    }
+    .phone::before {
+      content: "";
+      position: absolute;
+      top: 11px;
+      left: 50%;
+      z-index: 3;
+      width: 28%;
+      height: 11px;
+      border-radius: 999px;
+      background: #050506;
+      transform: translateX(-50%);
+      box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.06);
+      pointer-events: none;
+    }
+    .phone-screen {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      border-radius: calc(var(--phone-r) - 6px);
+      overflow: hidden;
+      background: #0a0a0b;
+    }
+    .phone-screen video {
+      display: block;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      background: #0a0a0b;
+    }
+    .phone-caption {
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.06em;
+      color: rgba(255, 255, 255, 0.4);
+      text-align: center;
+    }
+
+    /* —— 研究路径 —— */
     .section {
-      margin-top: clamp(40px, 7vh, 64px);
-      padding-top: clamp(28px, 4vh, 36px);
+      flex-shrink: 0;
+      margin-top: clamp(12px, 2vh, 18px);
+      padding-top: clamp(12px, 1.8vh, 16px);
       border-top: 1px dashed rgba(255, 255, 255, 0.1);
+    }
+    .section-head {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: baseline;
+      justify-content: space-between;
+      gap: 8px 16px;
+      margin-bottom: clamp(10px, 1.4vh, 12px);
     }
     .section h2 {
       display: flex;
       align-items: center;
       gap: 8px;
-      margin-bottom: 18px;
-      font-size: 12px;
+      font-size: 11px;
       font-weight: 700;
       letter-spacing: 0.14em;
       color: rgba(255, 255, 255, 0.55);
     }
     .section h2::before {
       content: "";
-      width: 6px;
-      height: 6px;
+      width: 5px;
+      height: 5px;
       border-radius: 1px;
       background: var(--lime);
       transform: rotate(45deg);
     }
+    .doc-note {
+      font-size: 12px;
+      line-height: 1.5;
+      color: var(--muted);
+    }
+    .doc-note b { color: #fff; }
     .steps {
       list-style: none;
       display: grid;
       grid-template-columns: repeat(4, minmax(0, 1fr));
-      gap: 14px;
+      gap: 10px;
     }
     .step-card {
       appearance: none;
@@ -173,9 +315,10 @@
       flex-direction: column;
       align-items: flex-start;
       width: 100%;
-      padding: 18px 16px;
+      min-height: 100%;
+      padding: 12px 12px 11px;
       border: 0;
-      border-radius: 16px;
+      border-radius: 12px;
       background: rgba(255, 255, 255, 0.025);
       box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.08);
       text-align: left;
@@ -187,7 +330,7 @@
     .step-card:hover {
       background: rgba(204, 255, 0, 0.05);
       box-shadow: inset 0 0 0 1px rgba(204, 255, 0, 0.35);
-      transform: translateY(-3px);
+      transform: translateY(-2px);
     }
     .step-card.is-active {
       background: rgba(204, 255, 0, 0.08);
@@ -200,48 +343,45 @@
     .step-card .step-no {
       display: block;
       font-family: var(--font-display);
-      font-size: 12px;
+      font-size: 11px;
       font-weight: 700;
       letter-spacing: 0.08em;
       color: var(--lime);
-      margin-bottom: 10px;
+      margin-bottom: 6px;
     }
     .step-card strong {
       display: block;
-      font-size: 15px;
+      font-size: 13px;
       font-weight: 700;
       color: #fff;
-      margin-bottom: 8px;
+      margin-bottom: 4px;
     }
     .step-card p {
-      font-size: 13px;
-      line-height: 1.65;
+      font-size: 12px;
+      line-height: 1.5;
       color: var(--muted);
-      margin-bottom: 14px;
+      margin-bottom: 8px;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
     }
     .step-card .step-go {
       margin-top: auto;
       display: inline-flex;
       align-items: center;
-      gap: 6px;
-      font-size: 11px;
+      gap: 5px;
+      font-size: 10px;
       font-weight: 700;
       letter-spacing: 0.06em;
       color: rgba(204, 255, 0, 0.72);
     }
     .step-card .step-go i { font-style: normal; transition: translate 0.28s var(--ease); }
     .step-card:hover .step-go i { translate: 2px -2px; }
-    .doc-note {
-      max-width: 42em;
-      font-size: 14px;
-      line-height: 1.7;
-      color: var(--muted);
-    }
-    .doc-note b { color: #fff; }
     .foot {
-      margin-top: 36px;
-      font-size: 12px;
-      color: rgba(255, 255, 255, 0.38);
+      margin-top: 8px;
+      font-size: 11px;
+      color: rgba(255, 255, 255, 0.32);
     }
 
     /* —— 研究图灯箱 —— */
@@ -383,21 +523,46 @@
     }
     .study-lb-hint b { color: var(--lime); font-weight: 700; }
 
+    @media (max-width: 900px) {
+      .wrap {
+        height: auto;
+        min-height: 100dvh;
+        overflow: visible;
+        padding-bottom: 28px;
+      }
+      .hero {
+        grid-template-columns: 1fr;
+        gap: 22px;
+      }
+      .hero-media { height: auto; }
+      .phone {
+        height: auto;
+        width: min(220px, 52vw);
+      }
+    }
     @media (max-width: 800px) {
       .steps { grid-template-columns: repeat(2, minmax(0, 1fr)); }
     }
     @media (max-width: 520px) {
       .steps { grid-template-columns: 1fr; }
       .top-actions { width: 100%; justify-content: space-between; }
+      .apk-row { flex-direction: column; align-items: flex-start; }
       .study-lb { padding: 12px; }
       .study-lb-panel { width: 100%; max-height: calc(100dvh - 24px); border-radius: 16px; }
       .study-lb-head { padding: 14px; }
       .study-lb-body { padding: 12px; }
+      .phone { --phone-r: 22px; width: min(200px, 58vw); }
+    }
+    @media (max-height: 780px) and (min-width: 901px) {
+      .phone { height: min(100%, 52vh); }
+      .step-card p { -webkit-line-clamp: 1; }
+      h1 { font-size: clamp(22px, 2.8vw, 30px); }
     }
     @media (prefers-reduced-motion: reduce) {
+      .hero-media,
       .step-card,
       .study-lb,
-      .study-lb-panel { transition: none; }
+      .study-lb-panel { animation: none; transition: none; }
     }
   </style>
 </head>
@@ -411,15 +576,40 @@
       </div>
     </div>
 
-    <header>
-      <p class="hero-kicker"><span>自主研究</span><em>Independent Study</em></p>
-      <h1>海外市场调研与功能优化</h1>
-      <p class="lead">从 2023 年起间歇使用至今，也曾在工作中将其作为重点竞品。结合海外工具类产品调研经验，以产品经理与长期用户的双重视角，完成从 <b>市场调研</b> 到 <b>用户评论分析</b> 的完整研究。</p>
-      <p class="disclaimer">个人自主研究，不属于公司正式工作，也不是《薄荷健康》官方项目。</p>
+    <header class="hero">
+      <div class="hero-copy">
+        <p class="hero-kicker"><span>自主研究</span><em>Independent Study</em></p>
+        <h1>海外市场调研与功能优化</h1>
+        <p class="lead">从 2023 年起间歇使用至今，也曾在工作中将其作为重点竞品。结合海外工具类产品调研经验，以产品经理与长期用户的双重视角，完成从 <b>市场调研</b> 到 <b>用户评论分析</b> 的完整研究。</p>
+        <p class="disclaimer">个人自主研究，不属于公司正式工作，也不是《薄荷健康》官方项目。</p>
+        <div class="apk-row">
+          <p>这是我的<strong>页面微调</strong>安卓包，可下载安装查看实际效果。</p>
+          <a class="apk-dl" href="assets/projects/fitnessSeries/app-debug.apk" download="app-debug.apk">下载 APK 安装包 <i aria-hidden="true">↓</i></a>
+        </div>
+      </div>
+      <aside class="hero-media" aria-label="页面微调演示">
+        <div class="phone">
+          <div class="phone-screen">
+            <video
+              src="assets/projects/fitnessSeries/界面微调视频演示.mp4"
+              muted
+              autoplay
+              loop
+              playsinline
+              preload="metadata"
+              controlslist="nodownload"
+            ></video>
+          </div>
+        </div>
+        <p class="phone-caption">页面微调 · 真机录屏</p>
+      </aside>
     </header>
 
     <section class="section" aria-label="研究路径">
-      <h2>研究路径</h2>
+      <div class="section-head">
+        <h2>研究路径</h2>
+        <p class="doc-note">点击卡片预览分析长图，或打开完整 <b>Figma</b> 研究报告。</p>
+      </div>
       <ol class="steps" id="studySteps">
         <li>
           <button type="button" class="step-card" data-step="0" aria-label="查看市场调研报告图">
@@ -454,11 +644,6 @@
           </button>
         </li>
       </ol>
-    </section>
-
-    <section class="section" aria-label="研究文档">
-      <h2>研究文档</h2>
-      <p class="doc-note">点击上方四步卡片可预览对应分析长图；点击预览图或右上角按钮，可跳转完整 <b>Figma</b> 研究报告。</p>
       <p class="foot">Cursor 页面与交互优化实践将在后续补充。</p>
     </section>
   </main>
@@ -487,6 +672,25 @@
 
   <script>
     (function () {
+      var demoVideo = document.querySelector(".phone-screen video");
+      if (demoVideo) {
+        demoVideo.muted = true;
+        var tryPlay = function () {
+          var p = demoVideo.play();
+          if (p && p.catch) p.catch(function () {});
+        };
+        tryPlay();
+        if ("IntersectionObserver" in window) {
+          var vio = new IntersectionObserver(function (entries) {
+            entries.forEach(function (en) {
+              if (en.isIntersecting) tryPlay();
+              else demoVideo.pause();
+            });
+          }, { threshold: 0.25 });
+          vio.observe(demoVideo);
+        }
+      }
+
       var FIGMA = document.getElementById("figmaTop").href;
       var steps = [
         {
