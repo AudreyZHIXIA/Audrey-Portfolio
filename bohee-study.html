@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta name="description" content="《薄荷健康》海外产品策略与增长实战 — 刘敏个人自主研究" />
-  <title>《薄荷健康》自主研究 · 刘敏</title>
+  <meta name="description" content="海外市场调研与功能优化 — 刘敏个人自主研究" />
+  <title>海外市场调研与功能优化 · 刘敏</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600;9..40,700&family=Noto+Serif+SC:wght@500;600;900&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet" />
@@ -19,6 +19,7 @@
       --font-display: "Space Grotesk", "DM Sans", sans-serif;
       --ease: cubic-bezier(0.22, 1, 0.36, 1);
       --page: min(920px, calc(100% - clamp(40px, 10vw, 120px)));
+      --figma: "https://www.figma.com/board/KRwPyy7vZ7BkLszaCXqaP5/%E3%80%8A%E8%96%84%E8%8D%B7%E5%81%A5%E5%BA%B7%E3%80%8B%E6%B5%B7%E5%A4%96%E4%BA%A7%E5%93%81%E7%AD%96%E7%95%A5%E4%B8%8E%E5%A2%9E%E9%95%BF%E5%AE%9E%E6%88%98?t=eobkbwidUytaxPKy-1";
     }
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     html { scroll-behavior: smooth; }
@@ -31,6 +32,7 @@
       background: var(--bg);
       -webkit-font-smoothing: antialiased;
     }
+    body.is-lb-open { overflow: hidden; }
     :focus-visible {
       outline: 2px solid var(--lime);
       outline-offset: 3px;
@@ -48,6 +50,13 @@
       justify-content: space-between;
       gap: 14px 20px;
       margin-bottom: clamp(36px, 6vh, 56px);
+    }
+    .top-actions {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: flex-end;
+      gap: 12px 16px;
     }
     .back {
       display: inline-flex;
@@ -69,6 +78,22 @@
       text-transform: uppercase;
       color: rgba(255, 255, 255, 0.38);
     }
+    .top-cta {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 10px 16px;
+      border-radius: 999px;
+      text-decoration: none;
+      font-size: 13px;
+      font-weight: 700;
+      letter-spacing: 0.04em;
+      color: #0a0a0b;
+      background: var(--lime);
+      transition: background 0.28s var(--ease), translate 0.28s var(--ease);
+    }
+    .top-cta:hover { background: #d8ff3d; translate: 0 -1px; }
+    .top-cta i { font-style: normal; }
     .hero-kicker {
       display: inline-flex;
       align-items: center;
@@ -142,13 +167,37 @@
       grid-template-columns: repeat(4, minmax(0, 1fr));
       gap: 14px;
     }
-    .steps li {
+    .step-card {
+      appearance: none;
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      width: 100%;
       padding: 18px 16px;
+      border: 0;
       border-radius: 16px;
       background: rgba(255, 255, 255, 0.025);
       box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.08);
+      text-align: left;
+      font-family: inherit;
+      color: inherit;
+      cursor: pointer;
+      transition: background 0.3s var(--ease), box-shadow 0.3s var(--ease), transform 0.3s var(--ease);
     }
-    .steps span {
+    .step-card:hover {
+      background: rgba(204, 255, 0, 0.05);
+      box-shadow: inset 0 0 0 1px rgba(204, 255, 0, 0.35);
+      transform: translateY(-3px);
+    }
+    .step-card.is-active {
+      background: rgba(204, 255, 0, 0.08);
+      box-shadow: inset 0 0 0 1px rgba(204, 255, 0, 0.55);
+    }
+    .step-card:focus-visible {
+      outline: 2px solid rgba(204, 255, 0, 0.55);
+      outline-offset: 3px;
+    }
+    .step-card .step-no {
       display: block;
       font-family: var(--font-display);
       font-size: 12px;
@@ -157,114 +206,379 @@
       color: var(--lime);
       margin-bottom: 10px;
     }
-    .steps strong {
+    .step-card strong {
       display: block;
       font-size: 15px;
       font-weight: 700;
       color: #fff;
       margin-bottom: 8px;
     }
-    .steps p {
+    .step-card p {
       font-size: 13px;
       line-height: 1.65;
       color: var(--muted);
+      margin-bottom: 14px;
     }
-    .cta-block {
-      display: flex;
-      flex-wrap: wrap;
+    .step-card .step-go {
+      margin-top: auto;
+      display: inline-flex;
       align-items: center;
-      justify-content: space-between;
-      gap: 18px 24px;
-      padding: 22px 24px;
-      border-radius: 18px;
-      background: rgba(204, 255, 0, 0.04);
-      box-shadow: inset 0 0 0 1px rgba(204, 255, 0, 0.28);
+      gap: 6px;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.06em;
+      color: rgba(204, 255, 0, 0.72);
     }
-    .cta-block p {
-      max-width: 34em;
+    .step-card .step-go i { font-style: normal; transition: translate 0.28s var(--ease); }
+    .step-card:hover .step-go i { translate: 2px -2px; }
+    .doc-note {
+      max-width: 42em;
       font-size: 14px;
       line-height: 1.7;
       color: var(--muted);
     }
-    .cta-block p b { color: #fff; }
-    .cta {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      padding: 12px 18px;
-      border-radius: 999px;
-      text-decoration: none;
-      font-size: 13px;
-      font-weight: 700;
-      letter-spacing: 0.04em;
-      color: #0a0a0b;
-      background: var(--lime);
-      transition: background 0.28s var(--ease), translate 0.28s var(--ease);
-    }
-    .cta:hover { background: #d8ff3d; translate: 0 -1px; }
-    .cta i { font-style: normal; }
+    .doc-note b { color: #fff; }
     .foot {
       margin-top: 36px;
       font-size: 12px;
       color: rgba(255, 255, 255, 0.38);
     }
+
+    /* —— 研究图灯箱 —— */
+    .study-lb {
+      position: fixed;
+      inset: 0;
+      z-index: 1000;
+      display: grid;
+      place-items: center;
+      padding: 24px;
+      opacity: 0;
+      visibility: hidden;
+      pointer-events: none;
+      transition: opacity 0.35s var(--ease), visibility 0.35s;
+    }
+    .study-lb.is-open {
+      opacity: 1;
+      visibility: visible;
+      pointer-events: auto;
+    }
+    .study-lb-backdrop {
+      position: absolute;
+      inset: 0;
+      background: rgba(4, 4, 6, 0.86);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+    }
+    .study-lb-panel {
+      position: relative;
+      z-index: 1;
+      display: flex;
+      flex-direction: column;
+      width: min(1080px, calc(100vw - 48px));
+      max-height: calc(100dvh - 48px);
+      border-radius: 22px;
+      background: #121214;
+      box-shadow:
+        inset 0 0 0 1px rgba(255, 255, 255, 0.08),
+        0 40px 80px rgba(0, 0, 0, 0.55);
+      overflow: hidden;
+      scale: 0.96;
+      transition: scale 0.4s var(--ease);
+    }
+    .study-lb.is-open .study-lb-panel { scale: 1; }
+    .study-lb-head {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px 16px;
+      padding: 16px 18px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    }
+    .study-lb-meta {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      min-width: 0;
+    }
+    .study-lb-kicker {
+      font-family: var(--font-display);
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      color: var(--lime);
+    }
+    .study-lb-title {
+      font-size: 16px;
+      font-weight: 700;
+      color: #fff;
+    }
+    .study-lb-actions {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 8px;
+    }
+    .study-lb-figma {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 9px 14px;
+      border-radius: 999px;
+      text-decoration: none;
+      font-size: 12px;
+      font-weight: 700;
+      color: #0a0a0b;
+      background: var(--lime);
+      transition: background 0.25s ease, translate 0.25s var(--ease);
+    }
+    .study-lb-figma:hover { background: #d8ff3d; translate: 0 -1px; }
+    .study-lb-figma i { font-style: normal; }
+    .study-lb-nav,
+    .study-lb-close {
+      appearance: none;
+      display: grid;
+      place-items: center;
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      border: 1px solid rgba(255, 255, 255, 0.14);
+      background: rgba(255, 255, 255, 0.05);
+      color: #fff;
+      cursor: pointer;
+      transition: background 0.25s ease, border-color 0.25s ease;
+    }
+    .study-lb-nav:hover,
+    .study-lb-close:hover {
+      background: rgba(204, 255, 0, 0.12);
+      border-color: rgba(204, 255, 0, 0.4);
+    }
+    .study-lb-nav svg,
+    .study-lb-close svg { width: 16px; height: 16px; stroke: currentColor; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+    .study-lb-body {
+      position: relative;
+      flex: 1;
+      min-height: 0;
+      overflow: auto;
+      padding: 18px;
+      background:
+        radial-gradient(ellipse at 50% 0%, rgba(204, 255, 0, 0.04), transparent 55%),
+        #0c0c0e;
+    }
+    .study-lb-shot {
+      display: block;
+      width: 100%;
+      margin: 0 auto;
+      border-radius: 12px;
+      cursor: zoom-in;
+      box-shadow: 0 20px 48px rgba(0, 0, 0, 0.45);
+      transition: opacity 0.25s ease;
+    }
+    .study-lb-shot.is-loading { opacity: 0.35; }
+    .study-lb-hint {
+      margin-top: 12px;
+      text-align: center;
+      font-size: 12px;
+      color: rgba(255, 255, 255, 0.42);
+    }
+    .study-lb-hint b { color: var(--lime); font-weight: 700; }
+
     @media (max-width: 800px) {
       .steps { grid-template-columns: repeat(2, minmax(0, 1fr)); }
     }
     @media (max-width: 520px) {
       .steps { grid-template-columns: 1fr; }
-      .cta-block { padding: 18px; }
+      .top-actions { width: 100%; justify-content: space-between; }
+      .study-lb { padding: 12px; }
+      .study-lb-panel { width: 100%; max-height: calc(100dvh - 24px); border-radius: 16px; }
+      .study-lb-head { padding: 14px; }
+      .study-lb-body { padding: 12px; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .step-card,
+      .study-lb,
+      .study-lb-panel { transition: none; }
     }
   </style>
 </head>
 <body>
   <main class="wrap">
     <div class="top">
-      <a class="back" href="index.html#cases"><i aria-hidden="true">←</i>返回健康管理产品系列</a>
-      <p class="note">Personal Extension · Not Official</p>
+      <a class="back" href="index.html#cases"><i aria-hidden="true">←</i>返回健康产品系列</a>
+      <div class="top-actions">
+        <p class="note">Personal Extension · Not Official</p>
+        <a class="top-cta" id="figmaTop" href="https://www.figma.com/board/KRwPyy7vZ7BkLszaCXqaP5/%E3%80%8A%E8%96%84%E8%8D%B7%E5%81%A5%E5%BA%B7%E3%80%8B%E6%B5%B7%E5%A4%96%E4%BA%A7%E5%93%81%E7%AD%96%E7%95%A5%E4%B8%8E%E5%A2%9E%E9%95%BF%E5%AE%9E%E6%88%98?t=eobkbwidUytaxPKy-1" target="_blank" rel="noopener noreferrer">打开 Figma 研究报告 <i aria-hidden="true">↗</i></a>
+      </div>
     </div>
 
     <header>
       <p class="hero-kicker"><span>自主研究</span><em>Independent Study</em></p>
-      <h1>《薄荷健康》海外产品策略与增长实战</h1>
+      <h1>海外市场调研与功能优化</h1>
       <p class="lead">从 2023 年起间歇使用至今，也曾在工作中将其作为重点竞品。结合海外工具类产品调研经验，以产品经理与长期用户的双重视角，完成从 <b>市场调研</b> 到 <b>用户评论分析</b> 的完整研究。</p>
       <p class="disclaimer">个人自主研究，不属于公司正式工作，也不是《薄荷健康》官方项目。</p>
     </header>
 
     <section class="section" aria-label="研究路径">
       <h2>研究路径</h2>
-      <ol class="steps">
+      <ol class="steps" id="studySteps">
         <li>
-          <span>01</span>
-          <strong>市场调研</strong>
-          <p>梳理海外健康管理赛道结构、增长机会与切入方向。</p>
+          <button type="button" class="step-card" data-step="0" aria-label="查看市场调研报告图">
+            <span class="step-no">01</span>
+            <strong>市场调研</strong>
+            <p>梳理海外健康管理赛道结构、增长机会与切入方向。</p>
+            <span class="step-go">查看报告图 <i aria-hidden="true">↗</i></span>
+          </button>
         </li>
         <li>
-          <span>02</span>
-          <strong>竞品池筛选</strong>
-          <p>从候选产品中圈定高价值竞品，建立可追踪的研究清单。</p>
+          <button type="button" class="step-card" data-step="1" aria-label="查看竞品池筛选报告图">
+            <span class="step-no">02</span>
+            <strong>竞品池筛选</strong>
+            <p>从候选产品中圈定高价值竞品，建立可追踪的研究清单。</p>
+            <span class="step-go">查看报告图 <i aria-hidden="true">↗</i></span>
+          </button>
         </li>
         <li>
-          <span>03</span>
-          <strong>竞品拆解</strong>
-          <p>拆解核心路径、功能结构与商业化设计，沉淀结构化洞察。</p>
+          <button type="button" class="step-card" data-step="2" aria-label="查看竞品拆解报告图">
+            <span class="step-no">03</span>
+            <strong>竞品拆解</strong>
+            <p>拆解核心路径、功能结构与商业化设计，沉淀结构化洞察。</p>
+            <span class="step-go">查看报告图 <i aria-hidden="true">↗</i></span>
+          </button>
         </li>
         <li>
-          <span>04</span>
-          <strong>用户评论分析</strong>
-          <p>提炼高频痛点与潜在需求，把市场信号转化为产品机会。</p>
+          <button type="button" class="step-card" data-step="3" aria-label="查看用户评论分析报告图">
+            <span class="step-no">04</span>
+            <strong>用户评论分析</strong>
+            <p>提炼高频痛点与潜在需求，把市场信号转化为产品机会。</p>
+            <span class="step-go">查看报告图 <i aria-hidden="true">↗</i></span>
+          </button>
         </li>
       </ol>
     </section>
 
     <section class="section" aria-label="研究文档">
       <h2>研究文档</h2>
-      <div class="cta-block">
-        <p>完整分析报告已整理于 Figma，覆盖市场调研、竞品池筛选、竞品拆解与用户评论分析全流程。</p>
-        <a class="cta" href="https://www.figma.com/board/KRwPyy7vZ7BkLszaCXqaP5/%E3%80%8A%E8%96%84%E8%8D%B7%E5%81%A5%E5%BA%B7%E3%80%8B%E6%B5%B7%E5%A4%96%E4%BA%A7%E5%93%81%E7%AD%96%E7%95%A5%E4%B8%8E%E5%A2%9E%E9%95%BF%E5%AE%9E%E6%88%98?t=eobkbwidUytaxPKy-1" target="_blank" rel="noopener noreferrer">打开 Figma 研究报告 <i aria-hidden="true">↗</i></a>
-      </div>
+      <p class="doc-note">点击上方四步卡片可预览对应分析长图；点击预览图或右上角按钮，可跳转完整 <b>Figma</b> 研究报告。</p>
       <p class="foot">Cursor 页面与交互优化实践将在后续补充。</p>
     </section>
   </main>
+
+  <div class="study-lb" id="studyLb" aria-hidden="true">
+    <div class="study-lb-backdrop" data-lb-close></div>
+    <div class="study-lb-panel" role="dialog" aria-modal="true" aria-labelledby="studyLbTitle">
+      <header class="study-lb-head">
+        <div class="study-lb-meta">
+          <p class="study-lb-kicker" id="studyLbKicker">01 / 04</p>
+          <h3 class="study-lb-title" id="studyLbTitle">市场调研</h3>
+        </div>
+        <div class="study-lb-actions">
+          <a class="study-lb-figma" id="studyLbFigma" href="https://www.figma.com/board/KRwPyy7vZ7BkLszaCXqaP5/%E3%80%8A%E8%96%84%E8%8D%B7%E5%81%A5%E5%BA%B7%E3%80%8B%E6%B5%B7%E5%A4%96%E4%BA%A7%E5%93%81%E7%AD%96%E7%95%A5%E4%B8%8E%E5%A2%9E%E9%95%BF%E5%AE%9E%E6%88%98?t=eobkbwidUytaxPKy-1" target="_blank" rel="noopener noreferrer">在 Figma 打开 <i aria-hidden="true">↗</i></a>
+          <button type="button" class="study-lb-nav" id="studyLbPrev" aria-label="上一张"><svg viewBox="0 0 24 24"><path d="M15 18l-6-6 6-6"/></svg></button>
+          <button type="button" class="study-lb-nav" id="studyLbNext" aria-label="下一张"><svg viewBox="0 0 24 24"><path d="M9 6l6 6-6 6"/></svg></button>
+          <button type="button" class="study-lb-close" data-lb-close aria-label="关闭"><svg viewBox="0 0 24 24"><path d="M6 6l12 12M18 6 6 18"/></svg></button>
+        </div>
+      </header>
+      <div class="study-lb-body">
+        <img class="study-lb-shot" id="studyLbImg" src="" alt="" decoding="async" title="点击图片打开 Figma 研究报告" />
+        <p class="study-lb-hint">点击图片将打开 <b>Figma</b> 完整研究报告 · Esc 关闭</p>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    (function () {
+      var FIGMA = document.getElementById("figmaTop").href;
+      var steps = [
+        {
+          title: "市场调研",
+          src: "assets/projects/fitnessSeries/一、《薄荷健康》在海外的基本情况.png",
+          alt: "《薄荷健康》在海外的基本情况"
+        },
+        {
+          title: "竞品池筛选",
+          src: "assets/projects/fitnessSeries/二、关键词研究与竞品池发现.png",
+          alt: "关键词研究与竞品池发现"
+        },
+        {
+          title: "竞品拆解",
+          src: "assets/projects/fitnessSeries/三、核心竞品的筛选和精细化拆解.png",
+          alt: "核心竞品的筛选和精细化拆解"
+        },
+        {
+          title: "用户评论分析",
+          src: "assets/projects/fitnessSeries/四、国内外用户评论.png",
+          alt: "国内外用户评论"
+        }
+      ];
+
+      var lb = document.getElementById("studyLb");
+      var img = document.getElementById("studyLbImg");
+      var titleEl = document.getElementById("studyLbTitle");
+      var kickerEl = document.getElementById("studyLbKicker");
+      var cards = document.querySelectorAll(".step-card");
+      var idx = 0;
+      var lastFocus = null;
+
+      function openFigma() {
+        window.open(FIGMA, "_blank", "noopener,noreferrer");
+      }
+
+      function markActive(i) {
+        cards.forEach(function (card) {
+          card.classList.toggle("is-active", Number(card.getAttribute("data-step")) === i);
+        });
+      }
+
+      function show(i) {
+        idx = (i + steps.length) % steps.length;
+        var item = steps[idx];
+        kickerEl.textContent = String(idx + 1).padStart(2, "0") + " / " + String(steps.length).padStart(2, "0");
+        titleEl.textContent = item.title;
+        img.classList.add("is-loading");
+        img.alt = item.alt;
+        img.onload = function () { img.classList.remove("is-loading"); };
+        img.src = encodeURI(item.src);
+        markActive(idx);
+      }
+
+      function open(i) {
+        lastFocus = document.activeElement;
+        show(i);
+        lb.classList.add("is-open");
+        lb.setAttribute("aria-hidden", "false");
+        document.body.classList.add("is-lb-open");
+        var closeBtn = document.querySelector(".study-lb-close");
+        if (closeBtn) closeBtn.focus();
+      }
+
+      function close() {
+        lb.classList.remove("is-open");
+        lb.setAttribute("aria-hidden", "true");
+        document.body.classList.remove("is-lb-open");
+        markActive(-1);
+        if (lastFocus && lastFocus.focus) lastFocus.focus();
+      }
+
+      cards.forEach(function (card) {
+        card.addEventListener("click", function () {
+          open(Number(card.getAttribute("data-step")));
+        });
+      });
+
+      img.addEventListener("click", openFigma);
+      document.getElementById("studyLbPrev").addEventListener("click", function () { show(idx - 1); });
+      document.getElementById("studyLbNext").addEventListener("click", function () { show(idx + 1); });
+      lb.querySelectorAll("[data-lb-close]").forEach(function (el) {
+        el.addEventListener("click", close);
+      });
+
+      window.addEventListener("keydown", function (e) {
+        if (!lb.classList.contains("is-open")) return;
+        if (e.key === "Escape") { e.preventDefault(); close(); }
+        else if (e.key === "ArrowLeft") { e.preventDefault(); show(idx - 1); }
+        else if (e.key === "ArrowRight") { e.preventDefault(); show(idx + 1); }
+      });
+    })();
+  </script>
 </body>
 </html>

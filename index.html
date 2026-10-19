@@ -96,7 +96,7 @@
       justify-content: center;
       gap: 4px;
       width: 100%;
-      max-width: 112px;
+      max-width: 148px;
       padding: 18px 12px;
       border-radius: 22px;
       background:
@@ -354,6 +354,66 @@
     .site-nav a:focus-visible {
       outline: 2px solid rgba(204, 255, 0, 0.55);
       outline-offset: 2px;
+    }
+    .site-nav .nav-group {
+      display: flex;
+      flex-direction: column;
+      align-items: stretch;
+      gap: 2px;
+    }
+    .site-nav .nav-sub {
+      display: grid;
+      grid-template-rows: 0fr;
+      opacity: 0;
+      margin: 0 0 0 26px;
+      padding-left: 8px;
+      border-left: 1px solid rgba(204, 255, 0, 0.18);
+      transition: grid-template-rows 0.4s var(--ease), opacity 0.35s var(--ease), margin 0.35s var(--ease);
+      pointer-events: none;
+    }
+    .site-nav .nav-group.is-open .nav-sub {
+      grid-template-rows: 1fr;
+      opacity: 1;
+      margin-bottom: 4px;
+      pointer-events: auto;
+    }
+    .site-nav .nav-sub-list {
+      min-height: 0;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      gap: 1px;
+      padding: 2px 0 4px;
+    }
+    .site-nav .nav-sub-link {
+      appearance: none;
+      display: block;
+      width: 100%;
+      padding: 5px 4px;
+      border: 0;
+      background: none;
+      text-align: left;
+      font-family: var(--font-ui);
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.02em;
+      line-height: 1.35;
+      color: rgba(255, 255, 255, 0.38);
+      cursor: pointer;
+      white-space: nowrap;
+      transition: color 0.28s var(--ease), transform 0.28s var(--ease);
+    }
+    .site-nav .nav-sub-link:hover {
+      color: rgba(255, 255, 255, 0.88);
+      transform: translateX(2px);
+    }
+    .site-nav .nav-sub-link.is-current {
+      color: var(--lime);
+    }
+    .site-nav .nav-sub-link:focus-visible {
+      outline: 2px solid rgba(204, 255, 0, 0.55);
+      outline-offset: 1px;
+      border-radius: 4px;
     }
 
     .progress-line {
@@ -649,7 +709,7 @@
     }
     .home-actions {
       display: flex;
-      flex-wrap: nowrap;
+      flex-wrap: wrap;
       gap: 12px;
       align-items: center;
     }
@@ -669,6 +729,7 @@
       border-radius: 999px;
       background: var(--lime);
       color: #0a0a0b;
+      text-decoration: none;
       cursor: pointer;
       box-shadow: 0 0 28px rgba(204, 255, 0, 0.22);
       transition: transform 0.3s var(--ease), box-shadow 0.3s var(--ease), background 0.25s ease, color 0.25s ease, border-color 0.25s ease;
@@ -6956,6 +7017,53 @@
       transition: background 0.35s var(--ease), border-color 0.35s var(--ease), color 0.35s var(--ease), rotate 0.35s var(--ease);
     }
     .life-card-go svg { width: 14px; height: 14px; }
+    .life-card-copy {
+      appearance: none;
+      position: absolute;
+      top: 14px;
+      right: 14px;
+      z-index: 2;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      min-height: 32px;
+      padding: 0 12px;
+      border-radius: 999px;
+      border: 1px solid rgba(204, 255, 0, 0.45);
+      background: var(--lime);
+      color: #0a0a0a;
+      font-family: var(--font-ui);
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 0.04em;
+      cursor: pointer;
+      opacity: 0;
+      visibility: hidden;
+      translate: 0 -4px;
+      pointer-events: none;
+      transition: opacity 0.28s var(--ease), visibility 0.28s, translate 0.28s var(--ease), background 0.2s ease;
+    }
+    .life-card-copy svg { width: 13px; height: 13px; flex: 0 0 auto; }
+    .life-card-copy .life-copy-done { display: none; }
+    .life-card-copy.is-done .life-copy-idle { display: none; }
+    .life-card-copy.is-done .life-copy-done { display: inline; }
+    .life-card.is-copyable:hover .life-card-copy,
+    .life-card.is-copyable:focus-within .life-card-copy {
+      opacity: 1;
+      visibility: visible;
+      translate: 0 0;
+      pointer-events: auto;
+    }
+    .life-card.is-copyable:hover .life-card-go,
+    .life-card.is-copyable:focus-within .life-card-go {
+      opacity: 0;
+      visibility: hidden;
+    }
+    .life-card-copy:hover { background: #d8ff3d; }
+    .life-card-copy:focus-visible {
+      outline: 2px solid rgba(204, 255, 0, 0.7);
+      outline-offset: 2px;
+    }
     .life-card:hover {
       transform: translateY(-4px);
       border-color: rgba(204, 255, 0, 0.35);
@@ -6966,7 +7074,7 @@
       border-color: var(--lime);
       color: #0a0a0a;
     }
-    .life-card:not(.is-primary):hover .life-card-go { rotate: -45deg; }
+    .life-card:not(.is-primary):not(.is-copyable):hover .life-card-go { rotate: -45deg; }
     .life-card:active { scale: 0.98; }
     .life-card:focus-visible {
       outline: 2px solid rgba(204, 255, 0, 0.55);
@@ -6984,6 +7092,18 @@
       color: var(--lime);
     }
     .life-card.is-primary:hover { box-shadow: 0 24px 50px rgba(204, 255, 0, 0.18); }
+    @media (hover: none) {
+      .life-card.is-copyable .life-card-copy {
+        opacity: 1;
+        visibility: visible;
+        translate: 0 0;
+        pointer-events: auto;
+      }
+      .life-card.is-copyable .life-card-go {
+        opacity: 0;
+        visibility: hidden;
+      }
+    }
     @media (max-width: 720px) {
       .life-contact { grid-template-columns: minmax(0, 1fr); }
     }
@@ -7026,9 +7146,9 @@
   <div class="progress-line" id="progressLine" aria-hidden="true"></div>
   <nav class="proj-rail" id="projRail" aria-label="个人项目目录">
     <span class="proj-rail-track" aria-hidden="true"><i></i></span>
-    <button type="button" class="proj-rail-item" data-proj-index="0" style="--ip-accent: #c4a1ff"><span class="proj-rail-label"><b>01</b>APP 素材平台</span><span class="proj-rail-dot" aria-hidden="true"></span></button>
-    <button type="button" class="proj-rail-item" data-proj-index="1" style="--ip-accent: #ff8fa3"><span class="proj-rail-label"><b>02</b>健康管理产品系列</span><span class="proj-rail-dot" aria-hidden="true"></span></button>
-    <button type="button" class="proj-rail-item" data-proj-index="2" style="--ip-accent: #ffb450"><span class="proj-rail-label"><b>03</b>闹钟 App 系列</span><span class="proj-rail-dot" aria-hidden="true"></span></button>
+    <button type="button" class="proj-rail-item" data-proj-index="0" style="--ip-accent: #c4a1ff"><span class="proj-rail-label"><b>01</b>APP素材平台</span><span class="proj-rail-dot" aria-hidden="true"></span></button>
+    <button type="button" class="proj-rail-item" data-proj-index="1" style="--ip-accent: #ff8fa3"><span class="proj-rail-label"><b>02</b>健康产品系列</span><span class="proj-rail-dot" aria-hidden="true"></span></button>
+    <button type="button" class="proj-rail-item" data-proj-index="2" style="--ip-accent: #ffb450"><span class="proj-rail-label"><b>03</b>闹钟产品系列</span><span class="proj-rail-dot" aria-hidden="true"></span></button>
   </nav>
 
   <button type="button" class="tt-mini" id="ttMini" aria-label="播放" aria-pressed="false" aria-hidden="true">
@@ -7048,7 +7168,16 @@
       <span class="site-nav-progress" aria-hidden="true"></span>
       <a href="#home" class="nav-link is-active" data-index="0"><span class="nav-dot" aria-hidden="true"></span><span class="nav-meta"><span class="nav-no">01</span><span class="nav-label">首页</span></span></a>
       <a href="#experience" class="nav-link" data-index="1"><span class="nav-dot" aria-hidden="true"></span><span class="nav-meta"><span class="nav-no">02</span><span class="nav-label">履历</span></span></a>
-      <a href="#cases" class="nav-link" data-index="2"><span class="nav-dot" aria-hidden="true"></span><span class="nav-meta"><span class="nav-no">03</span><span class="nav-label">项目</span></span></a>
+      <div class="nav-group" data-nav-group="cases">
+        <a href="#cases" class="nav-link" data-index="2"><span class="nav-dot" aria-hidden="true"></span><span class="nav-meta"><span class="nav-no">03</span><span class="nav-label">项目</span></span></a>
+        <div class="nav-sub" role="group" aria-label="项目小节">
+          <div class="nav-sub-list">
+            <button type="button" class="nav-sub-link" data-proj-jump="0">APP素材平台</button>
+            <button type="button" class="nav-sub-link" data-proj-jump="1">健康产品系列</button>
+            <button type="button" class="nav-sub-link" data-proj-jump="2">闹钟产品系列</button>
+          </div>
+        </div>
+      </div>
       <a href="#works" class="nav-link" data-index="3"><span class="nav-dot" aria-hidden="true"></span><span class="nav-meta"><span class="nav-no">04</span><span class="nav-label">作品集</span></span></a>
       <a href="#ai-lab" class="nav-link" data-index="4"><span class="nav-dot" aria-hidden="true"></span><span class="nav-meta"><span class="nav-no">05</span><span class="nav-label">AI技术</span></span></a>
       <a href="#life" class="nav-link" data-index="5"><span class="nav-dot" aria-hidden="true"></span><span class="nav-meta"><span class="nav-no">06</span><span class="nav-label">联系</span></span></a>
@@ -7090,6 +7219,7 @@
             <div class="home-actions">
               <button type="button" class="home-cta" data-goto="3">查看我的作品<span class="home-cta-arrow" aria-hidden="true">→</span></button>
               <button type="button" class="home-cta is-ghost" data-goto="2">查看我的项目</button>
+              <a class="home-cta is-ghost" href="bohee-study.html">薄荷健康 · 自主研究<span class="home-cta-arrow" aria-hidden="true">↗</span></a>
             </div>
           </div>
           <div class="home-visual" id="homeVisual">
@@ -7536,29 +7666,29 @@
           </header>
           <div class="proj-hub" id="projHub">
             <div class="proj-ip-cards" role="list">
-              <button type="button" class="proj-ip-card" role="listitem" data-proj-index="0" data-series="material" data-ip-src="assets/images/project01.png" aria-label="APP 素材平台">
+              <button type="button" class="proj-ip-card" role="listitem" data-proj-index="0" data-series="material" data-ip-src="assets/images/project01.png" aria-label="APP素材平台">
                 <span class="proj-ip-avatar"><img src="assets/images/project01.png" width="1086" height="1448" alt="" decoding="async" /></span>
                 <span class="proj-ip-copy">
                   <span class="proj-ip-num">01</span>
-                  <span class="proj-ip-title">APP 素材平台</span>
+                  <span class="proj-ip-title">APP素材平台</span>
                   <span class="proj-ip-role">产品支持 · 独立规划</span>
                   <span class="proj-ip-kpi">2h → 30min</span>
                 </span>
               </button>
-              <button type="button" class="proj-ip-card" role="listitem" data-proj-index="1" data-series="health" data-ip-src="assets/images/project04.png" aria-label="健康管理产品系列">
+              <button type="button" class="proj-ip-card" role="listitem" data-proj-index="1" data-series="health" data-ip-src="assets/images/project04.png" aria-label="健康产品系列">
                 <span class="proj-ip-avatar"><img src="assets/images/project04.png" width="1122" height="1402" alt="" decoding="async" /></span>
                 <span class="proj-ip-copy">
                   <span class="proj-ip-num">02</span>
-                  <span class="proj-ip-title">健康管理产品系列</span>
+                  <span class="proj-ip-title">健康产品系列</span>
                   <span class="proj-ip-role">产品规划</span>
                   <span class="proj-ip-kpi">留存 +89%</span>
                 </span>
               </button>
-              <button type="button" class="proj-ip-card" role="listitem" data-proj-index="2" data-series="alarm" data-ip-src="assets/images/project02.png" aria-label="闹钟 App 系列">
+              <button type="button" class="proj-ip-card" role="listitem" data-proj-index="2" data-series="alarm" data-ip-src="assets/images/project02.png" aria-label="闹钟产品系列">
                 <span class="proj-ip-avatar"><img src="assets/images/project02.png" width="1086" height="1448" alt="" decoding="async" /></span>
                 <span class="proj-ip-copy">
                   <span class="proj-ip-num">03</span>
-                  <span class="proj-ip-title">闹钟 App 系列</span>
+                  <span class="proj-ip-title">闹钟产品系列</span>
                   <span class="proj-ip-role">产品负责人</span>
                   <span class="proj-ip-kpi">收益同比 ≈21 倍</span>
                 </span>
@@ -7574,7 +7704,7 @@
                 <header class="proj-hero">
                   <span class="proj-num" aria-hidden="true">01</span>
                   <div class="proj-hero-text">
-                    <h3>APP 素材平台</h3>
+                    <h3>APP素材平台</h3>
                     <p class="proj-panel-role"><span>我的角色</span>V1 产品支持 · V2 独立规划</p>
                   </div>
                   <span class="proj-figure" aria-hidden="true"><img src="assets/images/project01.png" width="1086" height="1448" alt="" loading="lazy" decoding="async" /></span>
@@ -7641,8 +7771,8 @@
                       <div class="asc-player">
                         <div class="asc-player-bar" aria-hidden="true"><i></i><i></i><i></i><span>APP 矩阵素材生产平台 · 原型操作演示</span></div>
                         <div class="asc-player-screen">
-                          <video src="assets/projects/appSourceCreate/V2_show.mp4" poster="assets/projects/appSourceCreate/v2-poster.jpg" width="1558" height="808" playsinline preload="none" controlslist="nodownload"></video>
-                          <button type="button" class="asc-player-play" aria-label="播放 V2 原型演示"><span><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M8 5.5v13l10.5-6.5z" /></svg></span></button>
+                          <video src="assets/projects/appSourceCreate/V2_show.mp4" poster="assets/projects/appSourceCreate/v2-poster.jpg" width="1558" height="808" muted autoplay loop playsinline preload="metadata" controlslist="nodownload"></video>
+                          <button type="button" class="asc-player-play" aria-label="播放 V2 原型演示" hidden><span><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M8 5.5v13l10.5-6.5z" /></svg></span></button>
                         </div>
                       </div>
                     </div>
@@ -7654,7 +7784,7 @@
                 <header class="proj-hero">
                   <span class="proj-num" aria-hidden="true">02</span>
                   <div class="proj-hero-text">
-                    <h3>健康管理产品系列</h3>
+                    <h3>健康产品系列</h3>
                     <p class="proj-panel-role"><span>我的角色</span>产品规划</p>
                   </div>
                   <span class="proj-figure" aria-hidden="true"><img src="assets/images/project04.png" width="1122" height="1402" alt="" loading="lazy" decoding="async" /></span>
@@ -7683,9 +7813,9 @@
                           </section>
                         </div>
                       </div>
-                      <a class="health-study-card" href="bohee-study.html" aria-label="查看《薄荷健康》自主研究详情">
+                      <a class="health-study-card" href="bohee-study.html" aria-label="查看海外市场调研与功能优化详情">
                         <span class="health-study-card-kicker"><span>自主研究</span><em>Independent Study</em></span>
-                        <h4>《薄荷健康》海外产品策略与增长实战</h4>
+                        <h4>海外市场调研与功能优化</h4>
                         <p>从 2023 年起的长期用户，也是工作中的重点竞品。结合海外调研经验，完成从市场到用户的完整分析。</p>
                         <ul class="health-study-card-steps" aria-label="研究路径">
                           <li>市场调研</li>
@@ -7749,7 +7879,7 @@
                 <header class="proj-hero">
                   <span class="proj-num" aria-hidden="true">03</span>
                   <div class="proj-hero-text">
-                    <h3>闹钟 App 系列</h3>
+                    <h3>闹钟产品系列</h3>
                     <p class="proj-panel-role"><span>我的角色</span>产品负责人</p>
                   </div>
                   <span class="proj-figure" aria-hidden="true"><img src="assets/images/project02.png" width="1086" height="1448" alt="" loading="lazy" decoding="async" /></span>
@@ -8190,7 +8320,7 @@
         <div class="ai-page" id="aiPage">
           <header class="sec-head">
             <p class="sec-head-eyebrow"><span>AI Lab</span><i aria-hidden="true"></i><span>18 Notes · 2 Columns</span></p>
-            <h2 class="section-heading sec-head-title">我的<em>AI 学习</em></h2>
+            <h2 class="section-heading sec-head-title">AI<em>技术原理</em></h2>
             <p class="sec-head-sub">用 AI 做快速验证，而不是替代产品判断</p>
           </header>
           <div class="ai-intro">
@@ -8277,7 +8407,7 @@
           <header class="sec-head">
             <p class="sec-head-eyebrow"><span>Life</span><i aria-hidden="true"></i><span>Say Hello</span></p>
             <h2 class="section-heading sec-head-title">与我<em>联系</em></h2>
-            <p class="sec-head-sub">兴趣、人味内容与社交链接可写在这里。</p>
+            <p class="sec-head-sub">感谢您抽出宝贵时间了解我，期待有机会加入贵公司，一起把产品做得更好。</p>
           </header>
           <div class="life-contact">
             <a class="life-card" href="mailto:liumin_audrey@163.com">
@@ -8351,6 +8481,10 @@
         });
         if (siteNav) {
           siteNav.style.setProperty("--nav-p", String(total > 1 ? index / (total - 1) : 0));
+          siteNav.querySelectorAll(".nav-group").forEach(function (group) {
+            var link = group.querySelector(".nav-link");
+            group.classList.toggle("is-open", link && Number(link.getAttribute("data-index")) === index);
+          });
         }
         if (progress) {
           progress.style.width = ((index + 1) / total * 100) + "%";
@@ -9780,7 +9914,24 @@
             el.classList.toggle("is-current", Number(el.getAttribute("data-proj-index")) === index);
           });
         });
+        document.querySelectorAll(".nav-sub-link[data-proj-jump]").forEach(function (el) {
+          el.classList.toggle("is-current", Number(el.getAttribute("data-proj-jump")) === index);
+        });
       }
+
+      document.querySelectorAll(".nav-sub-link[data-proj-jump]").forEach(function (btn) {
+        btn.addEventListener("click", function () {
+          var jump = btn.getAttribute("data-proj-jump");
+          scrollToIndex(2);
+          setTimeout(function () {
+            if (typeof projScrollTo === "function") projScrollTo(jump);
+            else {
+              var panel = document.querySelector('.proj-panel[data-proj-index="' + jump + '"]');
+              if (panel) panel.scrollIntoView({ behavior: reduced ? "auto" : "smooth", block: "start" });
+            }
+          }, reduced ? 0 : 320);
+        });
+      });
 
       function projRailUpdate() {
         if (!projRail || !projDetailView || !track) return;
@@ -10175,11 +10326,12 @@
         document.querySelectorAll(".asc-player").forEach(function (pl) {
           var v = pl.querySelector("video");
           var playBtn = pl.querySelector(".asc-player-play");
-          if (!v || !playBtn) return;
+          if (!v) return;
           if (v.getAttribute("src")) v.src = encodeURI(decodeURI(v.getAttribute("src")));
-          playBtn.addEventListener("click", function () {
+          function startAscPlay(showControls) {
             pl.classList.add("is-playing");
-            v.controls = true;
+            if (showControls) v.controls = true;
+            v.muted = true;
             if (v.readyState === 0) v.load();
             var p = v.play();
             if (p && p.catch) {
@@ -10188,7 +10340,25 @@
                 v.play().catch(function () {});
               });
             }
-          });
+          }
+          if (playBtn) {
+            playBtn.addEventListener("click", function () {
+              playBtn.hidden = true;
+              startAscPlay(true);
+            });
+          }
+          if (v.hasAttribute("autoplay")) {
+            startAscPlay(false);
+            if ("IntersectionObserver" in window) {
+              var ascIo = new IntersectionObserver(function (entries) {
+                entries.forEach(function (entry) {
+                  if (entry.isIntersecting) startAscPlay(false);
+                  else v.pause();
+                });
+              }, { threshold: 0.35 });
+              ascIo.observe(pl);
+            }
+          }
         });
         ascLb.querySelectorAll("[data-lb-close]").forEach(function (el) { el.addEventListener("click", ascLbClose); });
         document.getElementById("ascLbPrev").addEventListener("click", function () { ascLbShow(ascLbIdx - 1); });
