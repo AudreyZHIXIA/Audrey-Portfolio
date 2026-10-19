@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="薄荷健康首页交互示意 — 点击活动中心进入活动页" />
+  <title>首页 · 活动中心入口示意</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600;9..40,700&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --bg: #0a0a0b;
+      --lime: #ccff00;
+      --text: #f5f5f7;
+      --muted: #9ca3af;
+      --font-ui: "DM Sans", "PingFang SC", "Microsoft YaHei", sans-serif;
+      --ease: cubic-bezier(0.22, 1, 0.36, 1);
+    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      min-height: 100dvh;
+      display: grid;
+      place-items: center;
+      padding: 28px 16px 40px;
+      font-family: var(--font-ui);
+      color: var(--text);
+      background: var(--bg);
+      -webkit-font-smoothing: antialiased;
+    }
+    .shell {
+      width: min(420px, 100%);
+      display: grid;
+      gap: 18px;
+    }
+    .top {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px 16px;
+    }
+    .back {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      text-decoration: none;
+      font-size: 13px;
+      font-weight: 700;
+      color: rgba(255, 255, 255, 0.62);
+      transition: color 0.28s var(--ease);
+    }
+    .back:hover { color: #fff; }
+    .back i { font-style: normal; color: var(--lime); }
+    .hint {
+      font-size: 12px;
+      color: var(--muted);
+      line-height: 1.5;
+    }
+    .hint b { color: var(--lime); font-weight: 700; }
+    .phone {
+      position: relative;
+      border-radius: 28px;
+      overflow: hidden;
+      background: #111;
+      box-shadow: 0 28px 80px rgba(0, 0, 0, 0.55), 0 0 0 1px rgba(255, 255, 255, 0.08);
+    }
+    .phone img {
+      display: block;
+      width: 100%;
+      height: auto;
+      -webkit-user-drag: none;
+      user-select: none;
+    }
+    /* 活动中心：首页快捷入口第一颗图标 */
+    .hotspot {
+      position: absolute;
+      left: 3.5%;
+      top: 13.8%;
+      width: 18.5%;
+      height: 9.2%;
+      border-radius: 18px;
+      text-indent: -9999px;
+      overflow: hidden;
+      z-index: 2;
+    }
+    .hotspot::after {
+      content: "";
+      position: absolute;
+      inset: 4px;
+      border-radius: 50%;
+      box-shadow: 0 0 0 2px rgba(204, 255, 0, 0.55), 0 0 18px rgba(204, 255, 0, 0.35);
+      opacity: 0.85;
+      animation: pulse 1.8s var(--ease) infinite;
+      pointer-events: none;
+    }
+    .hotspot:hover::after,
+    .hotspot:focus-visible::after {
+      opacity: 1;
+      box-shadow: 0 0 0 2px var(--lime), 0 0 22px rgba(204, 255, 0, 0.55);
+    }
+    .hotspot:focus-visible {
+      outline: 2px solid var(--lime);
+      outline-offset: 3px;
+    }
+    @keyframes pulse {
+      0%, 100% { transform: scale(1); opacity: 0.7; }
+      50% { transform: scale(1.06); opacity: 1; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .hotspot::after { animation: none; }
+    }
+  </style>
+</head>
+<body>
+  <div class="shell">
+    <div class="top">
+      <a class="back" href="bohee-study.html"><i aria-hidden="true">←</i>返回自主研究</a>
+      <p class="hint">点击高亮的 <b>活动中心</b> 进入下一页</p>
+    </div>
+    <div class="phone" aria-label="薄荷健康首页示意">
+      <img src="assets/projects/boheeDemo/home.jpg" width="470" height="1024" alt="薄荷健康首页截图" decoding="async" />
+      <a class="hotspot" href="bohee-activity.html" aria-label="进入活动中心">活动中心</a>
+    </div>
+  </div>
+</body>
+</html>

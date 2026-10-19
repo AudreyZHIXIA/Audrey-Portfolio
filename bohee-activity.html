@@ -1,0 +1,369 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="薄荷健康 · 活动中心页面示意" />
+  <title>活动中心</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600;9..40,700&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --bg: #0a0a0b;
+      --lime: #ccff00;
+      --page-bg: #f2f3f5;
+      --card: #fff;
+      --text: #1a1a1a;
+      --muted: #8a8f98;
+      --line: #eceef1;
+      --font-ui: "DM Sans", "PingFang SC", "Microsoft YaHei", sans-serif;
+      --ease: cubic-bezier(0.22, 1, 0.36, 1);
+      --green: #2fbf71;
+    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      min-height: 100dvh;
+      display: grid;
+      place-items: center;
+      padding: 28px 16px 40px;
+      font-family: var(--font-ui);
+      color: #f5f5f7;
+      background: var(--bg);
+      -webkit-font-smoothing: antialiased;
+    }
+    .shell {
+      width: min(420px, 100%);
+      display: grid;
+      gap: 18px;
+    }
+    .top {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px 16px;
+    }
+    .back-site {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      text-decoration: none;
+      font-size: 13px;
+      font-weight: 700;
+      color: rgba(255, 255, 255, 0.62);
+      transition: color 0.28s var(--ease);
+    }
+    .back-site:hover { color: #fff; }
+    .back-site i { font-style: normal; color: var(--lime); }
+    .hint {
+      font-size: 12px;
+      color: #9ca3af;
+    }
+    .phone {
+      border-radius: 28px;
+      overflow: hidden;
+      background: var(--page-bg);
+      box-shadow: 0 28px 80px rgba(0, 0, 0, 0.55), 0 0 0 1px rgba(255, 255, 255, 0.08);
+      color: var(--text);
+    }
+    .status {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 10px 18px 4px;
+      font-size: 12px;
+      font-weight: 700;
+      background: #fff;
+    }
+    .status span:last-child {
+      display: inline-flex;
+      gap: 6px;
+      font-size: 11px;
+      letter-spacing: 0.04em;
+      color: #333;
+    }
+    .nav {
+      display: grid;
+      grid-template-columns: 44px 1fr 44px;
+      align-items: center;
+      padding: 6px 8px 12px;
+      background: #fff;
+    }
+    .nav a {
+      display: grid;
+      place-items: center;
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      color: #222;
+      text-decoration: none;
+      transition: background 0.25s var(--ease);
+    }
+    .nav a:hover { background: rgba(0, 0, 0, 0.04); }
+    .nav a svg {
+      width: 22px;
+      height: 22px;
+      fill: none;
+      stroke: currentColor;
+      stroke-width: 2.2;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+    .nav h1 {
+      text-align: center;
+      font-size: 17px;
+      font-weight: 700;
+      letter-spacing: 0.02em;
+    }
+    .scroll {
+      max-height: min(760px, calc(100dvh - 160px));
+      overflow-y: auto;
+      padding: 0 12px 24px;
+      scrollbar-width: thin;
+    }
+    .banner {
+      position: relative;
+      margin-top: 4px;
+      border-radius: 16px;
+      overflow: hidden;
+      aspect-ratio: 16 / 7.2;
+      background:
+        radial-gradient(circle at 78% 55%, #ffe08a 0%, transparent 42%),
+        linear-gradient(115deg, #ffd36a 0%, #ff9a4a 48%, #ff7a59 100%);
+      box-shadow: 0 8px 20px rgba(255, 140, 60, 0.22);
+    }
+    .banner-copy {
+      position: relative;
+      z-index: 1;
+      padding: 22px 18px;
+      max-width: 62%;
+      color: #4a2a12;
+    }
+    .banner-copy strong {
+      display: block;
+      font-size: 18px;
+      font-weight: 800;
+      line-height: 1.25;
+      margin-bottom: 6px;
+    }
+    .banner-copy span {
+      display: block;
+      font-size: 12px;
+      font-weight: 600;
+      line-height: 1.45;
+      opacity: 0.9;
+    }
+    .banner-art {
+      position: absolute;
+      right: -2%;
+      bottom: -8%;
+      width: 48%;
+      height: 110%;
+      background:
+        radial-gradient(circle at 40% 35%, #fff6 0 18%, transparent 19%),
+        radial-gradient(circle at 55% 70%, #ffefc2 0 28%, transparent 29%),
+        radial-gradient(circle at 50% 50%, #ffb070 0 40%, transparent 41%);
+      opacity: 0.95;
+      pointer-events: none;
+    }
+    .dots {
+      display: flex;
+      justify-content: center;
+      gap: 5px;
+      margin: 8px 0 14px;
+    }
+    .dots i {
+      width: 5px;
+      height: 5px;
+      border-radius: 50%;
+      background: #d5d8de;
+    }
+    .dots i:first-child { background: var(--green); width: 12px; border-radius: 999px; }
+    .sec-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin: 6px 2px 10px;
+    }
+    .sec-head h2 {
+      font-size: 16px;
+      font-weight: 800;
+    }
+    .sec-head a {
+      font-size: 12px;
+      color: var(--muted);
+      text-decoration: none;
+    }
+    .card {
+      background: var(--card);
+      border-radius: 16px;
+      padding: 16px;
+      box-shadow: 0 1px 0 rgba(0, 0, 0, 0.02);
+    }
+    .empty {
+      display: grid;
+      place-items: center;
+      gap: 10px;
+      padding: 28px 12px 24px;
+      text-align: center;
+      color: var(--muted);
+      font-size: 13px;
+    }
+    .empty-ico {
+      width: 72px;
+      height: 64px;
+      border-radius: 12px;
+      background:
+        linear-gradient(180deg, #e9ecf1 0 38%, transparent 38%),
+        linear-gradient(180deg, transparent 42%, #dde2e9 42%);
+      position: relative;
+      opacity: 0.85;
+    }
+    .empty-ico::after {
+      content: "";
+      position: absolute;
+      right: 8px;
+      top: 6px;
+      width: 22px;
+      height: 18px;
+      border-radius: 8px;
+      background: #f0f2f5;
+      box-shadow: inset 0 0 0 1px #e2e6ec;
+    }
+    .list { display: grid; gap: 10px; }
+    .act {
+      display: grid;
+      grid-template-columns: 72px 1fr;
+      gap: 12px;
+      align-items: start;
+      padding: 12px;
+      border-radius: 16px;
+      background: var(--card);
+    }
+    .thumb {
+      width: 72px;
+      height: 72px;
+      border-radius: 12px;
+      object-fit: cover;
+      background: #f6f7f9;
+    }
+    .act h3 {
+      font-size: 14px;
+      font-weight: 800;
+      line-height: 1.35;
+      margin-bottom: 6px;
+    }
+    .act p {
+      font-size: 11px;
+      color: var(--muted);
+      line-height: 1.55;
+    }
+    .act .meta { margin-top: 6px; font-size: 11px; color: #a0a5ad; }
+    .thumb-a {
+      background:
+        radial-gradient(circle at 50% 38%, #ffd76a 0 22%, transparent 23%),
+        linear-gradient(160deg, #ff8fb8, #ff6b9d);
+    }
+    .thumb-b {
+      background:
+        linear-gradient(180deg, #f4f6f8 30%, #e8ebef 30%),
+        #f4f6f8;
+      box-shadow: inset 0 0 0 1px #e6e9ee;
+      position: relative;
+    }
+    .thumb-b::after {
+      content: "";
+      position: absolute;
+      inset: 22px 16px 18px;
+      border-radius: 6px;
+      background: linear-gradient(180deg, #dfe4ea, #cfd6df);
+      box-shadow: inset 0 8px 0 #fff8;
+    }
+    .thumb-c {
+      background:
+        radial-gradient(circle at 50% 42%, #fff 0 16%, transparent 17%),
+        linear-gradient(160deg, #5b8cff, #3d6df0);
+    }
+  </style>
+</head>
+<body>
+  <div class="shell">
+    <div class="top">
+      <a class="back-site" href="bohee-study.html"><i aria-hidden="true">←</i>返回自主研究</a>
+      <p class="hint">图二 · 活动中心</p>
+    </div>
+
+    <div class="phone" aria-label="活动中心页面">
+      <div class="status" aria-hidden="true">
+        <span>9:41</span>
+        <span>5G · ▮▮▮</span>
+      </div>
+      <header class="nav">
+        <a href="bohee-home.html" aria-label="返回首页">
+          <svg viewBox="0 0 24 24"><path d="M15 18l-6-6 6-6"/></svg>
+        </a>
+        <h1>活动中心</h1>
+        <span aria-hidden="true"></span>
+      </header>
+
+      <div class="scroll">
+        <section class="banner" aria-label="活动 Banner">
+          <div class="banner-copy">
+            <strong>挑战体重 2 位数</strong>
+            <span>30 天打卡得 1 年超级会员</span>
+          </div>
+          <div class="banner-art" aria-hidden="true"></div>
+        </section>
+        <div class="dots" aria-hidden="true"><i></i><i></i><i></i></div>
+
+        <section aria-labelledby="myActs">
+          <div class="sec-head">
+            <h2 id="myActs">我的活动</h2>
+            <a href="#" onclick="return false;">历史活动 &gt;</a>
+          </div>
+          <div class="card empty">
+            <div class="empty-ico" aria-hidden="true"></div>
+            <p>当前没有参与中的活动</p>
+          </div>
+        </section>
+
+        <section aria-labelledby="hotActs" style="margin-top: 18px">
+          <div class="sec-head">
+            <h2 id="hotActs">热门活动</h2>
+          </div>
+          <div class="list">
+            <article class="act">
+              <div class="thumb thumb-a" aria-hidden="true"></div>
+              <div>
+                <h3>免费用 3 个月宝耀会员</h3>
+                <p>报名时间：2026.03.04-2026.11.30</p>
+                <p>活动时间：2026.03.04-2026.11.30</p>
+                <p class="meta">1129 人已参加</p>
+              </div>
+            </article>
+            <article class="act">
+              <div class="thumb thumb-b" aria-hidden="true"></div>
+              <div>
+                <h3>新人福利·食物秤（完成 7 天饮食记录）</h3>
+                <p>报名时间：2026.01.01-2026.12.31</p>
+                <p>活动时间：2026.01.01-2026.12.31</p>
+                <p class="meta">3857 人已参加</p>
+              </div>
+            </article>
+            <article class="act">
+              <div class="thumb thumb-c" aria-hidden="true"></div>
+              <div>
+                <h3>挑战体重 2 位数得 1 年超级会员</h3>
+                <p>报名时间：2025.05.26-2026.10.31</p>
+                <p>活动时间：2025.05.26-2026.10.31</p>
+                <p class="meta">2290 人已参加</p>
+              </div>
+            </article>
+          </div>
+        </section>
+      </div>
+    </div>
+  </div>
+</body>
+</html>
