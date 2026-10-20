@@ -7666,6 +7666,44 @@
     @media (max-width: 720px) {
       .life-contact { grid-template-columns: minmax(0, 1fr); }
     }
+    .site-stats {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: baseline;
+      gap: 8px 18px;
+      width: min(1040px, 100%);
+      margin: clamp(28px, 4.2vh, 44px) auto 0;
+      padding-top: 16px;
+      border-top: 1px solid rgba(255, 255, 255, 0.08);
+      color: var(--muted);
+      font-family: var(--font-ui);
+      font-size: 12px;
+      font-weight: 500;
+      letter-spacing: 0.06em;
+    }
+    .site-stats b {
+      color: var(--lime);
+      font-weight: 700;
+      font-variant-numeric: tabular-nums;
+      letter-spacing: 0.04em;
+    }
+    .site-stats-dot {
+      display: inline-block;
+      width: 3px;
+      height: 3px;
+      border-radius: 50%;
+      background: rgba(204, 255, 0, 0.4);
+      translate: 0 -1px;
+    }
+    .site-stats-note {
+      margin-left: auto;
+      font-size: 11px;
+      letter-spacing: 0.04em;
+      color: rgba(156, 163, 175, 0.72);
+    }
+    @media (max-width: 720px) {
+      .site-stats-note { margin-left: 0; width: 100%; }
+    }
 
     @media (max-width: 720px) {
       .site-nav {
@@ -9039,6 +9077,14 @@
               <span class="life-card-go" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M6 13l6 6 6-6"/></svg></span>
             </a>
           </div>
+          <footer class="site-stats" aria-label="访问统计">
+            <span>访问 <b id="vercount_value_site_pv">—</b> 次</span>
+            <i class="site-stats-dot" aria-hidden="true"></i>
+            <span>访客 <b id="vercount_value_site_uv">—</b> 人</span>
+            <i class="site-stats-dot" aria-hidden="true"></i>
+            <span>本次停留 <b id="statStay">00:00</b></span>
+            <span class="site-stats-note">仅统计访问次数与停留时长</span>
+          </footer>
         </div>
       </div>
     </section>
@@ -11758,6 +11804,32 @@
       window.__openBoheeStudy = openStudyModal;
       window.__closeBoheeStudy = closeStudyModal;
 
+      /* 页脚：本次停留（仅统计当前标签页可见时长） */
+      (function () {
+        var el = document.getElementById("statStay");
+        if (!el) return;
+        var acc = 0;
+        var last = Date.now();
+        var visible = typeof document.visibilityState !== "string" || document.visibilityState !== "hidden";
+        function pad(n) { return n < 10 ? "0" + n : String(n); }
+        function render() {
+          var now = Date.now();
+          if (visible) acc += now - last;
+          last = now;
+          var s = Math.floor(acc / 1000);
+          var h = Math.floor(s / 3600);
+          var m = Math.floor((s % 3600) / 60);
+          var sec = s % 60;
+          el.textContent = h > 0 ? h + ":" + pad(m) + ":" + pad(sec) : pad(m) + ":" + pad(sec);
+        }
+        document.addEventListener("visibilitychange", function () {
+          render();
+          visible = document.visibilityState !== "hidden";
+        });
+        setInterval(render, 1000);
+        render();
+      })();
+
       /* 联系：悬浮复制邮箱 / 电话 */
       document.querySelectorAll(".life-card.is-copyable").forEach(function (card) {
         var btn = card.querySelector(".life-card-copy");
@@ -11798,5 +11870,6 @@
       });
     })();
   </script>
+  <script defer src="https://events.vercount.one/js"></script>
 </body>
 </html>
