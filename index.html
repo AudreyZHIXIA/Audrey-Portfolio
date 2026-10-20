@@ -475,8 +475,8 @@
     }
     @media (min-width: 860px) {
       .home-grid {
-        grid-template-columns: minmax(0, 520px) minmax(0, 460px);
-        gap: clamp(24px, 3vw, 48px);
+        grid-template-columns: minmax(0, 560px) minmax(0, 440px);
+        gap: clamp(20px, 2.5vw, 40px);
         justify-content: center;
         align-items: center;
       }
@@ -485,7 +485,7 @@
       position: relative;
       width: 100%;
       justify-self: center;
-      max-width: 520px;
+      max-width: 560px;
       container-type: inline-size;
     }
     .home-intro {
@@ -660,13 +660,16 @@
     }
     .home-actions {
       display: flex;
-      flex-wrap: wrap;
+      flex-wrap: nowrap;
       gap: 8px;
       align-items: center;
+      width: 100%;
+      max-width: 100%;
+      overflow-x: auto;
+      scrollbar-width: none;
+      -ms-overflow-style: none;
     }
-    @container (min-width: 480px) {
-      .home-actions { flex-wrap: nowrap; }
-    }
+    .home-actions::-webkit-scrollbar { display: none; }
     .home-cta {
       appearance: none;
       position: relative;
@@ -674,12 +677,12 @@
       display: inline-flex;
       align-items: center;
       justify-content: center;
-      gap: 6px;
+      gap: 4px;
       flex: 0 0 auto;
       font-family: var(--font-ui);
-      font-size: 13px;
+      font-size: 12px;
       font-weight: 700;
-      padding: 11px 16px;
+      padding: 10px 12px;
       white-space: nowrap;
       border: none;
       border-radius: 999px;
@@ -1835,9 +1838,9 @@
       background: rgba(204, 255, 0, 0.07);
       box-shadow: inset 0 0 0 1px rgba(204, 255, 0, 0.22);
       font-size: 12.5px;
-      font-weight: 600;
+      font-weight: 700;
       letter-spacing: 0.02em;
-      color: #fff;
+      color: var(--lime);
       line-height: 1.45;
     }
     .exp-copy .exp-biz span {
@@ -1904,12 +1907,12 @@
     .exp-row.has-docs {
       grid-template-areas: "visual node copy" "docs node copy";
       grid-template-rows: auto 1fr;
-      row-gap: 12px;
+      row-gap: 6px;
     }
     .exp-row.has-apps {
       grid-template-areas: "visual node copy" "apps node copy";
       grid-template-rows: auto 1fr;
-      row-gap: 10px;
+      row-gap: 6px;
     }
     .exp-row.has-apps.is-flip {
       grid-template-areas: "copy node visual" "copy node apps";
@@ -1925,7 +1928,7 @@
       display: flex;
       align-items: baseline;
       justify-content: space-between;
-      margin: 0 2px 6px;
+      margin: 0 2px 4px;
       font-size: 10px;
       font-weight: 700;
       letter-spacing: 0.2em;
@@ -2079,7 +2082,7 @@
       display: flex;
       align-items: baseline;
       justify-content: space-between;
-      margin: 0 2px 6px;
+      margin: 0 2px 4px;
       font-size: 10px;
       font-weight: 700;
       letter-spacing: 0.2em;
@@ -2095,7 +2098,7 @@
     }
     .exp-docs-note,
     .exp-apps-note {
-      margin: 0 2px 12px;
+      margin: 0 2px 8px;
       font-size: 12px;
       font-weight: 700;
       letter-spacing: 0.04em;
@@ -2555,20 +2558,6 @@
       white-space: nowrap;
     }
     .exp-rail-end.is-now { color: rgba(204, 255, 0, 0.72); }
-    .exp-hint {
-      margin: 0;
-      font-size: 11px;
-      font-weight: 600;
-      letter-spacing: 0.06em;
-      color: rgba(255, 255, 255, 0.38);
-      white-space: nowrap;
-      font-variant-numeric: tabular-nums;
-      text-align: center;
-    }
-    .exp-hint b {
-      color: var(--lime);
-      font-weight: 700;
-    }
     .exp-rail-track {
       position: relative;
       width: 100%;
@@ -2747,12 +2736,12 @@
       height: auto;
       display: grid;
       grid-template-columns: minmax(160px, 280px) minmax(0, 420px);
-      grid-template-rows: auto auto;
+      grid-template-rows: auto 1fr;
       grid-template-areas:
         "visual copy"
         "docs copy";
       column-gap: clamp(16px, 2.4vw, 28px);
-      row-gap: 12px;
+      row-gap: 6px;
       align-items: start;
       justify-content: center;
       padding: 6px 8px 10px;
@@ -2764,13 +2753,13 @@
       grid-template-areas:
         "visual copy"
         "apps copy";
-      row-gap: 10px;
+      row-gap: 6px;
     }
     .exp-row.has-docs {
       grid-template-areas:
         "visual copy"
         "docs copy";
-      row-gap: 12px;
+      row-gap: 6px;
     }
     .exp-row:not(.has-docs):not(.has-apps) {
       grid-template-rows: auto;
@@ -2837,7 +2826,6 @@
         width: 100% !important;
         max-width: none !important;
       }
-      .exp-hint { letter-spacing: 0.02em; font-size: 10px; }
       .exp-rail { width: min(100%, 520px); gap: 6px; }
       .exp-rail-end { font-size: 9px; letter-spacing: 0.1em; }
       .exp-rail-item .exp-rail-role { font-size: 11px; }
@@ -4090,7 +4078,15 @@
       padding-top: clamp(22px, 3vh, 30px);
       border-top: 1px dashed rgba(255, 255, 255, 0.1);
     }
-    .proj-head > .proj-bar-block:first-child p { max-width: 46em; }
+    .proj-head > .proj-bar-block:first-child p { max-width: none; }
+    #projIntro0 .proj-head > .proj-bar-block:not(.proj-head-result) p {
+      white-space: nowrap;
+    }
+    @media (max-width: 1100px) {
+      #projIntro0 .proj-head > .proj-bar-block:not(.proj-head-result) p {
+        white-space: normal;
+      }
+    }
     .proj-panel-body > .proj-show-label {
       margin-bottom: calc(clamp(10px, 1.6vw, 18px) - clamp(28px, 4vw, 44px));
     }
@@ -4832,10 +4828,21 @@
     }
     .asc-ver-role {
       margin-left: auto;
-      font-size: 11px;
-      font-weight: 600;
-      letter-spacing: 0.08em;
-      color: rgba(255, 255, 255, 0.42);
+      padding: 4px 11px;
+      border-radius: 999px;
+      font-size: 12.5px;
+      font-weight: 700;
+      letter-spacing: 0.06em;
+    }
+    .is-v2 .asc-ver-role {
+      color: var(--lime);
+      background: rgba(204, 255, 0, 0.12);
+      box-shadow: inset 0 0 0 1px rgba(204, 255, 0, 0.5);
+    }
+    .is-v1 .asc-ver-role {
+      color: #fff;
+      background: rgba(255, 255, 255, 0.1);
+      box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.28);
     }
     .asc-ver-desc {
       font-size: 13px;
@@ -7202,8 +7209,8 @@
       .home-badge-ico { width: 24px; height: 24px; }
       .home-badge-ico svg { width: 11px; height: 11px; }
       .home-badge strong { font-size: 12px; }
-      .home-actions { flex-direction: column; align-items: stretch; }
-      .home-cta { width: 100%; }
+      .home-actions { gap: 6px; }
+      .home-cta { padding: 9px 10px; font-size: 11px; }
       .tt { --d: min(340px, 80cqi); }
       .tt-buttons { gap: 18px; }
     }
@@ -7289,8 +7296,8 @@
             </p>
             <div class="home-actions">
               <button type="button" class="home-cta" data-goto="2">查看我的项目<span class="home-cta-arrow" aria-hidden="true">→</span></button>
-              <button type="button" class="home-cta is-ghost" data-goto="3">查看我的作品</button>
-              <button type="button" class="home-cta is-ghost" data-open-study>《薄荷健康》·海外市场研究<span class="home-cta-arrow" aria-hidden="true">↗</span></button>
+              <button type="button" class="home-cta is-ghost" data-goto="3">我的作品</button>
+              <button type="button" class="home-cta is-ghost" data-open-study>薄荷健康.海外市场研究<span class="home-cta-arrow" aria-hidden="true">↗</span></button>
             </div>
           </div>
           <div class="home-visual" id="homeVisual">
@@ -7407,7 +7414,6 @@
             <div class="exp-rail" aria-label="职业时间线，从近到远">
               <div class="exp-rail-meta">
                 <span class="exp-rail-end is-now">至今</span>
-                <p class="exp-hint">从近到远查看 · <b id="expCounter">01 / 04</b></p>
                 <span class="exp-rail-end">更早</span>
               </div>
               <div class="exp-rail-track">
@@ -7606,7 +7612,7 @@
               <div class="exp-copy">
                 <time datetime="2023-05/2023-10">2023.05 — 2023.10</time>
                 <h3>成都莱嗯信息技术有限公司</h3>
-                <p class="exp-biz"><span>公司业务</span>iOS 健康运动 App 精品运营</p>
+                <p class="exp-biz"><span>公司业务</span>海外运动健康APP精品运营</p>
                 <ul class="exp-points">
                   <li>
                     <strong>海外市场研究</strong>
@@ -7785,12 +7791,12 @@
                   <div class="proj-head">
                     <section class="proj-bar-block">
                       <h4>背景</h4>
-                      <p>App 矩阵需要大量重复的<b>上架与商业化素材</b>，制作链路分散、难以复用，也缺少可规模化的<b>智能生成</b>能力，效率低、交付不稳定。</p>
+                      <p>App 矩阵需大量重复的<b>上架与商业化素材</b>，却缺少统一平台与<b>智能生成</b>能力，效率低、交付不稳定。</p>
                     </section>
                     <section class="proj-bar-block">
                       <h4>行动</h4>
-                      <p><b>V1</b>：2026 年 3 月以产品支持梳理上架素材需求，约 <b>1 个月</b>推动平台上线并投入内用，打通生成、管理与导出。</p>
-                      <p><b>V2</b>：上线后跟踪真实使用，围绕上架素材场景独立复盘；9 月业余时间用半个多月重构流程，完成完整 PRD 与原型，重点规划 <b>AI 图文智能生成</b>，以及 <b>批量编辑、复用、共享</b>。</p>
+                      <p><b>V1</b>：2026 年 3 月以产品支持梳理需求，约 <b>1 个月</b>推动上线并投入内用。</p>
+                      <p><b>V2</b>：跟踪真实使用后独立复盘，业余半个多月重构流程，完成 PRD 与原型，重点规划 <b>AI 图文智能生成</b>及 <b>批量编辑、复用、共享</b>。</p>
                     </section>
                     <section class="proj-bar-block proj-head-result">
                       <h4>结果</h4>
@@ -7808,8 +7814,8 @@
                             <div><dt>6 类</dt><dd>制作任务</dd></div>
                           </dl>
                           <div class="asc-ver-actions">
-                            <a class="asc-ver-btn is-primary" href="https://my.feishu.cn/wiki/QXvrwbZ58iVAWxkKvxKcxJvMncg?from=from_copylink" target="_blank" rel="noopener noreferrer">PRD 文档<i aria-hidden="true">↗</i></a>
                             <a class="asc-ver-btn is-primary" href="https://www.figma.com/make/gnVIndcL7BiiTkhZWvoCao/APP%E7%B4%A0%E6%9D%90%E7%94%9F%E4%BA%A7%E5%B9%B3%E5%8F%B0%E5%8E%9F%E5%9E%8B%E8%A7%84%E5%88%92?t=mVGjN1HcnTnT7elE-1" target="_blank" rel="noopener noreferrer">Figma 原型<i aria-hidden="true">↗</i></a>
+                            <a class="asc-ver-btn" href="https://my.feishu.cn/wiki/QXvrwbZ58iVAWxkKvxKcxJvMncg?from=from_copylink" target="_blank" rel="noopener noreferrer">PRD 文档<i aria-hidden="true">↗</i></a>
                           </div>
                         </article>
                         <span class="asc-ver-arrow" aria-hidden="true"><em>复盘重构</em><em>从能用到好用</em><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12h15M14 7l5 5-5 5" /></svg></span>
@@ -9009,15 +9015,11 @@
       var expPrev = document.getElementById("expPrev");
       var expNext = document.getElementById("expNext");
       var expRailItems = expPage ? expPage.querySelectorAll(".exp-rail-item") : [];
-      var expCounter = document.getElementById("expCounter");
       var expTotal = expRows.length;
       var expCur = 0;
       var expWheelLock = 0;
       var expHinted = false;
 
-      function expPad(n) {
-        return (n < 10 ? "0" : "") + n;
-      }
       function expRowLeft(row) {
         if (!expTrack || !row) return 0;
         return row.getBoundingClientRect().left - expTrack.getBoundingClientRect().left + expTrack.scrollLeft;
@@ -9046,7 +9048,6 @@
         });
         if (expPrev) expPrev.disabled = expCur <= 0;
         if (expNext) expNext.disabled = expCur >= expTotal - 1;
-        if (expCounter) expCounter.textContent = expPad(expCur + 1) + " / " + expPad(expTotal || 1);
         if (expPage) {
           expPage.style.setProperty("--exp-n", String(expTotal || 1));
           expPage.style.setProperty("--exp-p", String(expTotal > 1 ? expCur / (expTotal - 1) : 0));
