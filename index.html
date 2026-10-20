@@ -4456,9 +4456,30 @@
       font-size: 12px;
       color: rgba(255, 255, 255, 0.55);
     }
+    /* 双卡重叠：底纯绿垫卡 + 顶内容卡（微浮动 + 间歇扫光） */
+    .health-study-stack {
+      position: relative;
+      width: 100%;
+      align-self: start;
+      isolation: isolate;
+    }
+    .health-study-stack::before {
+      content: "";
+      position: absolute;
+      left: -10px;
+      right: 12px;
+      top: 14px;
+      bottom: -12px;
+      z-index: 0;
+      border-radius: 20px;
+      background: var(--lime);
+      box-shadow: 0 18px 40px rgba(204, 255, 0, 0.22);
+      pointer-events: none;
+    }
     .health-study-card {
       appearance: none;
       position: relative;
+      z-index: 1;
       display: flex;
       flex-direction: column;
       align-items: stretch;
@@ -4467,23 +4488,77 @@
       padding: 22px 22px 20px;
       border: 0;
       border-radius: 18px;
+      overflow: hidden;
       text-align: left;
       text-decoration: none;
       font: inherit;
       color: inherit;
       cursor: pointer;
-      background: rgba(255, 255, 255, 0.03);
-      box-shadow: inset 0 0 0 1px rgba(204, 255, 0, 0.28);
-      transition: translate 0.4s var(--ease), box-shadow 0.4s var(--ease), background 0.4s var(--ease);
+      background:
+        radial-gradient(120% 80% at 0% 0%, rgba(204, 255, 0, 0.06), transparent 55%),
+        linear-gradient(180deg, #17171a 0%, #101012 100%);
+      box-shadow:
+        inset 0 0 0 1px rgba(255, 255, 255, 0.1),
+        0 20px 44px rgba(0, 0, 0, 0.45);
+      transform-origin: center center;
+      animation: healthStudyFloat 5.2s ease-in-out infinite;
+      transition: transform 0.4s var(--ease), box-shadow 0.4s var(--ease), background 0.4s var(--ease);
+    }
+    .health-study-card::after {
+      content: "";
+      position: absolute;
+      inset: -12% -45%;
+      z-index: 2;
+      pointer-events: none;
+      background: linear-gradient(
+        105deg,
+        transparent 0%,
+        transparent 40%,
+        rgba(255, 255, 255, 0.06) 46%,
+        rgba(255, 255, 255, 0.28) 50%,
+        rgba(255, 255, 255, 0.08) 54%,
+        transparent 60%,
+        transparent 100%
+      );
+      transform: translateX(-60%) skewX(-14deg);
+      opacity: 0;
+      animation: healthStudySheen 5.2s ease-in-out infinite;
     }
     .health-study-card:hover {
-      translate: 0 -3px;
-      background: rgba(204, 255, 0, 0.04);
-      box-shadow: inset 0 0 0 1px rgba(204, 255, 0, 0.48);
+      animation-play-state: paused;
+      transform: translateY(-6px);
+      box-shadow:
+        inset 0 0 0 1px rgba(204, 255, 0, 0.35),
+        0 26px 52px rgba(0, 0, 0, 0.5);
     }
+    .health-study-card:hover::after { animation-play-state: paused; }
     .health-study-card:focus-visible {
       outline: 2px solid rgba(204, 255, 0, 0.55);
       outline-offset: 3px;
+    }
+    @keyframes healthStudyFloat {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-5px); }
+    }
+    @keyframes healthStudySheen {
+      0%, 62% {
+        transform: translateX(-60%) skewX(-14deg);
+        opacity: 0;
+      }
+      68% { opacity: 1; }
+      88% {
+        transform: translateX(60%) skewX(-14deg);
+        opacity: 0;
+      }
+      100% {
+        transform: translateX(60%) skewX(-14deg);
+        opacity: 0;
+      }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .health-study-card,
+      .health-study-card::after { animation: none; }
+      .health-study-card:hover { transform: none; }
     }
     .health-study-card-kicker {
       display: inline-flex;
@@ -5543,7 +5618,7 @@
     .proj-stage.js-reveal .proj-panel .proj-panel-role,
     .proj-stage.js-reveal .proj-panel .proj-head > *,
     .proj-stage.js-reveal .proj-panel .health-overview,
-    .proj-stage.js-reveal .proj-panel .health-study-card,
+    .proj-stage.js-reveal .proj-panel .health-study-stack,
     .proj-stage.js-reveal .proj-panel .health-showcase,
     .proj-stage.js-reveal .proj-panel .proj-show-label,
     .proj-stage.js-reveal .proj-panel .proj-content {
@@ -5557,7 +5632,7 @@
     .proj-stage.js-reveal .proj-panel.is-in .proj-panel-role,
     .proj-stage.js-reveal .proj-panel.is-in .proj-head > *,
     .proj-stage.js-reveal .proj-panel.is-in .health-overview,
-    .proj-stage.js-reveal .proj-panel.is-in .health-study-card,
+    .proj-stage.js-reveal .proj-panel.is-in .health-study-stack,
     .proj-stage.js-reveal .proj-panel.is-in .health-showcase,
     .proj-stage.js-reveal .proj-panel.is-in .proj-show-label,
     .proj-stage.js-reveal .proj-panel.is-in .proj-content {
@@ -5575,7 +5650,7 @@
     .proj-stage.js-reveal .proj-panel.is-in .proj-head > :nth-child(2) { transition-delay: 0.3s; }
     .proj-stage.js-reveal .proj-panel.is-in .proj-head > :nth-child(3) { transition-delay: 0.38s; }
     .proj-stage.js-reveal .proj-panel.is-in .health-overview { transition-delay: 0.22s; }
-    .proj-stage.js-reveal .proj-panel.is-in .health-study-card { transition-delay: 0.3s; }
+    .proj-stage.js-reveal .proj-panel.is-in .health-study-stack { transition-delay: 0.3s; }
     .proj-stage.js-reveal .proj-panel.is-in .health-showcase { transition-delay: 0.38s; }
     .proj-stage.js-reveal .proj-panel.is-in .proj-show-label { transition-delay: 0.36s; }
     .proj-stage.js-reveal .proj-panel.is-in .proj-content { transition-delay: 0.42s; }
@@ -8062,18 +8137,20 @@
                           </section>
                         </div>
                       </div>
-                      <button type="button" class="health-study-card" data-open-study aria-label="查看《薄荷健康》App 海外市场调研与功能优化详情">
-                        <span class="health-study-card-kicker"><span>自主研究</span><em>Independent Study</em></span>
-                        <h4>《薄荷健康》App 海外市场调研与功能优化</h4>
-                        <p>从 2023 年起的长期用户，也是工作中的重点竞品。结合海外调研经验，完成从市场到用户的完整分析。</p>
-                        <ul class="health-study-card-steps" aria-label="研究路径">
-                          <li>市场调研</li>
-                          <li>竞品池筛选</li>
-                          <li>竞品拆解</li>
-                          <li>用户评论分析</li>
-                        </ul>
-                        <span class="health-study-card-go">查看自主研究详情 <i aria-hidden="true">↗</i></span>
-                      </button>
+                      <div class="health-study-stack">
+                        <button type="button" class="health-study-card" data-open-study aria-label="查看《薄荷健康》App 海外市场调研与功能优化详情">
+                          <span class="health-study-card-kicker"><span>自主研究</span><em>Independent Study</em></span>
+                          <h4>《薄荷健康》App 海外市场调研与功能优化</h4>
+                          <p>从 2023 年起的长期用户，也是工作中的重点竞品。结合海外调研经验，完成从市场到用户的完整分析。</p>
+                          <ul class="health-study-card-steps" aria-label="研究路径">
+                            <li>市场调研</li>
+                            <li>竞品池筛选</li>
+                            <li>竞品拆解</li>
+                            <li>用户评论分析</li>
+                          </ul>
+                          <span class="health-study-card-go">查看自主研究详情 <i aria-hidden="true">↗</i></span>
+                        </button>
+                      </div>
                     </div>
                   </div>
 
