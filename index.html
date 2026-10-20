@@ -526,8 +526,8 @@
     }
     @media (min-width: 860px) {
       .home-grid {
-        grid-template-columns: minmax(0, 420px) minmax(0, 500px);
-        gap: clamp(32px, 4.5vw, 64px);
+        grid-template-columns: minmax(0, 520px) minmax(0, 460px);
+        gap: clamp(24px, 3vw, 48px);
         justify-content: center;
         align-items: center;
       }
@@ -536,7 +536,8 @@
       position: relative;
       width: 100%;
       justify-self: center;
-      max-width: 420px;
+      max-width: 520px;
+      container-type: inline-size;
     }
     .home-intro {
       margin-bottom: 8px;
@@ -698,8 +699,11 @@
     .home-actions {
       display: flex;
       flex-wrap: wrap;
-      gap: 12px;
+      gap: 8px;
       align-items: center;
+    }
+    @container (min-width: 480px) {
+      .home-actions { flex-wrap: nowrap; }
     }
     .home-cta {
       appearance: none;
@@ -709,10 +713,12 @@
       align-items: center;
       justify-content: center;
       gap: 6px;
+      flex: 0 0 auto;
       font-family: var(--font-ui);
       font-size: 13px;
       font-weight: 700;
-      padding: 12px 22px;
+      padding: 11px 16px;
+      white-space: nowrap;
       border: none;
       border-radius: 999px;
       background: var(--lime);
@@ -1831,25 +1837,6 @@
       padding-left: 18px;
       border-left: 1px solid rgba(255, 255, 255, 0.16);
     }
-    .exp-visual-tags {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 8px;
-      margin: 12px 0 0;
-      padding: 0;
-      list-style: none;
-    }
-    .exp-visual-tags li {
-      padding: 4px 10px;
-      border-radius: 999px;
-      background: rgba(255, 255, 255, 0.08);
-      -webkit-backdrop-filter: blur(6px);
-      backdrop-filter: blur(6px);
-      font-size: 10.5px;
-      font-weight: 600;
-      letter-spacing: 0.06em;
-      color: rgba(255, 255, 255, 0.82);
-    }
     .exp-copy {
       position: relative;
       width: min(100%, 400px);
@@ -1876,26 +1863,32 @@
       line-height: 1.35;
     }
     .exp-copy .exp-biz {
-      margin-top: -4px;
-      font-size: 11.5px;
-      font-weight: 500;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 8px 10px;
+      margin: 2px 0 4px;
+      padding: 8px 12px;
+      border-radius: 10px;
+      background: rgba(204, 255, 0, 0.07);
+      box-shadow: inset 0 0 0 1px rgba(204, 255, 0, 0.22);
+      font-size: 12.5px;
+      font-weight: 600;
       letter-spacing: 0.02em;
-      color: rgba(255, 255, 255, 0.48);
+      color: #fff;
       line-height: 1.45;
     }
     .exp-copy .exp-biz span {
-      margin-right: 8px;
-      padding-right: 8px;
-      border-right: 1px solid rgba(255, 255, 255, 0.16);
-      color: rgba(255, 255, 255, 0.34);
-      font-size: 10.5px;
+      display: inline-flex;
+      align-items: center;
+      padding: 2px 8px;
+      border-radius: 999px;
+      background: var(--lime);
+      color: #0a0a0b;
+      font-size: 10px;
+      font-weight: 700;
       letter-spacing: 0.08em;
       white-space: nowrap;
-    }
-    .exp-copy .exp-role {
-      font-size: 12px;
-      color: var(--lime);
-      font-weight: 600;
     }
     .exp-copy ul {
       list-style: none;
@@ -1949,12 +1942,12 @@
     .exp-row.has-docs {
       grid-template-areas: "visual node copy" "docs node copy";
       grid-template-rows: auto 1fr;
-      row-gap: 26px;
+      row-gap: 12px;
     }
     .exp-row.has-apps {
       grid-template-areas: "visual node copy" "apps node copy";
       grid-template-rows: auto 1fr;
-      row-gap: 18px;
+      row-gap: 10px;
     }
     .exp-row.has-apps.is-flip {
       grid-template-areas: "copy node visual" "copy node apps";
@@ -1970,7 +1963,7 @@
       display: flex;
       align-items: baseline;
       justify-content: space-between;
-      margin: 0 2px 10px;
+      margin: 0 2px 6px;
       font-size: 10px;
       font-weight: 700;
       letter-spacing: 0.2em;
@@ -2124,7 +2117,7 @@
       display: flex;
       align-items: baseline;
       justify-content: space-between;
-      margin: 0 2px 12px;
+      margin: 0 2px 6px;
       font-size: 10px;
       font-weight: 700;
       letter-spacing: 0.2em;
@@ -2137,6 +2130,14 @@
       font-size: 12px;
       letter-spacing: 0.04em;
       color: rgba(255, 255, 255, 0.3);
+    }
+    .exp-docs-note,
+    .exp-apps-note {
+      margin: 0 2px 12px;
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 0.04em;
+      color: var(--lime);
     }
     .exp-docs-list {
       display: grid;
@@ -7205,9 +7206,9 @@
               <span><span class="home-badge-ico" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 9l10-5 10 5-10 5z" /><path d="M6 11v5c3 2 9 2 12 0v-5" /></svg></span>软件工程</span>
             </p>
             <div class="home-actions">
-              <button type="button" class="home-cta" data-goto="3">查看我的作品<span class="home-cta-arrow" aria-hidden="true">→</span></button>
-              <button type="button" class="home-cta is-ghost" data-goto="2">查看我的项目</button>
-              <a class="home-cta is-ghost" href="bohee-study.html">薄荷健康 · 自主研究<span class="home-cta-arrow" aria-hidden="true">↗</span></a>
+              <button type="button" class="home-cta" data-goto="2">查看我的项目<span class="home-cta-arrow" aria-hidden="true">→</span></button>
+              <button type="button" class="home-cta is-ghost" data-goto="3">查看我的作品</button>
+              <a class="home-cta is-ghost" href="bohee-study.html">《薄荷健康》·海外市场研究<span class="home-cta-arrow" aria-hidden="true">↗</span></a>
             </div>
           </div>
           <div class="home-visual" id="homeVisual">
@@ -7346,15 +7347,12 @@
                     <div><dt>+39.8%</dt><dd>广告 ARPU 增长</dd></div>
                     <div><dt>10+</dt><dd>核心产品 PRD 文档</dd></div>
                   </dl>
-                  <ul class="exp-visual-tags">
-                    <li>Vibe Coding</li>
-                    <li>ASO</li>
-                    <li>数据分析</li>
-                  </ul>
+                  <p class="exp-visual-role">产品经理 / 运营 · 全职</p>
                 </div>
               </div>
               <aside class="exp-docs" aria-label="工作文档">
                 <p class="exp-docs-head"><span>Work Docs</span><em>05</em></p>
+                <p class="exp-docs-note">工作经验文档</p>
                 <ul class="exp-docs-list">
                   <li>
                     <a class="exp-doc" data-doc="ai-dev" href="https://my.feishu.cn/wiki/WJLrwVkxniCKRTkhbvhckRrfn8b?from=from_copylink" target="_blank" rel="noopener noreferrer">
@@ -7416,7 +7414,6 @@
                 <time datetime="2024-10">2024.10 — 至今</time>
                 <h3>成都创鸿奥通信息技术有限公司</h3>
                 <p class="exp-biz"><span>公司业务</span>安卓 / 鸿蒙 App 矩阵运营</p>
-                <p class="exp-role">产品经理 / 运营 · 全职</p>
                 <ul class="exp-points">
                   <li>
                     <strong>Vibe Coding</strong>
@@ -7456,15 +7453,12 @@
                     <div><dt>1000+</dt><dd>海外 App 筛选</dd></div>
                     <div><dt>10+</dt><dd>头部产品拆解</dd></div>
                   </dl>
-                  <ul class="exp-visual-tags">
-                    <li>海外市场研究</li>
-                    <li>竞品分析</li>
-                    <li>用户洞察</li>
-                  </ul>
+                  <p class="exp-visual-role">产品助理 · 实习 · 海外 C 端产品</p>
                 </div>
               </div>
               <aside class="exp-apps" aria-label="主营产品">
                 <p class="exp-apps-head"><span>Main Products</span><em>06</em></p>
+                <p class="exp-apps-note">主营产品，月收入$20K+</p>
                 <ul class="exp-apps-grid">
                   <li style="--i:0">
                     <a class="exp-app" data-app="wfw" href="https://app.sensortower-china.com/publisher/ios/596300475/?page=1&amp;page_size=25" target="_blank" rel="noopener noreferrer" title="Workout for Women: Home &amp; Gym">
@@ -7512,7 +7506,6 @@
                 <time datetime="2023-05/2023-10">2023.05 — 2023.10</time>
                 <h3>成都莱嗯信息技术有限公司</h3>
                 <p class="exp-biz"><span>公司业务</span>iOS 健康运动 App 精品运营</p>
-                <p class="exp-role">产品助理 · 实习 · 海外 C 端产品</p>
                 <ul class="exp-points">
                   <li>
                     <strong>海外市场研究</strong>
@@ -7543,15 +7536,12 @@
                     <div><dt>500+</dt><dd>测试任务</dd></div>
                     <div><dt>6000+</dt><dd>SQL 测试数据</dd></div>
                   </dl>
-                  <ul class="exp-visual-tags">
-                    <li>功能测试</li>
-                    <li>SQL</li>
-                    <li>Android</li>
-                  </ul>
+                  <p class="exp-visual-role">软件测试工程师 · 实习</p>
                 </div>
               </div>
               <aside class="exp-docs" aria-label="工作文档">
                 <p class="exp-docs-head"><span>Work Docs</span><em>02</em></p>
+                <p class="exp-docs-note">测试方法论</p>
                 <ul class="exp-docs-list">
                   <li>
                     <a class="exp-doc" href="https://my.feishu.cn/wiki/V3WVwIbSWiKaiekAgBRcT7BZnEd?from=from_copylink" target="_blank" rel="noopener noreferrer">
@@ -7582,8 +7572,7 @@
               <div class="exp-copy">
                 <time datetime="2022-09/2023-03">2022.09 — 2023.03</time>
                 <h3>北京直真科技股份有限公司</h3>
-                <p class="exp-biz"><span>公司业务</span>通信OSS运营支撑</p>
-                <p class="exp-role">软件测试工程师 · 实习</p>
+                <p class="exp-biz"><span>公司业务</span>通信 OSS 运营支撑</p>
                 <ul class="exp-points">
                   <li>
                     <strong>功能与接口测试</strong>
@@ -7613,10 +7602,7 @@
                   <dl class="exp-visual-stats">
                     <div class="is-wide is-text"><dt>国家奖学金</dt><dd>荣誉奖项</dd></div>
                   </dl>
-                  <ul class="exp-visual-tags">
-                    <li>软件工程</li>
-                    <li>实践部部长</li>
-                  </ul>
+                  <p class="exp-visual-role">软件工程 · 本科</p>
                 </div>
               </div>
               <div class="exp-node">
@@ -7626,7 +7612,6 @@
               <div class="exp-copy">
                 <time datetime="2019-09/2023-07">2019.09 — 2023.07</time>
                 <h3>西南科技大学</h3>
-                <p class="exp-role">软件工程 · 本科</p>
                 <ul class="exp-points">
                   <li><strong>专业学习</strong>核心课程：软件工程、数据结构、数据库原理、Python；AI 方向：机器学习、深度学习、知识图谱。</li>
                   <li><strong>校园经历</strong>担任青年志愿者<b>实践部部长</b>，参与活动策划、团队管理与组织协调。</li>
@@ -7801,9 +7786,9 @@
                           </section>
                         </div>
                       </div>
-                      <a class="health-study-card" href="bohee-study.html" aria-label="查看海外市场调研与功能优化详情">
+                      <a class="health-study-card" href="bohee-study.html" aria-label="查看《薄荷健康》App 海外市场调研与功能优化详情">
                         <span class="health-study-card-kicker"><span>自主研究</span><em>Independent Study</em></span>
-                        <h4>海外市场调研与功能优化</h4>
+                        <h4>《薄荷健康》App 海外市场调研与功能优化</h4>
                         <p>从 2023 年起的长期用户，也是工作中的重点竞品。结合海外调研经验，完成从市场到用户的完整分析。</p>
                         <ul class="health-study-card-steps" aria-label="研究路径">
                           <li>市场调研</li>
