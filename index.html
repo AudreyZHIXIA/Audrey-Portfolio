@@ -2116,6 +2116,13 @@
       font-weight: 700;
     }
     .exp-points em { font-style: normal; }
+    .exp-points a {
+      color: var(--lime);
+      font-weight: 700;
+      text-decoration: underline;
+      text-underline-offset: 3px;
+    }
+    .exp-points a:hover { color: #d8ff3d; }
     /* 文案内关键词/句子：与左侧文档双向悬停高亮 */
     .exp-doc-hit {
       display: inline;
@@ -7517,9 +7524,9 @@
     }
     .life-contact {
       display: grid;
-      grid-template-columns: repeat(3, minmax(0, 1fr));
+      grid-template-columns: repeat(4, minmax(0, 1fr));
       gap: clamp(14px, 1.6vw, 20px);
-      width: min(860px, 100%);
+      width: min(1040px, 100%);
       margin: 0 auto;
     }
     .life-card {
@@ -7652,6 +7659,9 @@
         opacity: 0;
         visibility: hidden;
       }
+    }
+    @media (max-width: 960px) {
+      .life-contact { grid-template-columns: repeat(2, minmax(0, 1fr)); }
     }
     @media (max-width: 720px) {
       .life-contact { grid-template-columns: minmax(0, 1fr); }
@@ -8189,7 +8199,7 @@
               </div>
             </article>
 
-            <article class="exp-row is-flip" data-exp="3" aria-label="大学 2019.09 — 2023.07">
+            <article class="exp-row is-flip has-docs" data-exp="3" aria-label="大学 2019.09 — 2023.07">
               <div class="exp-visual has-stats">
                 <img src="assets/images/04.png" width="1024" height="1536" alt="" decoding="async" />
                 <div class="exp-visual-data">
@@ -8199,6 +8209,22 @@
                   </dl>
                 </div>
               </div>
+              <aside class="exp-docs" aria-label="学籍文档">
+                <p class="exp-docs-head"><span>Education</span><em>01</em></p>
+                <p class="exp-docs-note">学籍验证报告</p>
+                <ul class="exp-docs-list">
+                  <li>
+                    <a class="exp-doc" href="assets/doc/教育部学籍在线验证报告_刘敏.pdf" download="教育部学籍在线验证报告_刘敏.pdf">
+                      <span class="exp-doc-cover is-sheet">
+                        <span class="exp-doc-sheet" aria-hidden="true"><b></b><i></i><i></i><i></i><i></i></span>
+                        <span class="exp-doc-no">01</span>
+                        <span class="exp-doc-go" aria-hidden="true"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M8 3.5v7M5 8l3 3 3-3M3.5 13h9"/></svg></span>
+                      </span>
+                      <span class="exp-doc-text"><strong>教育部学籍在线验证报告</strong><small>PDF · 可下载核验</small></span>
+                    </a>
+                  </li>
+                </ul>
+              </aside>
               <div class="exp-node">
                 <span class="exp-node-dot" aria-hidden="true"></span>
                 <span class="exp-node-date">2019.09</span>
@@ -8209,6 +8235,7 @@
                 <ul class="exp-points">
                   <li><strong>专业学习</strong>核心课程：软件工程、数据结构、数据库原理、Python；AI 方向：机器学习、深度学习、知识图谱。</li>
                   <li><strong>专业证书</strong>考取<b>数据库三级、四级</b>证书。</li>
+                  <li><strong>学籍信息</strong>教育部学籍在线可核验，可下载 <a href="assets/doc/教育部学籍在线验证报告_刘敏.pdf" download="教育部学籍在线验证报告_刘敏.pdf">学籍验证报告</a>。</li>
                   <li><strong>校园经历</strong>担任青年志愿者<b>实践部部长</b>，参与活动策划、团队管理与组织协调。</li>
                   <li><strong>荣誉奖项</strong><b>国家奖学金</b>、创业实践奖、明星部长、十佳志愿者团队。</li>
                 </ul>
@@ -9004,6 +9031,11 @@
             <a class="life-card is-primary" href="assets/doc/刘敏_应聘产品经理_19114049215.pdf" download="刘敏_应聘产品经理_19114049215.pdf">
               <span class="life-card-kicker">Resume · 简历</span>
               <span class="life-card-value">Download CV</span>
+              <span class="life-card-go" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M6 13l6 6 6-6"/></svg></span>
+            </a>
+            <a class="life-card" href="assets/doc/教育部学籍在线验证报告_刘敏.pdf" download="教育部学籍在线验证报告_刘敏.pdf">
+              <span class="life-card-kicker">Education · 学籍</span>
+              <span class="life-card-value">下载学籍验证报告</span>
               <span class="life-card-go" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M6 13l6 6 6-6"/></svg></span>
             </a>
           </div>
