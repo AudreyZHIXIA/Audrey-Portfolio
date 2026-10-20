@@ -7524,11 +7524,55 @@
     }
     .life-contact {
       display: grid;
-      grid-template-columns: repeat(4, minmax(0, 1fr));
+      grid-template-columns: repeat(3, minmax(0, 1fr));
       gap: clamp(14px, 1.6vw, 20px);
-      width: min(1040px, 100%);
+      width: min(860px, 100%);
       margin: 0 auto;
     }
+    .life-edu-btn {
+      appearance: none;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      width: fit-content;
+      min-height: 44px;
+      margin: 22px auto 0;
+      padding: 0 18px;
+      border-radius: 14px;
+      border: 1px solid rgba(255, 255, 255, 0.14);
+      background: rgba(255, 255, 255, 0.04);
+      color: rgba(255, 255, 255, 0.82);
+      font-family: var(--font-ui);
+      font-size: 13px;
+      font-weight: 700;
+      letter-spacing: 0.04em;
+      text-decoration: none;
+      box-shadow: 0 10px 28px rgba(0, 0, 0, 0.28);
+      transition:
+        transform 0.35s var(--ease),
+        border-color 0.35s var(--ease),
+        background 0.35s var(--ease),
+        color 0.35s var(--ease),
+        box-shadow 0.35s var(--ease);
+    }
+    .life-edu-btn svg {
+      width: 14px;
+      height: 14px;
+      flex: 0 0 auto;
+    }
+    .life-edu-btn:hover {
+      transform: translateY(-2px);
+      border-color: rgba(204, 255, 0, 0.45);
+      background: rgba(204, 255, 0, 0.1);
+      color: var(--lime);
+      box-shadow: 0 16px 36px rgba(0, 0, 0, 0.38);
+    }
+    .life-edu-btn:focus-visible {
+      outline: 2px solid rgba(204, 255, 0, 0.55);
+      outline-offset: 3px;
+    }
+    .life-edu-btn:active { transform: translateY(0) scale(0.98); }
     .life-card {
       position: relative;
       display: flex;
@@ -7660,17 +7704,19 @@
         visibility: hidden;
       }
     }
-    @media (max-width: 960px) {
+    @media (max-width: 860px) {
       .life-contact { grid-template-columns: repeat(2, minmax(0, 1fr)); }
     }
     @media (max-width: 720px) {
       .life-contact { grid-template-columns: minmax(0, 1fr); }
+      .life-edu-btn { width: min(100%, 280px); }
     }
     .site-stats {
       display: flex;
-      flex-wrap: wrap;
-      align-items: baseline;
-      gap: 8px 18px;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
       width: min(1040px, 100%);
       margin: clamp(28px, 4.2vh, 44px) auto 0;
       padding-top: 16px;
@@ -7680,6 +7726,14 @@
       font-size: 12px;
       font-weight: 500;
       letter-spacing: 0.06em;
+      text-align: center;
+    }
+    .site-stats-row {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: baseline;
+      justify-content: center;
+      gap: 8px 18px;
     }
     .site-stats b {
       color: var(--lime);
@@ -7696,13 +7750,9 @@
       translate: 0 -1px;
     }
     .site-stats-note {
-      margin-left: auto;
       font-size: 11px;
       letter-spacing: 0.04em;
       color: rgba(156, 163, 175, 0.72);
-    }
-    @media (max-width: 720px) {
-      .site-stats-note { margin-left: 0; width: 100%; }
     }
 
     @media (max-width: 720px) {
@@ -9071,18 +9121,19 @@
               <span class="life-card-value">Download CV</span>
               <span class="life-card-go" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M6 13l6 6 6-6"/></svg></span>
             </a>
-            <a class="life-card" href="assets/doc/教育部学籍在线验证报告_刘敏.pdf" download="教育部学籍在线验证报告_刘敏.pdf">
-              <span class="life-card-kicker">Education · 学籍</span>
-              <span class="life-card-value">下载学籍验证报告</span>
-              <span class="life-card-go" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M6 13l6 6 6-6"/></svg></span>
-            </a>
           </div>
+          <a class="life-edu-btn" href="assets/doc/教育部学籍在线验证报告_刘敏.pdf" download="教育部学籍在线验证报告_刘敏.pdf">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 5v14M6 13l6 6 6-6"/></svg>
+            <span>下载学籍验证报告</span>
+          </a>
           <footer class="site-stats" aria-label="访问统计">
-            <span>访问 <b id="vercount_value_site_pv">—</b> 次</span>
-            <i class="site-stats-dot" aria-hidden="true"></i>
-            <span>访客 <b id="vercount_value_site_uv">—</b> 人</span>
-            <i class="site-stats-dot" aria-hidden="true"></i>
-            <span>本次停留 <b id="statStay">00:00</b></span>
+            <div class="site-stats-row">
+              <span>访问 <b id="vercount_value_site_pv">—</b> 次</span>
+              <i class="site-stats-dot" aria-hidden="true"></i>
+              <span>访客 <b id="vercount_value_site_uv">—</b> 人</span>
+              <i class="site-stats-dot" aria-hidden="true"></i>
+              <span>本次停留 <b id="statStay">00:00</b></span>
+            </div>
             <span class="site-stats-note">仅统计访问次数与停留时长</span>
           </footer>
         </div>
