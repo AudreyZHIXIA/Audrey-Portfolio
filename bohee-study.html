@@ -18,22 +18,32 @@
       --font-serif: "Noto Serif SC", "Songti SC", serif;
       --font-display: "Space Grotesk", "DM Sans", sans-serif;
       --ease: cubic-bezier(0.22, 1, 0.36, 1);
-      --page: min(1080px, calc(100% - clamp(32px, 5vw, 72px)));
+      --page: min(1180px, calc(100% - clamp(32px, 5vw, 72px)));
     }
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-    html { scroll-behavior: smooth; }
+    html {
+      height: 100%;
+      scroll-behavior: smooth;
+      overflow: hidden;
+      scrollbar-width: none;
+    }
+    html::-webkit-scrollbar { width: 0; height: 0; display: none; }
     body {
+      height: 100%;
       min-height: 100dvh;
+      overflow: hidden;
+      scrollbar-width: none;
       font-family: var(--font-ui);
-      font-size: 14px;
-      line-height: 1.6;
+      font-size: 15px;
+      line-height: 1.65;
       color: var(--text);
       background:
-        radial-gradient(ellipse 70% 50% at 78% 42%, rgba(204, 255, 0, 0.045), transparent 55%),
-        radial-gradient(ellipse 50% 40% at 12% 80%, rgba(255, 255, 255, 0.03), transparent 50%),
+        radial-gradient(ellipse 55% 55% at 82% 45%, rgba(204, 255, 0, 0.055), transparent 58%),
+        radial-gradient(ellipse 45% 40% at 10% 75%, rgba(255, 255, 255, 0.03), transparent 50%),
         var(--bg);
       -webkit-font-smoothing: antialiased;
     }
+    body::-webkit-scrollbar { width: 0; height: 0; display: none; }
     body.is-lb-open { overflow: hidden; }
     :focus-visible {
       outline: 2px solid var(--lime);
@@ -41,91 +51,109 @@
     }
     a { color: inherit; }
 
-    /* —— 一屏布局 —— */
     .wrap {
       width: var(--page);
       margin: 0 auto;
       height: 100dvh;
+      max-height: 100dvh;
       display: flex;
       flex-direction: column;
-      padding: clamp(14px, 2.2vh, 22px) 0 clamp(12px, 1.8vh, 18px);
+      padding: clamp(10px, 1.6vh, 18px) 0 clamp(10px, 1.8vh, 18px);
       overflow: hidden;
     }
 
+    /* —— 顶栏 —— */
     .top {
       flex-shrink: 0;
       display: flex;
       flex-wrap: wrap;
       align-items: center;
       justify-content: space-between;
-      gap: 10px 16px;
-      margin-bottom: clamp(10px, 1.8vh, 16px);
+      gap: 8px 18px;
+      margin-bottom: clamp(8px, 1.4vh, 14px);
     }
-    .top-actions {
-      display: flex;
-      flex-wrap: wrap;
-      align-items: center;
-      justify-content: flex-end;
-      gap: 10px 14px;
+    .study-close {
+      appearance: none;
+      display: grid;
+      place-items: center;
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      border: 1px solid rgba(255, 255, 255, 0.16);
+      background: rgba(255, 255, 255, 0.06);
+      color: #fff;
+      cursor: pointer;
+      transition: background 0.25s var(--ease), border-color 0.25s var(--ease), color 0.25s var(--ease), transform 0.25s var(--ease);
     }
-    .back {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      text-decoration: none;
-      font-size: 12px;
-      font-weight: 700;
-      letter-spacing: 0.04em;
-      color: rgba(255, 255, 255, 0.62);
-      transition: color 0.28s var(--ease);
+    .study-close:hover {
+      background: rgba(204, 255, 0, 0.14);
+      border-color: rgba(204, 255, 0, 0.45);
+      color: var(--lime);
+      transform: scale(1.04);
     }
-    .back:hover { color: #fff; }
-    .back i { font-style: normal; color: var(--lime); }
+    .study-close:focus-visible {
+      outline: 2px solid rgba(204, 255, 0, 0.55);
+      outline-offset: 3px;
+    }
+    .study-close svg {
+      width: 16px;
+      height: 16px;
+      stroke: currentColor;
+      fill: none;
+      stroke-width: 2;
+      stroke-linecap: round;
+    }
     .note {
-      font-size: 10px;
+      font-size: 11px;
       font-weight: 700;
       letter-spacing: 0.12em;
       text-transform: uppercase;
       color: rgba(255, 255, 255, 0.38);
     }
-    .top-cta {
+    .path-cta {
       display: inline-flex;
       align-items: center;
-      gap: 7px;
-      padding: 8px 14px;
+      gap: 8px;
+      margin-top: 12px;
+      padding: 9px 15px;
       border-radius: 999px;
       text-decoration: none;
-      font-size: 12px;
+      font-size: 13px;
       font-weight: 700;
       letter-spacing: 0.04em;
       color: #0a0a0b;
       background: var(--lime);
       transition: background 0.28s var(--ease), translate 0.28s var(--ease);
+      white-space: nowrap;
     }
-    .top-cta:hover { background: #d8ff3d; translate: 0 -1px; }
-    .top-cta i { font-style: normal; }
+    .path-cta:hover { background: #d8ff3d; translate: 0 -1px; }
+    .path-cta i { font-style: normal; }
+    .path-head {
+      margin-bottom: 10px;
+    }
 
-    /* —— Hero：文案 + 手机 —— */
-    .hero {
+    /* —— 主体：左文案+路径 / 右真机 —— */
+    .stage {
       flex: 1;
       min-height: 0;
       display: grid;
-      grid-template-columns: minmax(0, 1.2fr) minmax(200px, 0.72fr);
-      gap: clamp(20px, 3.5vw, 40px);
+      grid-template-columns: minmax(0, 1.05fr) minmax(240px, 0.9fr);
+      gap: clamp(20px, 3vw, 40px);
       align-items: center;
     }
-    .hero-copy {
+    .stage-left {
       min-width: 0;
       display: flex;
       flex-direction: column;
-      justify-content: center;
+      gap: clamp(12px, 1.8vh, 18px);
     }
+
     .hero-kicker {
       display: inline-flex;
       align-items: center;
       gap: 10px;
-      margin-bottom: clamp(8px, 1.2vh, 12px);
-      font-size: 10px;
+      margin-bottom: 8px;
+      font-size: 12px;
       font-weight: 700;
       letter-spacing: 0.16em;
       text-transform: uppercase;
@@ -138,176 +166,60 @@
       letter-spacing: 0.1em;
     }
     h1 {
-      max-width: 12em;
+      max-width: 14em;
       font-family: var(--font-serif);
-      font-size: clamp(24px, 3.4vw, 36px);
+      font-size: clamp(28px, 3.4vw, 40px);
       font-weight: 600;
       line-height: 1.22;
       letter-spacing: 0.01em;
     }
     .lead {
-      max-width: 36em;
-      margin-top: clamp(10px, 1.5vh, 14px);
-      font-size: clamp(13px, 1.35vw, 14px);
-      line-height: 1.7;
+      max-width: 38em;
+      margin-top: 10px;
+      font-size: clamp(14.5px, 1.35vw, 16px);
+      line-height: 1.65;
       color: var(--muted);
     }
     .lead b { color: #fff; font-weight: 700; }
     .disclaimer {
-      max-width: 36em;
-      margin-top: clamp(10px, 1.4vh, 12px);
+      max-width: 38em;
+      margin-top: 10px;
       padding: 9px 12px;
       border-radius: 10px;
-      font-size: 11px;
+      font-size: 12.5px;
       line-height: 1.55;
-      color: rgba(255, 255, 255, 0.52);
+      color: rgba(255, 255, 255, 0.55);
       background: rgba(255, 255, 255, 0.03);
       box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.08);
     }
-    .apk-row {
-      display: flex;
-      flex-wrap: wrap;
-      align-items: center;
-      gap: 10px 14px;
-      margin-top: clamp(14px, 2vh, 18px);
-    }
-    .apk-row p {
-      flex: 1 1 180px;
-      font-size: 12px;
-      line-height: 1.55;
-      color: var(--muted);
-    }
-    .apk-row p b { color: #fff; font-weight: 700; }
-    .apk-dl {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      gap: 7px;
-      flex-shrink: 0;
-      padding: 9px 15px;
-      border-radius: 999px;
-      text-decoration: none;
-      font-size: 12px;
-      font-weight: 700;
-      letter-spacing: 0.04em;
-      color: #0a0a0b;
-      background: var(--lime);
-      transition: background 0.28s var(--ease), translate 0.28s var(--ease);
-    }
-    .apk-dl:hover { background: #d8ff3d; translate: 0 -1px; }
-    .apk-dl i { font-style: normal; }
 
-    /* —— 手机框 —— */
-    .hero-media {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      gap: 10px;
-      min-width: 0;
-      min-height: 0;
-      height: 100%;
-      animation: phoneIn 0.7s var(--ease) both;
-    }
-    @keyframes phoneIn {
-      from { opacity: 0; transform: translateY(16px) scale(0.97); }
-      to { opacity: 1; transform: none; }
-    }
-    .phone {
-      --phone-r: 28px;
-      position: relative;
-      height: min(100%, 58vh);
-      aspect-ratio: 9 / 19.4;
-      max-width: 100%;
-      padding: 7px;
-      border-radius: var(--phone-r);
-      background: linear-gradient(160deg, #2a2a2e 0%, #0e0e10 45%, #1a1a1d 100%);
-      box-shadow:
-        0 0 0 1px rgba(255, 255, 255, 0.12),
-        inset 0 1px 0 rgba(255, 255, 255, 0.14),
-        0 28px 56px rgba(0, 0, 0, 0.55),
-        0 0 48px rgba(204, 255, 0, 0.04);
-    }
-    .phone::before {
-      content: "";
-      position: absolute;
-      top: 11px;
-      left: 50%;
-      z-index: 3;
-      width: 28%;
-      height: 11px;
-      border-radius: 999px;
-      background: #050506;
-      transform: translateX(-50%);
-      box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.06);
-      pointer-events: none;
-    }
-    .phone-screen {
-      position: relative;
-      width: 100%;
-      height: 100%;
-      border-radius: calc(var(--phone-r) - 6px);
-      overflow: hidden;
-      background: #0a0a0b;
-    }
-    .phone-screen video {
-      display: block;
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      background: #0a0a0b;
-    }
-    .phone-caption {
-      font-size: 11px;
-      font-weight: 600;
-      letter-spacing: 0.06em;
-      color: rgba(255, 255, 255, 0.4);
-      text-align: center;
-    }
-
-    /* —— 研究路径 —— */
-    .section {
-      flex-shrink: 0;
-      margin-top: clamp(12px, 2vh, 18px);
-      padding-top: clamp(12px, 1.8vh, 16px);
+    /* —— 研究路径：两排 —— */
+    .path {
+      padding-top: clamp(10px, 1.5vh, 14px);
       border-top: 1px dashed rgba(255, 255, 255, 0.1);
     }
-    .section-head {
-      display: flex;
-      flex-wrap: wrap;
-      align-items: baseline;
-      justify-content: space-between;
-      gap: 8px 16px;
-      margin-bottom: clamp(10px, 1.4vh, 12px);
-    }
-    .section h2 {
+    .path h2 {
       display: flex;
       align-items: center;
       gap: 8px;
-      font-size: 11px;
+      font-size: 13px;
       font-weight: 700;
       letter-spacing: 0.14em;
       color: rgba(255, 255, 255, 0.55);
     }
-    .section h2::before {
+    .path h2::before {
       content: "";
-      width: 5px;
-      height: 5px;
+      width: 6px;
+      height: 6px;
       border-radius: 1px;
       background: var(--lime);
       transform: rotate(45deg);
     }
-    .doc-note {
-      font-size: 12px;
-      line-height: 1.5;
-      color: var(--muted);
-    }
-    .doc-note b { color: #fff; }
     .steps {
       list-style: none;
       display: grid;
-      grid-template-columns: repeat(4, minmax(0, 1fr));
-      gap: 10px;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 8px;
     }
     .step-card {
       appearance: none;
@@ -316,7 +228,7 @@
       align-items: flex-start;
       width: 100%;
       min-height: 100%;
-      padding: 12px 12px 11px;
+      padding: 12px 13px 11px;
       border: 0;
       border-radius: 12px;
       background: rgba(255, 255, 255, 0.025);
@@ -347,18 +259,18 @@
       font-weight: 700;
       letter-spacing: 0.08em;
       color: var(--lime);
-      margin-bottom: 6px;
+      margin-bottom: 5px;
     }
     .step-card strong {
       display: block;
-      font-size: 13px;
+      font-size: 14.5px;
       font-weight: 700;
       color: #fff;
       margin-bottom: 4px;
     }
     .step-card p {
-      font-size: 12px;
-      line-height: 1.5;
+      font-size: 13px;
+      line-height: 1.45;
       color: var(--muted);
       margin-bottom: 8px;
       display: -webkit-box;
@@ -371,7 +283,7 @@
       display: inline-flex;
       align-items: center;
       gap: 5px;
-      font-size: 10px;
+      font-size: 12px;
       font-weight: 700;
       letter-spacing: 0.06em;
       color: rgba(204, 255, 0, 0.72);
@@ -380,8 +292,130 @@
     .step-card:hover .step-go i { translate: 2px -2px; }
     .foot {
       margin-top: 8px;
-      font-size: 11px;
+      font-size: 11.5px;
       color: rgba(255, 255, 255, 0.32);
+    }
+
+    /* —— 右侧真机：竖直 + APK —— */
+    .stage-right {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      min-width: 0;
+      animation: phoneIn 0.75s var(--ease) both;
+    }
+    @keyframes phoneIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: none; }
+    }
+    .apk-block {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 7px;
+      width: min(100%, 260px);
+      text-align: center;
+    }
+    .apk-block .apk-dl { order: 0; }
+    .apk-block p {
+      order: 1;
+      font-size: 12.5px;
+      line-height: 1.45;
+      color: var(--muted);
+    }
+    .apk-block p b { color: #fff; font-weight: 700; }
+    .apk-dl {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      padding: 10px 16px;
+      border-radius: 999px;
+      text-decoration: none;
+      font-size: 13.5px;
+      font-weight: 700;
+      letter-spacing: 0.04em;
+      color: #0a0a0b;
+      background: var(--lime);
+      transition: background 0.28s var(--ease), translate 0.28s var(--ease);
+    }
+    .apk-dl:hover { background: #d8ff3d; translate: 0 -1px; }
+    .apk-dl i { font-style: normal; }
+    .phone-stage {
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 100%;
+      max-width: min(280px, 32dvh);
+    }
+    .phone-stage::before {
+      content: "";
+      position: absolute;
+      left: 14%;
+      right: 14%;
+      bottom: -4%;
+      height: 14%;
+      border-radius: 50%;
+      background: radial-gradient(ellipse at center, rgba(0, 0, 0, 0.45), transparent 70%);
+      filter: blur(10px);
+      pointer-events: none;
+      z-index: 0;
+    }
+    .phone {
+      --phone-r: 30px;
+      position: relative;
+      z-index: 1;
+      width: min(100%, clamp(168px, 22dvh, 232px));
+      aspect-ratio: 9 / 19.4;
+      padding: 8px;
+      border-radius: var(--phone-r);
+      background: linear-gradient(165deg, #2e2e32 0%, #101012 48%, #1a1a1d 100%);
+      box-shadow:
+        0 0 0 1px rgba(255, 255, 255, 0.14),
+        inset 0 1px 0 rgba(255, 255, 255, 0.16),
+        0 22px 44px rgba(0, 0, 0, 0.5),
+        0 0 40px rgba(204, 255, 0, 0.05);
+      transition: transform 0.4s var(--ease);
+    }
+    .phone:hover { transform: translateY(-4px); }
+    .phone::before {
+      content: "";
+      position: absolute;
+      top: 12px;
+      left: 50%;
+      z-index: 3;
+      width: 30%;
+      height: 12px;
+      border-radius: 999px;
+      background: #050506;
+      transform: translateX(-50%);
+      box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.06);
+      pointer-events: none;
+    }
+    .phone-screen {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      border-radius: calc(var(--phone-r) - 7px);
+      overflow: hidden;
+      background: #0a0a0b;
+    }
+    .phone-screen video {
+      display: block;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      background: #0a0a0b;
+    }
+    .phone-caption {
+      font-size: 11.5px;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      color: rgba(255, 255, 255, 0.45);
+      text-align: center;
     }
 
     /* —— 研究图灯箱 —— */
@@ -523,44 +557,42 @@
     }
     .study-lb-hint b { color: var(--lime); font-weight: 700; }
 
-    @media (max-width: 900px) {
+    @media (max-width: 960px) {
+      html, body {
+        height: auto;
+        overflow: auto;
+        scrollbar-width: thin;
+      }
+      html::-webkit-scrollbar,
+      body::-webkit-scrollbar { width: 8px; height: 8px; display: block; }
       .wrap {
         height: auto;
+        max-height: none;
         min-height: 100dvh;
         overflow: visible;
-        padding-bottom: 28px;
+        padding: 20px 0 28px;
       }
-      .hero {
+      .stage {
         grid-template-columns: 1fr;
-        gap: 22px;
+        gap: 28px;
       }
-      .hero-media { height: auto; }
-      .phone {
-        height: auto;
-        width: min(220px, 52vw);
-      }
+      .stage-right { order: -1; }
+      .phone { width: min(250px, 56vw); }
+      .phone-stage { max-width: 300px; }
     }
-    @media (max-width: 800px) {
-      .steps { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-    }
-    @media (max-width: 520px) {
+    @media (max-width: 560px) {
+      .note { width: 100%; text-align: left; }
       .steps { grid-template-columns: 1fr; }
-      .top-actions { width: 100%; justify-content: space-between; }
-      .apk-row { flex-direction: column; align-items: flex-start; }
+      .phone { --phone-r: 26px; width: min(230px, 64vw); }
       .study-lb { padding: 12px; }
       .study-lb-panel { width: 100%; max-height: calc(100dvh - 24px); border-radius: 16px; }
       .study-lb-head { padding: 14px; }
       .study-lb-body { padding: 12px; }
-      .phone { --phone-r: 22px; width: min(200px, 58vw); }
-    }
-    @media (max-height: 780px) and (min-width: 901px) {
-      .phone { height: min(100%, 52vh); }
-      .step-card p { -webkit-line-clamp: 1; }
-      h1 { font-size: clamp(22px, 2.8vw, 30px); }
     }
     @media (prefers-reduced-motion: reduce) {
-      .hero-media,
+      .stage-right,
       .step-card,
+      .phone,
       .study-lb,
       .study-lb-panel { animation: none; transition: none; }
     }
@@ -569,83 +601,87 @@
 <body>
   <main class="wrap">
     <div class="top">
-      <a class="back" href="index.html#cases"><i aria-hidden="true">←</i>返回健康产品系列</a>
-      <div class="top-actions">
-        <p class="note">Personal Extension · Not Official</p>
-        <a class="top-cta" id="figmaTop" href="https://www.figma.com/board/KRwPyy7vZ7BkLszaCXqaP5/%E3%80%8A%E8%96%84%E8%8D%B7%E5%81%A5%E5%BA%B7%E3%80%8B%E6%B5%B7%E5%A4%96%E4%BA%A7%E5%93%81%E7%AD%96%E7%95%A5%E4%B8%8E%E5%A2%9E%E9%95%BF%E5%AE%9E%E6%88%98?t=eobkbwidUytaxPKy-1" target="_blank" rel="noopener noreferrer">打开 Figma 研究报告 <i aria-hidden="true">↗</i></a>
-      </div>
+      <button type="button" class="study-close" id="studyClose" aria-label="关闭研究报告">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18"/></svg>
+      </button>
+      <p class="note">Personal Extension · Not Official</p>
     </div>
 
-    <header class="hero">
-      <div class="hero-copy">
-        <p class="hero-kicker"><span>自主研究</span><em>Independent Study</em></p>
-        <h1>《薄荷健康》App 海外市场调研与功能优化</h1>
-        <p class="lead">从 2023 年起间歇使用至今，也曾在工作中将其作为重点竞品。结合海外工具类产品调研经验，以产品经理与长期用户的双重视角，完成从 <b>市场调研</b> 到 <b>用户评论分析</b> 的完整研究。</p>
-        <p class="disclaimer">个人自主研究，不属于公司正式工作，也不是《薄荷健康》官方项目。</p>
-        <div class="apk-row">
-          <p>这是我的<strong>页面微调</strong>安卓包，可下载安装查看实际效果。</p>
-          <a class="apk-dl" href="assets/projects/fitnessSeries/app-debug.apk" download="app-debug.apk">下载 APK 安装包 <i aria-hidden="true">↓</i></a>
-        </div>
+    <div class="stage">
+      <div class="stage-left">
+        <header>
+          <p class="hero-kicker"><span>自主研究</span><em>Independent Study</em></p>
+          <h1>《薄荷健康》App 海外市场调研与功能优化</h1>
+          <a class="path-cta" id="figmaTop" href="https://www.figma.com/board/KRwPyy7vZ7BkLszaCXqaP5/%E3%80%8A%E8%96%84%E8%8D%B7%E5%81%A5%E5%BA%B7%E3%80%8B%E6%B5%B7%E5%A4%96%E4%BA%A7%E5%93%81%E7%AD%96%E7%95%A5%E4%B8%8E%E5%A2%9E%E9%95%BF%E5%AE%9E%E6%88%98?t=eobkbwidUytaxPKy-1" target="_blank" rel="noopener noreferrer">打开 Figma 研究报告 <i aria-hidden="true">↗</i></a>
+          <p class="lead">从 2023 年起间歇使用至今，也曾在工作中将其作为重点竞品。结合海外工具类产品调研经验，以产品经理与长期用户的双重视角，完成从 <b>市场调研</b> 到 <b>用户评论分析</b> 的完整研究。</p>
+          <p class="disclaimer">个人自主研究，不属于公司正式工作，也不是《薄荷健康》官方项目。</p>
+        </header>
+
+        <section class="path" aria-label="研究路径">
+          <div class="path-head">
+            <h2>研究路径</h2>
+          </div>
+          <ol class="steps" id="studySteps">
+            <li>
+              <button type="button" class="step-card" data-step="0" aria-label="查看市场调研报告图">
+                <span class="step-no">01</span>
+                <strong>市场调研</strong>
+                <p>梳理海外健康管理赛道结构、增长机会与切入方向。</p>
+                <span class="step-go">查看报告图 <i aria-hidden="true">↗</i></span>
+              </button>
+            </li>
+            <li>
+              <button type="button" class="step-card" data-step="1" aria-label="查看竞品池筛选报告图">
+                <span class="step-no">02</span>
+                <strong>竞品池筛选</strong>
+                <p>从候选产品中圈定高价值竞品，建立可追踪的研究清单。</p>
+                <span class="step-go">查看报告图 <i aria-hidden="true">↗</i></span>
+              </button>
+            </li>
+            <li>
+              <button type="button" class="step-card" data-step="2" aria-label="查看竞品拆解报告图">
+                <span class="step-no">03</span>
+                <strong>竞品拆解</strong>
+                <p>拆解核心路径、功能结构与商业化设计，沉淀结构化洞察。</p>
+                <span class="step-go">查看报告图 <i aria-hidden="true">↗</i></span>
+              </button>
+            </li>
+            <li>
+              <button type="button" class="step-card" data-step="3" aria-label="查看用户评论分析报告图">
+                <span class="step-no">04</span>
+                <strong>用户评论分析</strong>
+                <p>提炼高频痛点与潜在需求，把市场信号转化为产品机会。</p>
+                <span class="step-go">查看报告图 <i aria-hidden="true">↗</i></span>
+              </button>
+            </li>
+          </ol>
+          <p class="foot">Cursor 页面与交互优化实践将在后续补充。</p>
+        </section>
       </div>
-      <aside class="hero-media" aria-label="页面微调演示">
-        <div class="phone">
-          <div class="phone-screen">
-            <video
-              src="assets/projects/fitnessSeries/界面微调视频演示.mp4"
-              muted
-              autoplay
-              loop
-              playsinline
-              preload="metadata"
-              controlslist="nodownload"
-            ></video>
+
+      <aside class="stage-right" aria-label="页面微调演示">
+        <div class="phone-stage">
+          <div class="phone">
+            <div class="phone-screen">
+              <video
+                src="assets/projects/fitnessSeries/界面微调视频演示.mp4"
+                muted
+                autoplay
+                loop
+                playsinline
+                preload="metadata"
+                controlslist="nodownload"
+              ></video>
+            </div>
           </div>
         </div>
         <p class="phone-caption">页面微调 · 真机录屏</p>
+        <div class="apk-block">
+          <a class="apk-dl" href="assets/projects/fitnessSeries/app-debug.apk" download="app-debug.apk">下载 APK 安装包 <i aria-hidden="true">↓</i></a>
+          <p>这是我的<strong>页面微调</strong>安卓包，可下载安装查看实际效果。</p>
+        </div>
       </aside>
-    </header>
-
-    <section class="section" aria-label="研究路径">
-      <div class="section-head">
-        <h2>研究路径</h2>
-        <p class="doc-note">点击卡片预览分析长图，或打开完整 <b>Figma</b> 研究报告。</p>
-      </div>
-      <ol class="steps" id="studySteps">
-        <li>
-          <button type="button" class="step-card" data-step="0" aria-label="查看市场调研报告图">
-            <span class="step-no">01</span>
-            <strong>市场调研</strong>
-            <p>梳理海外健康管理赛道结构、增长机会与切入方向。</p>
-            <span class="step-go">查看报告图 <i aria-hidden="true">↗</i></span>
-          </button>
-        </li>
-        <li>
-          <button type="button" class="step-card" data-step="1" aria-label="查看竞品池筛选报告图">
-            <span class="step-no">02</span>
-            <strong>竞品池筛选</strong>
-            <p>从候选产品中圈定高价值竞品，建立可追踪的研究清单。</p>
-            <span class="step-go">查看报告图 <i aria-hidden="true">↗</i></span>
-          </button>
-        </li>
-        <li>
-          <button type="button" class="step-card" data-step="2" aria-label="查看竞品拆解报告图">
-            <span class="step-no">03</span>
-            <strong>竞品拆解</strong>
-            <p>拆解核心路径、功能结构与商业化设计，沉淀结构化洞察。</p>
-            <span class="step-go">查看报告图 <i aria-hidden="true">↗</i></span>
-          </button>
-        </li>
-        <li>
-          <button type="button" class="step-card" data-step="3" aria-label="查看用户评论分析报告图">
-            <span class="step-no">04</span>
-            <strong>用户评论分析</strong>
-            <p>提炼高频痛点与潜在需求，把市场信号转化为产品机会。</p>
-            <span class="step-go">查看报告图 <i aria-hidden="true">↗</i></span>
-          </button>
-        </li>
-      </ol>
-      <p class="foot">Cursor 页面与交互优化实践将在后续补充。</p>
-    </section>
+    </div>
   </main>
 
   <div class="study-lb" id="studyLb" aria-hidden="true">
@@ -672,6 +708,21 @@
 
   <script>
     (function () {
+      var closeBtn = document.getElementById("studyClose");
+      function closeStudy() {
+        if (window.parent && window.parent !== window) {
+          window.parent.postMessage({ type: "close-bohee-study" }, "*");
+          return;
+        }
+        window.location.href = "index.html#cases";
+      }
+      if (closeBtn) closeBtn.addEventListener("click", closeStudy);
+      window.addEventListener("keydown", function (e) {
+        if (e.key !== "Escape") return;
+        if (document.getElementById("studyLb") && document.getElementById("studyLb").classList.contains("is-open")) return;
+        closeStudy();
+      });
+
       var demoVideo = document.querySelector(".phone-screen video");
       if (demoVideo) {
         demoVideo.muted = true;
